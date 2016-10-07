@@ -1,10 +1,10 @@
-package me.lyh.shapeless.datatype.record
+package shapeless.datatype.record
 
-import me.lyh.shapeless.datatype.SerializableUtils
 import org.scalacheck.Prop.{BooleanOperators, all, forAll}
 import org.scalacheck.Shapeless._
 import org.scalacheck._
 import shapeless._
+import shapeless.datatype.SerializableUtils
 import shapeless.poly._
 
 object RecordMatcherRecords {

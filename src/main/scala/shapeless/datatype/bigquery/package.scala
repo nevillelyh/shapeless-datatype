@@ -1,7 +1,7 @@
-package me.lyh.shapeless.datatype
+package shapeless.datatype
 
-import me.lyh.shapeless.datatype.mappable.{FromMappable, ToMappable}
 import shapeless._
+import shapeless.datatype.mappable.{FromMappable, ToMappable}
 
 package object bigquery extends BigQueryMappableType {
   type TableRow = java.util.Map[String, AnyRef]

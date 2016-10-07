@@ -1,9 +1,9 @@
-package me.lyh.shapeless.datatype.datastore
+package shapeless.datatype.datastore
 
-import com.google.datastore.v1.{Entity, Value}
 import com.google.datastore.v1.client.DatastoreHelper._
+import com.google.datastore.v1.{Entity, Value}
 import com.google.protobuf.ByteString
-import me.lyh.shapeless.datatype.mappable.{BaseMappableType, MappableType}
+import shapeless.datatype.mappable.{BaseMappableType, MappableType}
 
 import scala.collection.JavaConverters._
 

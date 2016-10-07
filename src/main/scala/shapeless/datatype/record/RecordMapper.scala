@@ -1,4 +1,4 @@
-package me.lyh.shapeless.datatype.record
+package shapeless.datatype.record
 
 import shapeless._
 import shapeless.labelled.{FieldType, field}

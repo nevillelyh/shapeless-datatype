@@ -1,10 +1,10 @@
-package me.lyh.shapeless.datatype.record
+package shapeless.datatype.record
 
-import me.lyh.shapeless.datatype.SerializableUtils
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Shapeless._
 import org.scalacheck._
 import shapeless._
+import shapeless.datatype.SerializableUtils
 
 object RecordMapperRecords {
   case class RequiredA(intField: Int, longField: Long, stringField: String)

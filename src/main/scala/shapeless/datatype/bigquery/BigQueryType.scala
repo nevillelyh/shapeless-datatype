@@ -1,4 +1,4 @@
-package me.lyh.shapeless.datatype.bigquery
+package shapeless.datatype.bigquery
 
 import shapeless._
 

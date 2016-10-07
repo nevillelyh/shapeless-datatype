@@ -1,4 +1,4 @@
-package me.lyh.shapeless.datatype
+package shapeless.datatype
 
 import java.{io => jio}
 

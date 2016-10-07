@@ -1,4 +1,4 @@
-package me.lyh.shapeless.datatype.mappable
+package shapeless.datatype.mappable
 
 trait BaseMappableType[M] {
   def base: M

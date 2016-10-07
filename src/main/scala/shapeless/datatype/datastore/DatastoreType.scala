@@ -1,7 +1,7 @@
-package me.lyh.shapeless.datatype.datastore
+package shapeless.datatype.datastore
 
 import com.google.datastore.v1.Entity
-import shapeless.{HList, LabelledGeneric}
+import shapeless._
 
 class DatastoreType[A] extends Serializable {
   def fromEntity[L <: HList](m: Entity)

@@ -1,7 +1,7 @@
-package me.lyh.shapeless.datatype.bigquery
+package shapeless.datatype.bigquery
 
 import com.google.common.io.BaseEncoding
-import me.lyh.shapeless.datatype.mappable.{BaseMappableType, MappableType}
+import shapeless.datatype.mappable.{BaseMappableType, MappableType}
 
 import scala.collection.JavaConverters._
 

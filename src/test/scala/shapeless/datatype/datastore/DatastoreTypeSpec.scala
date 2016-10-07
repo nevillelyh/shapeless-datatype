@@ -1,12 +1,11 @@
-package me.lyh.shapeless.datatype.bigquery
+package shapeless.datatype.datastore
 
-import com.fasterxml.jackson.databind.{ObjectMapper, SerializationFeature}
-import me.lyh.shapeless.datatype.SerializableUtils
-import me.lyh.shapeless.datatype.record._
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Shapeless._
 import org.scalacheck._
 import shapeless._
+import shapeless.datatype.SerializableUtils
+import shapeless.datatype.record._
 
 object Records {
   case class Required(intField: Int, longField: Long, floatField: Float, doubleField: Double,
@@ -33,25 +32,21 @@ object Records {
                     requiredN: Mixed, optionalN: Option[Mixed], repeatedN: List[Mixed])
 }
 
-class BigQueryTypeSpec extends Properties("BigQueryType") {
+class DatastoreTypeSpec extends Properties("DatastoreType") {
 
   import Records._
-
-  val mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
 
   implicit val compareByteArrays =
     (x: Array[Byte], y: Array[Byte]) => java.util.Arrays.equals(x, y)
 
-  def roundTrip[A, L <: HList](m: A, t: BigQueryType[A] = BigQueryType[A])
+  def roundTrip[A, L <: HList](m: A, t: DatastoreType[A] = DatastoreType[A])
                               (implicit
                                gen: LabelledGeneric.Aux[A, L],
-                               fromL: FromTableRow[L],
-                               toL: ToTableRow[L],
+                               fromL: FromEntity[L],
+                               toL: ToEntity[L],
                                rm: RecordMatcher[L]): Boolean = {
-    val tr1 = t.toTableRow(m)
-    val tr2 = mapper.readValue(mapper.writeValueAsString(tr1), classOf[TableRow])
     val rmt = RecordMatcherType[A]
-    t.fromTableRow(tr2).exists(rmt(_, m))
+    t.fromEntity(t.toEntity(m)).exists(rmt(_, m))
   }
 
   property("required") = forAll { m: Required => roundTrip(m) }
@@ -60,7 +55,7 @@ class BigQueryTypeSpec extends Properties("BigQueryType") {
   property("mixed") = forAll { m: Mixed => roundTrip(m) }
   property("nested") = forAll { m: Nested => roundTrip(m) }
 
-  val t = SerializableUtils.ensureSerializable(BigQueryType[Nested])
+  val t = SerializableUtils.ensureSerializable(DatastoreType[Nested])
   property("serializable") = forAll { m: Nested => roundTrip(m, t) }
 
 }
