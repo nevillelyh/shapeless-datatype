@@ -33,65 +33,24 @@ class RecordMatcherTypeSpec extends Properties("RecordMatcherType") {
   object inc extends ->((x: Double) => x + 1.0)
   implicit val compareDoubles = (x: Double, y: Double) => math.abs(x) == math.abs(y)
 
-  val t1 = RecordMatcherType[Required]
-  val t2 = RecordMatcherType[Optional]
-  val t3 = RecordMatcherType[Repeated]
-  val t4 = RecordMatcherType[Mixed]
-  val t5 = RecordMatcherType[Nested]
-
-  property("required") = forAll { m: Required =>
-    val m1 = everywhere(negate)(m)
-    val m2 = everywhere(inc)(m)
+  def test[A, L <: HList](original: A, withNegate: A, withInc: A,
+                          t: RecordMatcherType[A] = RecordMatcherType[A])
+                         (implicit
+                          gen: LabelledGeneric.Aux[A, L],
+                          rm: RecordMatcher[L]): Prop = {
     all(
-      "equal self"    |: t1(m, m),
-      "equal negate"  |: t1(m, m1),
-      "not equal inc" |: !t1(m, m2))
+      "equal self"    |: t(original, original),
+      "equal negate"  |: t(original, withNegate),
+      "not equal inc" |: !t(original, withInc))
   }
 
-  property("optional") = forAll { m: Optional =>
-    val m1 = everywhere(negate)(m)
-    val m2 = everywhere(inc)(m)
-    all(
-      "equal self"    |: t2(m, m),
-      "equal negate"  |: t2(m, m1),
-      "not equal inc" |: !t2(m, m2))
-  }
-
-  property("repeated") = forAll { m: Repeated =>
-    val m1 = everywhere(negate)(m)
-    val m2 = everywhere(inc)(m)
-    all(
-      "equal self"    |: t3(m, m),
-      "equal negate"  |: t3(m, m1),
-      "not equal inc" |: !t3(m, m2))
-  }
-
-  property("mixed") = forAll { m: Mixed =>
-    val m1 = everywhere(negate)(m)
-    val m2 = everywhere(inc)(m)
-    all(
-      "equal self"    |: t4(m, m),
-      "equal negate"  |: t4(m, m1),
-      "not equal inc" |: !t4(m, m2))
-  }
-
-  property("nested") = forAll { m: Nested =>
-    val m1 = everywhere(negate)(m)
-    val m2 = everywhere(inc)(m)
-    all(
-      "equal self"    |: t5(m, m),
-      "equal negate"  |: t5(m, m1),
-      "not equal inc" |: !t5(m, m2))
-  }
+  property("required") = forAll { m: Required => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
+  property("optional") = forAll { m: Optional => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
+  property("repeated") = forAll { m: Repeated => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
+  property("mixed") = forAll { m: Mixed => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
+  property("nested") = forAll { m: Nested => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
 
   val t = SerializableUtils.ensureSerializable(RecordMatcherType[Nested])
-  property("serializable") = forAll { m: Nested =>
-    val m1 = everywhere(negate)(m)
-    val m2 = everywhere(inc)(m)
-    all(
-      "equal self"    |: t(m, m),
-      "equal negate"  |: t(m, m1),
-      "not equal inc" |: !t(m, m2))
-  }
+  property("serializable") = forAll { m: Nested => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
 
 }
