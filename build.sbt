@@ -5,8 +5,8 @@ version := "0.1.0-SNAPSHOT"
 
 scalaVersion := "2.11.8"
 crossScalaVersions := Seq("2.10.6", "2.11.8")
-scalacOptions ++= Seq("-target:jvm-1.8", "-deprecation", "-feature", "-unchecked")
-javacOptions ++= Seq("-source", "1.8", "-target", "1.8", "-Xlint:unchecked")
+scalacOptions ++= Seq("-target:jvm-1.7", "-deprecation", "-feature", "-unchecked")
+javacOptions ++= Seq("-source", "1.7", "-target", "1.7", "-Xlint:unchecked")
 
 libraryDependencies ++= Seq(
   "com.chuusai" %% "shapeless" % "2.3.2",
