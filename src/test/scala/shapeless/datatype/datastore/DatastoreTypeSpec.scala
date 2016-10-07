@@ -36,8 +36,7 @@ class DatastoreTypeSpec extends Properties("DatastoreType") {
 
   import Records._
 
-  implicit val compareByteArrays =
-    (x: Array[Byte], y: Array[Byte]) => java.util.Arrays.equals(x, y)
+  implicit val compareByteArrays = (x: Array[Byte], y: Array[Byte]) => java.util.Arrays.equals(x, y)
 
   def roundTrip[A, L <: HList](m: A, t: DatastoreType[A] = DatastoreType[A])
                               (implicit

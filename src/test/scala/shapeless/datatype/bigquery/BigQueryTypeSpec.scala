@@ -39,8 +39,7 @@ class BigQueryTypeSpec extends Properties("BigQueryType") {
 
   val mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
 
-  implicit val compareByteArrays =
-    (x: Array[Byte], y: Array[Byte]) => java.util.Arrays.equals(x, y)
+  implicit val compareByteArrays = (x: Array[Byte], y: Array[Byte]) => java.util.Arrays.equals(x, y)
 
   def roundTrip[A, L <: HList](m: A, t: BigQueryType[A] = BigQueryType[A])
                               (implicit
