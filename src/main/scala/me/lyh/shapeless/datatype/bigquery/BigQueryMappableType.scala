@@ -11,10 +11,11 @@ trait BaseBigQueryMappableType[V] extends MappableType[TableRow, V] {
 
   override def get(m: TableRow, key: String): Option[V] =
     Option(m.get(key)).map(from)
-  override def getAll(m: TableRow, key: String): Seq[V] = if (m.containsKey(key))
-    m.get(key).asInstanceOf[java.util.List[AnyRef]].asScala.map(from)
-  else
-    Nil
+  override def getAll(m: TableRow, key: String): Seq[V] =
+    if (m.containsKey(key))
+      m.get(key).asInstanceOf[java.util.List[AnyRef]].asScala.map(from)
+    else
+      Nil
 
   override def put(key: String, value: V, tail: TableRow): TableRow = {
     tail.put(key, to(value))
