@@ -1,0 +1,29 @@
+[{
+    "type": "record",
+    "name": "Required",
+    "namespace": "shapeless.datatype.avro",
+    "doc": "Record with required primitive fields",
+    "fields": [
+        {"name": "int_field", "type": "int"},
+        {"name": "long_field", "type": "long"},
+        {"name": "float_field", "type": "float"},
+        {"name": "double_field", "type": "double"},
+        {"name": "boolean_field", "type": "boolean"},
+        {"name": "string_field", "type": "string"}
+    ]
+},
+{
+    "type": "record",
+    "name": "Optional",
+    "namespace": "shapeless.datatype.avro",
+    "doc": "Record with optional primitive fields",
+    "fields": [
+        {"name": "int_field", "type": ["null", "int"], "default": null},
+        {"name": "long_field", "type": ["null", "long"], "default": null},
+        {"name": "float_field", "type": ["null", "float"], "default": null},
+        {"name": "double_field", "type": ["null", "double"], "default": null},
+        {"name": "boolean_field", "type": ["null", "boolean"], "default": null},
+        {"name": "string_field", "type": ["null", "string"], "default": null}
+    ]
+}
+]

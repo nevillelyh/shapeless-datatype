@@ -7,6 +7,8 @@ crossScalaVersions := Seq("2.10.6", "2.11.8")
 scalacOptions ++= Seq("-target:jvm-1.7", "-deprecation", "-feature", "-unchecked")
 javacOptions ++= Seq("-source", "1.7", "-target", "1.7", "-Xlint:unchecked")
 
+sbtavro.SbtAvro.avroSettings
+
 libraryDependencies ++= Seq(
   "com.chuusai" %% "shapeless" % "2.3.2",
   "com.google.apis" % "google-api-services-bigquery" % "v2-rev317-1.22.0",
