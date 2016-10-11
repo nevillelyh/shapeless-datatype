@@ -1,5 +1,7 @@
 package shapeless.datatype.avro
 
+import java.nio.ByteBuffer
+
 import org.apache.avro.Schema
 import org.apache.avro.specific.SpecificRecord
 import shapeless._
@@ -15,7 +17,7 @@ class AvroLabelledMacros(val c: whitebox.Context)
 
   def mkDefaultSymbolicLabellingImpl[T](implicit tTag: WeakTypeTag[T]): Tree = {
     val tTpe = weakTypeOf[T]
-    val labels: List[String] = schemaOf(tTpe).getFields.asScala.map(_.name()).toList
+    val labels: List[String] = avroSchemaOf(tTpe).getFields.asScala.map(_.name()).toList
 
     val labelTpes = labels.map(SingletonSymbolType(_))
     val labelValues = labels.map(mkSingletonSymbol)
@@ -60,11 +62,28 @@ trait AvroMacros {
 
   import c.universe._
 
-  def schemaOf(tTpe: Type): Schema =
-    Class.forName(tTpe.typeSymbol.fullName)
+  def avroSchemaOf(tpe: Type): Schema =
+    Class.forName(tpe.typeSymbol.fullName)
       .getMethod("getClassSchema")
       .invoke(null)
       .asInstanceOf[Schema]
+
+  def avroFieldsOf(tpe: Type): Seq[(TermName, Type)] = {
+    val schema = avroSchemaOf(tpe)
+    schema.getFields.asScala.toList.map { f =>
+      (TermName(f.name()), typeOf[Int])
+    }
+  }
+
+  def avroTypeOf(schema: Schema): Type = schema.getType match {
+    case Schema.Type.INT => typeOf[Int]
+    case Schema.Type.LONG => typeOf[Long]
+    case Schema.Type.FLOAT => typeOf[Float]
+    case Schema.Type.DOUBLE => typeOf[Double]
+    case Schema.Type.BOOLEAN => typeOf[Boolean]
+    case Schema.Type.STRING => typeOf[String]
+    case Schema.Type.BYTES => typeOf[ByteBuffer]
+  }
 
   def isAvro(tpe: Type): Boolean = tpe =:= typeOf[SpecificRecord]
 }
