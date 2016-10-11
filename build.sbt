@@ -1,7 +1,6 @@
 organization := "me.lyh"
 name := "shapeless-datatype"
 description := "Shapeless utilities for common data types"
-version := "0.1.0-SNAPSHOT"
 
 scalaVersion := "2.11.8"
 crossScalaVersions := Seq("2.10.6", "2.11.8")
@@ -24,3 +23,30 @@ libraryDependencies ++= (
   else
     Nil
 )
+
+// Release settings
+releaseCrossBuild             := true
+releasePublishArtifactsAction := PgpKeys.publishSigned.value
+publishMavenStyle             := true
+publishArtifact in Test       := false
+sonatypeProfileName           := "com.spotify"
+pomExtra                      := {
+  <url>https://github.com/nevillelyh/shapeless-datatype</url>
+  <licenses>
+    <license>
+      <name>Apache 2</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+  <scm>
+    <url>git@github.com/spotify/ratatool.git</url>
+    <connection>scm:git:git@github.com:spotify/ratatool.git</connection>
+  </scm>
+  <developers>
+    <developer>
+      <id>sinisa_lyh</id>
+      <name>Neville Li</name>
+      <url>https://twitter.com/sinisa_lyh</url>
+    </developer>
+  </developers>
+}
