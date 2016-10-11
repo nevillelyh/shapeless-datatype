@@ -25,5 +25,5 @@ package object avro {
     macro AvroLabelledMacros.mkDefaultSymbolicLabellingImpl[T]
 
   implicit def materializeAvro[T <: SpecificRecord, R]: Generic.Aux[T, R] =
-    macro AvroGenericMacros.materializeAvro[T, R]
+    macro AvroGenericMacros.materialize[T, R]
 }

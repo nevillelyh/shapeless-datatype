@@ -43,7 +43,7 @@ class AvroGenericMacros(val c: whitebox.Context) extends AvroMacros {
   import internal.constantType
   import Flag._
 
-  def materializeAvro[T: WeakTypeTag, R: WeakTypeTag]: Tree = {
+  def materialize[T: WeakTypeTag, R: WeakTypeTag]: Tree = {
     val tpe = weakTypeOf[T]
 
     q"""
