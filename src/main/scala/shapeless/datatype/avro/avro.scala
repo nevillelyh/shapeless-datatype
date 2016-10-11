@@ -1,6 +1,7 @@
 package shapeless.datatype.avro
 
 import org.apache.avro.Schema
+import org.apache.avro.specific.SpecificRecord
 import shapeless._
 
 import scala.collection.JavaConverters._
@@ -9,10 +10,10 @@ import scala.reflect.macros.whitebox
 
 @macrocompat.bundle
 class AvroLabelledMacros(val c: whitebox.Context)
-  extends AvroMacros with SingletonTypeUtils with CaseClassMacros {
+  extends SingletonTypeUtils with CaseClassMacros with AvroMacros {
   import c.universe._
 
-  def mkAvroSymbolicLabellingImpl[T](implicit tTag: WeakTypeTag[T]): Tree = {
+  def mkDefaultSymbolicLabellingImpl[T](implicit tTag: WeakTypeTag[T]): Tree = {
     val tTpe = weakTypeOf[T]
     val labels: List[String] = schemaOf(tTpe).getFields.asScala.map(_.name()).toList
 
@@ -32,19 +33,23 @@ class AvroLabelledMacros(val c: whitebox.Context)
       } : _root_.shapeless.DefaultSymbolicLabelling.Aux[$tTpe, $labelsTpe]
     """
   }
-
 }
 
 @macrocompat.bundle
-class AvroGenericMacros(val c: whitebox.Context) extends AvroMacros with CaseClassMacros {
+class AvroGenericMacros(val c: whitebox.Context) extends AvroMacros {
   import c.universe._
   import internal.constantType
   import Flag._
 
-  def materialize[T: WeakTypeTag, R: WeakTypeTag]: Tree = {
+  def materializeAvro[T: WeakTypeTag, R: WeakTypeTag]: Tree = {
     val tpe = weakTypeOf[T]
+
     q"""
-       null
+       new Generic[$tpe] {
+         type Repr = _root_.shapeless.HNil
+         def to(p: $tpe): Repr = HNil
+         def from(p: Repr): $tpe = null
+       }.asInstanceOf[_root_.shapeless.Generic.Aux[$tpe, _root_.shapeless.HNil]]
      """
   }
 }
@@ -61,4 +66,5 @@ trait AvroMacros {
       .invoke(null)
       .asInstanceOf[Schema]
 
+  def isAvro(tpe: Type): Boolean = tpe =:= typeOf[SpecificRecord]
 }
