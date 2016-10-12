@@ -37,15 +37,21 @@ class AvroLabelledMacros(val c: whitebox.Context)
   }
 }
 
-@macrocompat.bundle
-class AvroGenericMacros(val c: whitebox.Context) extends AvroMacros {
+class RichGenericMacros(override val c: whitebox.Context) extends GenericMacros(c) with AvroMacros {
   import c.universe._
   import internal.constantType
   import Flag._
 
-  def materialize[T: WeakTypeTag, R: WeakTypeTag]: Tree = {
+  def richMaterialize[T: WeakTypeTag, R: WeakTypeTag]: Tree = {
     val tpe = weakTypeOf[T]
 
+    if (tpe <:< typeOf[SpecificRecord])
+      mkAvroGeneric(tpe)
+    else
+      materialize[T, R]
+  }
+
+  def mkAvroGeneric(tpe: Type): Tree = {
     q"""
        new Generic[$tpe] {
          type Repr = _root_.shapeless.HNil
