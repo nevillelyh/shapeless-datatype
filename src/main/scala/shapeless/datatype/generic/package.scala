@@ -10,6 +10,7 @@ TEST SCRIPT
 
 import shapeless._
 import shapeless.datatype.avro._
+import shapeless.datatype.generic._
 
 case class CRequired(i: Int, l: Long, f: Float, d: Double, b: Boolean, s: String)
 
@@ -20,7 +21,7 @@ Generic[CRequired]
 Generic[Required]
  */
 
-package object avro {
+package object generic {
   implicit def mkAvroSymbolicLabelling[T <: SpecificRecord]: DefaultSymbolicLabelling[T] =
     macro AvroLabelledMacros.mkDefaultSymbolicLabellingImpl[T]
 
