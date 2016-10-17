@@ -31,4 +31,5 @@ object Records {
                    byteStringFieldR: List[ByteString], byteArrayFieldR: List[Array[Byte]])
   case class Nested(required: Int, optional: Option[Int], repeated: List[Int],
                     requiredN: Mixed, optionalN: Option[Mixed], repeatedN: List[Mixed])
+  case class SeqTypes(array: Array[Int], list: List[Int], vector: Vector[Int])
 }

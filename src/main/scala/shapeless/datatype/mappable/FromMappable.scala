@@ -32,9 +32,9 @@ trait LowPriorityFromMappableOption1 extends LowPriorityFromMappable1 {
 }
 
 trait LowPriorityFromMappableSeq1 extends LowPriorityFromMappableOption1 {
-  implicit def hconsFromMappableSeq1[K <: Symbol, V, T <: HList, M, S[_] <: Seq[_]]
+  implicit def hconsFromMappableSeq1[K <: Symbol, V, T <: HList, M, S[_]]
   (implicit wit: Witness.Aux[K], mt: MappableType[M, V], fromT: Lazy[FromMappable[T, M]],
-   cbf: CanBuildFrom[_, V, S[V]])
+   cbf: CanBuildFrom[_, V, S[V]], toSeq: S[V] => Seq[V])
   : FromMappable[FieldType[K, S[V]] :: T, M] = new FromMappable[FieldType[K, S[V]] :: T, M] {
     override def apply(m: M): Option[FieldType[K, S[V]] :: T] = for {
       t <- fromT.value(m)
@@ -77,10 +77,10 @@ trait LowPriorityFromMappableOption0 extends LowPriorityFromMappable0 {
 }
 
 trait LowPriorityFromMappableSeq0 extends LowPriorityFromMappableOption0 {
-  implicit def hconsFromMappableSeq0[K <: Symbol, V, H <: HList, T <: HList, M, S[_] <: Seq[_]]
+  implicit def hconsFromMappableSeq0[K <: Symbol, V, H <: HList, T <: HList, M, S[_]]
   (implicit wit: Witness.Aux[K], gen: LabelledGeneric.Aux[V, H], bmt: BaseMappableType[M],
    fromH: Lazy[FromMappable[H, M]], fromT: Lazy[FromMappable[T, M]],
-   cbf: CanBuildFrom[_, V, S[V]])
+   cbf: CanBuildFrom[_, V, S[V]], toSeq: S[V] => Seq[V])
   : FromMappable[FieldType[K, S[V]] :: T, M] = new FromMappable[FieldType[K, S[V]] :: T, M] {
     override def apply(m: M): Option[FieldType[K, S[V]] :: T] = for {
       t <- fromT.value(m)
