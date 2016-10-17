@@ -48,6 +48,8 @@ trait DatastoreMappableType {
     override def to(value: T): Value = toFn(value)
   }
 
+  implicit val booleanEntityMappableType =
+    at[Boolean](_.getBooleanValue, makeValue(_).build())
   implicit val intDatastoreMappableType =
     at[Int](_.getIntegerValue.toInt, makeValue(_).build())
   implicit val longEntityMappableType =
@@ -56,14 +58,13 @@ trait DatastoreMappableType {
     at[Float](_.getDoubleValue.toFloat, makeValue(_).build())
   implicit val doubleEntityMappableType =
     at[Double](_.getDoubleValue, makeValue(_).build())
-  implicit val booleanEntityMappableType =
-    at[Boolean](_.getBooleanValue, makeValue(_).build())
   implicit val stringEntityMappableType =
     at[String](_.getStringValue, makeValue(_).build())
-  implicit val byteArrayEntityMappableType =
-    at[Array[Byte]](_.getBlobValue.toByteArray, v => makeValue(ByteString.copyFrom(v)).build())
   implicit val byteStringEntityMappableType =
     at[ByteString](_.getBlobValue, makeValue(_).build())
+  implicit val byteArrayEntityMappableType =
+    at[Array[Byte]](_.getBlobValue.toByteArray, v => makeValue(ByteString.copyFrom(v)).build())
+  // FIXME: timestamp
 }
 
 object DatastoreMappableType extends DatastoreMappableType

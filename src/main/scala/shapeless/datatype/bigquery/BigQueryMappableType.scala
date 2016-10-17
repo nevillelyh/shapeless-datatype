@@ -1,6 +1,7 @@
 package shapeless.datatype.bigquery
 
 import com.google.common.io.BaseEncoding
+import com.google.protobuf.ByteString
 import shapeless.datatype.mappable.{BaseMappableType, MappableType}
 
 import scala.collection.JavaConverters._
@@ -61,14 +62,18 @@ trait BigQueryMappableType {
   }
 
   private def id[T](x: T): AnyRef = x.asInstanceOf[AnyRef]
+  implicit val booleanBigQueryMappableType = at[Boolean](_.toString.toBoolean, id)
   implicit val intBigQueryMappableType = at[Int](_.toString.toInt, id)
   implicit val longBigQueryMappableType = at[Long](_.toString.toLong, id)
   implicit val floatBigQueryMappableType = at[Float](_.toString.toFloat, id)
   implicit val doubleBigQueryMappableType = at[Double](_.toString.toDouble, id)
-  implicit val booleanBigQueryMappableType = at[Boolean](_.toString.toBoolean, id)
   implicit val stringBigQueryMappableType = at[String](_.toString, id)
-  implicit val bytesBigQueryMappableType =
-    at[Array[Byte]](x => BaseEncoding.base64().decode(x.toString), id)
+  implicit val byteStringBigQueryMappableType = at[ByteString](
+    x => ByteString.copyFrom(BaseEncoding.base64().decode(x.toString)),
+    x => BaseEncoding.base64().encode(x.toByteArray))
+  implicit val byteArrayBigQueryMappableType = at[Array[Byte]](
+    x => BaseEncoding.base64().decode(x.toString),
+    x => BaseEncoding.base64().encode(x))
   // FIXME: timestamp
 }
 
