@@ -2,7 +2,9 @@ package shapeless.datatype.datastore
 
 import com.google.datastore.v1.client.DatastoreHelper._
 import com.google.datastore.v1.{Entity, Value}
-import com.google.protobuf.ByteString
+import com.google.protobuf.{ByteString, Timestamp}
+import org.joda.time.Instant
+import org.joda.time.DateTimeConstants
 import shapeless.datatype.mappable.{BaseMappableType, MappableType}
 
 import scala.collection.JavaConverters._
@@ -64,7 +66,19 @@ trait DatastoreMappableType {
     at[ByteString](_.getBlobValue, makeValue(_).build())
   implicit val byteArrayEntityMappableType =
     at[Array[Byte]](_.getBlobValue.toByteArray, v => makeValue(ByteString.copyFrom(v)).build())
-  // FIXME: timestamp
+  implicit val timestampEntityMappableType = at[Instant](toInstant, fromInstant)
+
+  private def toInstant(v: Value): Instant = {
+    val t = v.getTimestampValue
+    new Instant(t.getSeconds * DateTimeConstants.MILLIS_PER_SECOND + t.getNanos / 1000000)
+  }
+  private def fromInstant(i: Instant): Value = {
+    val t = Timestamp.newBuilder()
+      .setSeconds(i.getMillis / DateTimeConstants.MILLIS_PER_SECOND)
+      .setNanos((i.getMillis % 1000).toInt * 1000000)
+    Value.newBuilder().setTimestampValue(t).build()
+  }
+
 }
 
 object DatastoreMappableType extends DatastoreMappableType

@@ -2,6 +2,8 @@ package shapeless.datatype.bigquery
 
 import com.google.common.io.BaseEncoding
 import com.google.protobuf.ByteString
+import org.joda.time._
+import org.joda.time.format.{DateTimeFormat, DateTimeFormatterBuilder}
 import shapeless.datatype.mappable.{BaseMappableType, MappableType}
 
 import scala.collection.JavaConverters._
@@ -74,7 +76,72 @@ trait BigQueryMappableType {
   implicit val byteArrayBigQueryMappableType = at[Array[Byte]](
     x => BaseEncoding.base64().decode(x.toString),
     x => BaseEncoding.base64().encode(x))
-  // FIXME: timestamp
+
+  import TimestampConverter._
+  implicit val timestampBigQueryMappableType = at[Instant](toInstant, fromInstant)
+  implicit val localDateBigQueryMappableType = at[LocalDate](toLocalDate, fromLocalDate)
+  implicit val localTimeBigQueryMappableType = at[LocalTime](toLocalTime, fromLocalTime)
+  implicit val localDateTimeBigQueryMappableType =
+    at[LocalDateTime](toLocalDateTime, fromLocalDateTime)
+
+}
+
+private object TimestampConverter {
+
+  // FIXME: verify that these match BigQuery specification
+  // TIMESTAMP
+  // YYYY-[M]M-[D]D[ [H]H:[M]M:[S]S[.DDDDDD]][time zone]
+  private val timestampPrinter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSSSSS ZZZ")
+  private val timestampParser = new DateTimeFormatterBuilder()
+    .append(DateTimeFormat.forPattern("yyyy-MM-dd"))
+    .appendOptional(new DateTimeFormatterBuilder()
+      .append(DateTimeFormat.forPattern(" HH:mm:ss").getParser)
+      .appendOptional(DateTimeFormat.forPattern(".SSSSSS").getParser)
+      .toParser)
+    .appendOptional(new DateTimeFormatterBuilder()
+      .append(null, Array(" ZZZ", "ZZ").map(p => DateTimeFormat.forPattern(p).getParser))
+      .toParser)
+    .toFormatter
+    .withZoneUTC()
+
+  // DATE
+  // YYYY-[M]M-[D]D
+  private val datePrinter = DateTimeFormat.forPattern("yyyy-MM-dd").withZoneUTC()
+  private val dateParser = datePrinter
+
+  // TIME
+  // [H]H:[M]M:[S]S[.DDDDDD]
+  private val timePrinter = DateTimeFormat.forPattern("HH:mm:ss.SSSSSS").withZoneUTC()
+  private val timeParser = new DateTimeFormatterBuilder()
+    .append(DateTimeFormat.forPattern("HH:mm:ss").getParser)
+    .appendOptional(DateTimeFormat.forPattern(".SSSSSS").getParser)
+    .toFormatter
+    .withZoneUTC()
+
+  // DATETIME
+  // YYYY-[M]M-[D]D[ [H]H:[M]M:[S]S[.DDDDDD]]
+  private val datetimePrinter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")
+  private val datetimeParser = new DateTimeFormatterBuilder()
+    .append(DateTimeFormat.forPattern("yyyy-MM-dd"))
+    .appendOptional(new DateTimeFormatterBuilder()
+      .append(DateTimeFormat.forPattern(" HH:mm:ss").getParser)
+      .appendOptional(DateTimeFormat.forPattern(".SSSSSS").getParser)
+      .toParser)
+    .toFormatter
+    .withZoneUTC()
+
+  def toInstant(v: AnyRef): Instant = timestampParser.parseDateTime(v.toString).toInstant
+  def fromInstant(i: Instant): AnyRef = timestampPrinter.print(i)
+
+  def toLocalDate(v: AnyRef): LocalDate = dateParser.parseLocalDate(v.toString)
+  def fromLocalDate(d: LocalDate): AnyRef = datePrinter.print(d)
+
+  def toLocalTime(v: AnyRef): LocalTime = timeParser.parseLocalTime(v.toString)
+  def fromLocalTime(t: LocalTime): AnyRef = timePrinter.print(t)
+
+  def toLocalDateTime(v: AnyRef): LocalDateTime = datetimeParser.parseLocalDateTime(v.toString)
+  def fromLocalDateTime(dt: LocalDateTime): AnyRef = datetimePrinter.print(dt)
+
 }
 
 object BigQueryMappableType extends BigQueryMappableType
