@@ -2,7 +2,6 @@ name := "shapeless-datatype"
 description := "Shapeless utilities for common data types"
 
 val bigqueryVersion = "v2-rev317-1.22.0"
-val datastoreVersion = "1.2.0"
 val jacksonVersion = "2.8.4"
 val jodaTimeVersion = "2.9.4"
 val paradiseVersion = "2.1.0"
@@ -61,7 +60,9 @@ lazy val root: Project = Project(
 ).aggregate(
   core,
   bigquery,
-  datastore
+  datastore11,
+  datastore12,
+  datastore13
 )
 
 lazy val core: Project = Project(
@@ -98,20 +99,26 @@ lazy val bigquery: Project = Project(
   test % "test"
 )
 
-lazy val datastore: Project = Project(
-  "shapeless-datatype-datastore",
-  file("datastore")
+def datastoreProject(binaryVersion: String, version: String): Project = Project(
+  "shapeless-datatype-datastore_" + binaryVersion.replace(".", ""),
+  file("datastore_" + binaryVersion)
 ).settings(
   commonSettings,
+  moduleName := "shapeless-datatype-datastore_" + binaryVersion,
   description := "Shapeless utilities for Google Cloud Datastore",
+  unmanagedSourceDirectories in Compile += (baseDirectory in ThisBuild).value / "datastore/src/main/scala",
+  scalaSource in Test := (baseDirectory in ThisBuild).value / "datastore/src/test/scala",
   libraryDependencies ++= Seq(
-    "com.google.cloud.datastore" % "datastore-v1-proto-client" % datastoreVersion,
+    "com.google.cloud.datastore" % "datastore-v1-proto-client" % version,
     "joda-time" % "joda-time" % jodaTimeVersion % "provided"
   )
 ).dependsOn(
   core,
   test % "test"
 )
+val datastore11 = datastoreProject("1.1", "1.1.0")
+val datastore12 = datastoreProject("1.2", "1.2.0")
+val datastore13 = datastoreProject("1.3", "1.3.0")
 
 lazy val test: Project = Project(
   "shapeless-datatype-test",
