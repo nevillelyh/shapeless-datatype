@@ -29,7 +29,7 @@ releaseCrossBuild             := true
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 publishMavenStyle             := true
 publishArtifact in Test       := false
-sonatypeProfileName           := "com.spotify"
+sonatypeProfileName           := "me.lyh"
 pomExtra                      := {
   <url>https://github.com/nevillelyh/shapeless-datatype</url>
   <licenses>
@@ -39,8 +39,8 @@ pomExtra                      := {
     </license>
   </licenses>
   <scm>
-    <url>git@github.com/spotify/ratatool.git</url>
-    <connection>scm:git:git@github.com:spotify/ratatool.git</connection>
+    <url>git@github.com/nevillelyh/shapeless-datatype.git</url>
+    <connection>scm:git:git@github.com:nevillelyh/shapeless-datatype.git</connection>
   </scm>
   <developers>
     <developer>
