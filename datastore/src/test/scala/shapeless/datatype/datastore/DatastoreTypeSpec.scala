@@ -1,7 +1,5 @@
 package shapeless.datatype.datastore
 
-import com.google.protobuf.ByteString
-import org.joda.time.Instant
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Shapeless._
 import org.scalacheck._
@@ -13,8 +11,6 @@ class DatastoreTypeSpec extends Properties("DatastoreType") {
 
   import shapeless.datatype.Records._
 
-  implicit val arbByteString = Arbitrary(Gen.alphaStr.map(ByteString.copyFromUtf8))
-  implicit val arbInstant = Arbitrary(Gen.const(Instant.now()))
   implicit val compareByteArrays = (x: Array[Byte], y: Array[Byte]) => java.util.Arrays.equals(x, y)
   implicit val compareIntArrays = (x: Array[Int], y: Array[Int]) => java.util.Arrays.equals(x, y)
 

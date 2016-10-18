@@ -1,7 +1,6 @@
 package shapeless.datatype.bigquery
 
 import com.fasterxml.jackson.databind.{ObjectMapper, SerializationFeature}
-import com.google.protobuf.ByteString
 import org.joda.time.{Instant, LocalDate, LocalDateTime, LocalTime}
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Shapeless._
@@ -16,8 +15,6 @@ class BigQueryTypeSpec extends Properties("BigQueryType") {
 
   val mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
 
-  implicit val arbByteString = Arbitrary(Gen.alphaStr.map(ByteString.copyFromUtf8))
-  implicit val arbInstant = Arbitrary(Gen.const(Instant.now()))
   implicit val compareByteArrays = (x: Array[Byte], y: Array[Byte]) => java.util.Arrays.equals(x, y)
   implicit val compareIntArrays = (x: Array[Int], y: Array[Int]) => java.util.Arrays.equals(x, y)
 

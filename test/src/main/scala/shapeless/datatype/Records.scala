@@ -2,6 +2,7 @@ package shapeless.datatype
 
 import com.google.protobuf.ByteString
 import org.joda.time.Instant
+import org.scalacheck._
 
 object Records {
   case class Required(booleanField: Boolean,
@@ -39,4 +40,7 @@ object Records {
   case class Nested(required: Int, optional: Option[Int], repeated: List[Int],
                     requiredN: Mixed, optionalN: Option[Mixed], repeatedN: List[Mixed])
   case class SeqTypes(array: Array[Int], list: List[Int], vector: Vector[Int])
+
+  implicit val arbByteString = Arbitrary(Gen.alphaStr.map(ByteString.copyFromUtf8))
+  implicit val arbInstant = Arbitrary(Gen.const(Instant.now()))
 }
