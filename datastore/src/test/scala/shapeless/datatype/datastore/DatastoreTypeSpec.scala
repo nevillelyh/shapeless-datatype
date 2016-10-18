@@ -11,8 +11,8 @@ class DatastoreTypeSpec extends Properties("DatastoreType") {
 
   import shapeless.datatype.Records._
 
-  implicit val compareByteArrays = (x: Array[Byte], y: Array[Byte]) => java.util.Arrays.equals(x, y)
-  implicit val compareIntArrays = (x: Array[Int], y: Array[Int]) => java.util.Arrays.equals(x, y)
+  implicit def compareByteArrays(x: Array[Byte], y: Array[Byte]) = java.util.Arrays.equals(x, y)
+  implicit def compareIntArrays(x: Array[Int], y: Array[Int]) = java.util.Arrays.equals(x, y)
 
   def roundTrip[A, L <: HList](m: A, t: DatastoreType[A] = DatastoreType[A])
                               (implicit

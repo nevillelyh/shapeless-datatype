@@ -31,7 +31,7 @@ class RecordMatcherTypeSpec extends Properties("RecordMatcherType") {
 
   object negate extends ->((x: Double) => -x)
   object inc extends ->((x: Double) => x + 1.0)
-  implicit val compareDoubles = (x: Double, y: Double) => math.abs(x) == math.abs(y)
+  implicit def compareDoubles(x: Double, y: Double) = math.abs(x) == math.abs(y)
 
   def test[A, L <: HList](original: A, withNegate: A, withInc: A,
                           t: RecordMatcherType[A] = RecordMatcherType[A])

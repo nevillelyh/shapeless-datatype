@@ -29,8 +29,8 @@ class RecordMapperTypeSpec extends Properties("RecordMapperType") {
 
   import RecordMapperRecords._
 
-  implicit val s2b = (x: String) => x.getBytes
-  implicit val b2s = (x: Array[Byte]) => new String(x)
+  implicit def s2b(x: String) = x.getBytes
+  implicit def b2s(x: Array[Byte]) = new String(x)
 
   class RoundTrip[B] {
     def from[A, LA <: HList, LB <: HList](a: A, t: RecordMapperType[A, B] = RecordMapperType[A, B])
