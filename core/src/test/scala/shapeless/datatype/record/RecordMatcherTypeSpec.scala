@@ -7,20 +7,9 @@ import shapeless._
 import shapeless.datatype.SerializableUtils
 import shapeless.poly._
 
-object RecordMatcherRecords {
-  case class Required(intField: Int, doubleField: Double)
-  case class Optional(intField: Option[Int], doubleField: Option[Double])
-  case class Repeated(intField: List[Int], doubleField: List[Double])
-  case class Mixed(intField: Int, doubleField: Double,
-                   intFieldO: Option[Int], doubleFieldO: Option[Double],
-                   intFieldR: List[Int], doubleFieldR: List[Double])
-  case class Nested(required: Double, optional: Double, repeated: Double,
-                    requiredN: Mixed, optionalN: Option[Mixed], repeatedN: List[Mixed])
-}
-
 class RecordMatcherTypeSpec extends Properties("RecordMatcherType") {
 
-  import RecordMatcherRecords._
+  import shapeless.datatype.Records._
 
   // always generate [-π, π] for Double
   implicit val arbDouble = Arbitrary(Gen.chooseNum(-math.Pi, math.Pi))
