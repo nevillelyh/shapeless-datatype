@@ -18,6 +18,13 @@ val commonSettings = Seq(
   scalacOptions ++= Seq("-target:jvm-1.7", "-deprecation", "-feature", "-unchecked"),
   javacOptions ++= Seq("-source", "1.7", "-target", "1.7", "-Xlint:unchecked"),
 
+  libraryDependencies ++= (
+    if (scalaBinaryVersion.value == "2.10")
+      Seq(compilerPlugin("org.scalamacros" % "paradise" % paradiseVersion cross CrossVersion.full))
+    else
+      Nil
+  ),
+
   // Release settings
   releaseCrossBuild             := true,
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
@@ -73,12 +80,6 @@ lazy val core: Project = Project(
   description := "Shapeless utilities for common data types",
   libraryDependencies ++= Seq(
     "com.chuusai" %% "shapeless" % shapelessVersion
-  ),
-  libraryDependencies ++= (
-    if (scalaBinaryVersion.value == "2.10")
-      Seq(compilerPlugin("org.scalamacros" % "paradise" % paradiseVersion cross CrossVersion.full))
-    else
-      Nil
   )
 ).dependsOn(test % "test")
 
