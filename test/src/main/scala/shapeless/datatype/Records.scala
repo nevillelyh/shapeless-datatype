@@ -22,21 +22,9 @@ object Records {
                       stringField: List[String],
                       byteStringField: List[ByteString], byteArrayField: List[Array[Byte]],
                       timestampField: List[Instant])
-  case class Mixed(booleanField: Boolean,
-                   longField: Long, doubleField: Double,
-                   stringField: String,
-                   byteStringField: ByteString, byteArrayField: Array[Byte],
-                   timestampField: Instant,
-                   booleanFieldO: Option[Boolean],
-                   longFieldO: Option[Long], doubleFieldO: Option[Double],
-                   stringFieldO: Option[String],
-                   byteStringFieldO: Option[ByteString], byteArrayFieldO: Option[Array[Byte]],
-                   timestampFieldO: Option[Instant],
-                   booleanFieldR: List[Boolean],
-                   longFieldR: List[Long], doubleFieldR: List[Double],
-                   stringFieldR: List[String],
-                   byteStringFieldR: List[ByteString], byteArrayFieldR: List[Array[Byte]],
-                   timestampFieldR: List[Instant])
+  case class Mixed(longField: Long, doubleField: Double, stringField: String,
+                   longFieldO: Option[Long], doubleFieldO: Option[Double], stringFieldO: Option[String],
+                   longFieldR: List[Long], doubleFieldR: List[Double], stringFieldR: List[String])
   case class Nested(longField: Long, longFieldO: Option[Long], longFieldR: List[Long],
                     mixedField: Mixed, mixedFieldO: Option[Mixed], mixedFieldR: List[Mixed])
   case class SeqTypes(array: Array[Int], list: List[Int], vector: Vector[Int])
