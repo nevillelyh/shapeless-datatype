@@ -69,7 +69,8 @@ lazy val root: Project = Project(
   bigquery,
   datastore11,
   datastore12,
-  datastore13
+  datastore13,
+  test
 )
 
 lazy val core: Project = Project(
