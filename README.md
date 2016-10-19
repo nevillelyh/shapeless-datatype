@@ -5,7 +5,7 @@ shapeless-datatype
 [![codecov.io](https://codecov.io/github/nevillelyh/shapeless-datatype/coverage.svg?branch=master)](https://codecov.io/github/nevillelyh/shapeless-datatype?branch=master)
 [![GitHub license](https://img.shields.io/github/license/nevillelyh/shapeless-datatype.svg)](./LICENSE)
 
-Shapeless utilities for common data types
+[Shapeless](https://github.com/milessabin/shapeless) utilities for common data types
 
 # Modules
 
@@ -15,15 +15,16 @@ This library includes the following modules.
 - `shapeless-datatype-bigquery`
 - `shapeless-datatype-datastore`
 
-Due to library dependency `shapeless-datatype-datastore` is built for 3 different versions of Datastore client, e.g. use `shapeless-datatype-datastore_1.3` for `datastore-v1-proto-client` version `1.3.0`.
+Due to library dependency `shapeless-datatype-datastore` is built for different versions of Datastore client, e.g. `shapeless-datatype-datastore_1.3` for `datastore-v1-proto-client` 1.3.0.
 
 # Core
 
 Core includes the following components.
 
 - A `MappableType` for generic conversion between case class and other data types, used by BigQuery and Datastore modules.
-- A `RecordMapper` for generic conversion between case class types.
-- A `RecordMatcher` for generic equality check bewteen case classes.
+- A `RecordMapperType` for generic conversion between case class types.
+- A `RecordMatcherType` for generic type-based equality check bewteen case classes.
+- A `LensMatcher` for generic lens-based equality check between case classes.
 
 ## RecordMapperType
 
@@ -32,6 +33,7 @@ Core includes the following components.
 ```scala
 import shapeless._
 import shapeless.datatype.record._
+import scala.language.implicitConversions
 
 // records with same field names but different types
 case class Point1(x: Double, y: Double, label: String)
@@ -48,20 +50,41 @@ m.from(Point2(0.5, -0.5, "a")) // Point1(0.5,-0.5,a)
 
 ## RecordMatcherType
 
-`RecordMatcherType[T]` performs equality check of instances of case class `T` with custom logic from implicit values.
+`RecordMatcherType[T]` performs equality check of instances of case class `T` with custom logic based on field types.
 
 ```scala
 import shapeless._
 import shapeless.datatype.record._
 
-case class Record(id: String, value: Int)
+case class Record(id: String, name: String, value: Int)
 
-// custom comparator of String type
+// custom comparator for String type
 implicit def compareStrings(x: String, y: String) = x.toLowerCase == y.toLowerCase
 
 val m = RecordMatcherType[Record]
-Record("abcde", 10) == Record("ABCDE", 10)  // false
-m(Record("abcde", 10), Record("ABCDE", 10))  // true
+Record("a", "RecordA", 10) == Record("A", "RECORDA", 10)  // false
+
+// compareStrings is applied to all String fields
+m(Record("a", "RecordA", 10) == Record("A", "RECORDA", 10))  // true
+```
+
+## LensMatcher
+
+`LensMatcher[T]` performs equality check of instances of case class `T` with custom logic based on Lenses.
+
+```scala
+import shapeless._
+import shapeless.datatype.record._
+
+case class Record(id: String, name: String, value: Int)
+
+// compare String fields id and name with different logic
+val m = LensMatcher[Record]
+  .on(_ >> 'id)(_.toLowerCase == _.toLowerCase)
+  .on(_ >> 'name)(_.length == _.length)
+
+Record("a", "foo", 10) == Record("A", "bar", 10)  // false
+m(Record("a", "foo", 10), Record("A", "bar", 10))  // true
 ```
 
 # BigQueryType
