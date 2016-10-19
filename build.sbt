@@ -82,7 +82,9 @@ lazy val core: Project = Project(
   libraryDependencies ++= Seq(
     "com.chuusai" %% "shapeless" % shapelessVersion
   )
-).dependsOn(test % "test")
+).dependsOn(
+  test % "test->test"
+)
 
 lazy val bigquery: Project = Project(
   "shapeless-datatype-bigquery",
@@ -98,7 +100,7 @@ lazy val bigquery: Project = Project(
   )
 ).dependsOn(
   core,
-  test % "test"
+  test % "test->test"
 )
 
 def datastoreProject(binaryVersion: String, version: String): Project = Project(
@@ -116,7 +118,7 @@ def datastoreProject(binaryVersion: String, version: String): Project = Project(
   )
 ).dependsOn(
   core,
-  test % "test"
+  test % "test->test"
 )
 lazy val datastore11 = datastoreProject("1.1", "1.1.0")
 lazy val datastore12 = datastoreProject("1.2", "1.2.0")
