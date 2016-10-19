@@ -10,6 +10,13 @@ class LensMatcherSpec extends Properties("LensMatcher") {
 
   import shapeless.datatype.Records._
 
+  // always generate alphabet string for String
+  implicit val arbString = Arbitrary(Gen.alphaStr)
+  // always generate Some[T] for Option[T]
+  implicit def arbOption[T](implicit arb: Arbitrary[T]) = Arbitrary(Gen.some(arb.arbitrary))
+  // always generate non-empty List[T]
+  implicit def arbList[T](implicit arb: Arbitrary[T]) = Arbitrary(Gen.nonEmptyListOf(arb.arbitrary))
+
   val mL = LensMatcher[Nested].on(_ >> 'longField)(math.abs(_) == math.abs(_))
   val mML = LensMatcher[Nested].on(_ >> 'mixedField >> 'longField)(math.abs(_) == math.abs(_))
   val mMulti = LensMatcher[Nested]
