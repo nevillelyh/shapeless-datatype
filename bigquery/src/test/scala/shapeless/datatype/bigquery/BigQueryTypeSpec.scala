@@ -23,11 +23,11 @@ class BigQueryTypeSpec extends Properties("BigQueryType") {
                                gen: LabelledGeneric.Aux[A, L],
                                fromL: FromTableRow[L],
                                toL: ToTableRow[L],
-                               rm: RecordMatcher[L]): Boolean = {
+                               mr: MatchRecord[L]): Boolean = {
     val tr1 = t.toTableRow(m)
     val tr2 = mapper.readValue(mapper.writeValueAsString(tr1), classOf[TableRow])
-    val rmt = RecordMatcherType[A]
-    t.fromTableRow(tr2).exists(rmt(_, m))
+    val rm = RecordMatcher[A]
+    t.fromTableRow(tr2).exists(rm(_, m))
   }
 
   property("required") = forAll { m: Required => roundTrip(m) }

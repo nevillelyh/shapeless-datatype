@@ -23,13 +23,13 @@ Due to library dependency `shapeless-datatype-datastore` is built for different 
 Core includes the following components.
 
 - A `MappableType` for generic conversion between case class and other data types, used by BigQuery and Datastore modules.
-- A `RecordMapperType` for generic conversion between case class types.
-- A `RecordMatcherType` for generic type-based equality check bewteen case classes.
+- A `RecordMapper` for generic conversion between case class types.
+- A `RecordMatcher` for generic type-based equality check bewteen case classes.
 - A `LensMatcher` for generic lens-based equality check between case classes.
 
-## RecordMapperType
+## RecordMapper
 
-`RecordMapperType[A, B]` maps instances of case class `A` and `B` with different field types.
+`RecordMapper[A, B]` maps instances of case class `A` and `B` with different field types.
 
 ```scala
 import shapeless._
@@ -44,14 +44,14 @@ case class Point2(x: Float, y: Float, label: String)
 implicit def f2d(x: Float) = x.toDouble
 implicit def d2f(x: Double) = x.toFloat
 
-val m = RecordMapperType[Point1, Point2]
+val m = RecordMapper[Point1, Point2]
 m.to(Point1(0.5, -0.5, "a"))  // Point2(0.5,-0.5,a)
 m.from(Point2(0.5, -0.5, "a")) // Point1(0.5,-0.5,a)
 ```
 
-## RecordMatcherType
+## RecordMatcher
 
-`RecordMatcherType[T]` performs equality check of instances of case class `T` with custom logic based on field types.
+`RecordMatcher[T]` performs equality check of instances of case class `T` with custom logic based on field types.
 
 ```scala
 import shapeless._
@@ -62,7 +62,7 @@ case class Record(id: String, name: String, value: Int)
 // custom comparator for String type
 implicit def compareStrings(x: String, y: String) = x.toLowerCase == y.toLowerCase
 
-val m = RecordMatcherType[Record]
+val m = RecordMatcher[Record]
 Record("a", "RecordA", 10) == Record("A", "RECORDA", 10)  // false
 
 // compareStrings is applied to all String fields

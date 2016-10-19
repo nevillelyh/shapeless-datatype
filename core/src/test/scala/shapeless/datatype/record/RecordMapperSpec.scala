@@ -26,7 +26,7 @@ object RecordMapperRecords {
                      requiredN: MixedB, optionalN: Option[MixedB], repeatedN: List[MixedB])
 }
 
-class RecordMapperTypeSpec extends Properties("RecordMapperType") {
+class RecordMapperSpec extends Properties("RecordMapper") {
 
   import RecordMapperRecords._
   import shapeless.datatype.test.SerializableUtils._
@@ -35,12 +35,12 @@ class RecordMapperTypeSpec extends Properties("RecordMapperType") {
   implicit def b2s(x: Array[Byte]): String = new String(x)
 
   class RoundTrip[B] {
-    def from[A, LA <: HList, LB <: HList](a: A, t: RecordMapperType[A, B] = RecordMapperType[A, B])
+    def from[A, LA <: HList, LB <: HList](a: A, t: RecordMapper[A, B] = RecordMapper[A, B])
                                          (implicit
                                           genA: LabelledGeneric.Aux[A, LA],
                                           genB: LabelledGeneric.Aux[B, LB],
-                                          rmA: RecordMapper[LA, LB],
-                                          rmB: RecordMapper[LB, LA]): Boolean =
+                                          mrA: MapRecord[LA, LB],
+                                          mrB: MapRecord[LB, LA]): Boolean =
       t.from(t.to(a)) == a
   }
   def roundTripTo[B]: RoundTrip[B] = new RoundTrip[B]
@@ -51,7 +51,7 @@ class RecordMapperTypeSpec extends Properties("RecordMapperType") {
   property("mixed") = forAll { m: MixedA => roundTripTo[MixedB].from(m) }
   property("nested") = forAll { m: NestedA => roundTripTo[NestedB].from(m) }
 
-  val t = ensureSerializable(RecordMapperType[NestedA, NestedB])
+  val t = ensureSerializable(RecordMapper[NestedA, NestedB])
   property("serializable") = forAll { m: NestedA => roundTripTo[NestedB].from(m, t) }
 
 }

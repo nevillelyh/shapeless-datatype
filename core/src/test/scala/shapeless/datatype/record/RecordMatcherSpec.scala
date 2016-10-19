@@ -6,7 +6,7 @@ import org.scalacheck._
 import shapeless._
 import shapeless.poly._
 
-class RecordMatcherTypeSpec extends Properties("RecordMatcherType") {
+class RecordMatcherSpec extends Properties("RecordMatcher") {
 
   import shapeless.datatype.test.Records._
   import shapeless.datatype.test.SerializableUtils._
@@ -23,10 +23,10 @@ class RecordMatcherTypeSpec extends Properties("RecordMatcherType") {
   implicit def compareDoubles(x: Double, y: Double) = math.abs(x) == math.abs(y)
 
   def test[A, L <: HList](original: A, withNegate: A, withInc: A,
-                          t: RecordMatcherType[A] = RecordMatcherType[A])
+                          t: RecordMatcher[A] = RecordMatcher[A])
                          (implicit
                           gen: LabelledGeneric.Aux[A, L],
-                          rm: RecordMatcher[L]): Prop = {
+                          mr: MatchRecord[L]): Prop = {
     all(
       "equal self"    |: t(original, original),
       "equal negate"  |: t(original, withNegate),
@@ -39,7 +39,7 @@ class RecordMatcherTypeSpec extends Properties("RecordMatcherType") {
   property("mixed") = forAll { m: Mixed => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
   property("nested") = forAll { m: Nested => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
 
-  val t = ensureSerializable(RecordMatcherType[Nested])
+  val t = ensureSerializable(RecordMatcher[Nested])
   property("serializable") = forAll { m: Nested => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
 
 }

@@ -19,11 +19,11 @@ class DatastoreTypeSpec extends Properties("DatastoreType") {
                                gen: LabelledGeneric.Aux[A, L],
                                fromL: FromEntity[L],
                                toL: ToEntity[L],
-                               rm: RecordMatcher[L]): Prop = {
-    val rmt = RecordMatcherType[A]
+                               mr: MatchRecord[L]): Prop = {
+    val rm = RecordMatcher[A]
     all(
-      t.fromEntity(t.toEntity(m)).exists(rmt(_, m)),
-      t.fromEntityBuilder(t.toEntityBuilder(m)).exists(rmt(_, m))
+      t.fromEntity(t.toEntity(m)).exists(rm(_, m)),
+      t.fromEntityBuilder(t.toEntityBuilder(m)).exists(rm(_, m))
     )
   }
 
