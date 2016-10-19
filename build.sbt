@@ -60,7 +60,7 @@ val noPublishSettings = Seq(
 )
 
 lazy val root: Project = Project(
-  "shapeless-datatype",
+  "root",
   file(".")
 ).settings(
   commonSettings ++ noPublishSettings
@@ -74,7 +74,7 @@ lazy val root: Project = Project(
 )
 
 lazy val core: Project = Project(
-  "shapeless-datatype-core",
+  "core",
   file("core")
 ).settings(
   commonSettings,
@@ -87,7 +87,7 @@ lazy val core: Project = Project(
 )
 
 lazy val bigquery: Project = Project(
-  "shapeless-datatype-bigquery",
+  "bigquery",
   file("bigquery")
 ).settings(
   commonSettings,
@@ -104,7 +104,7 @@ lazy val bigquery: Project = Project(
 )
 
 def datastoreProject(binaryVersion: String, version: String): Project = Project(
-  "shapeless-datatype-datastore_" + binaryVersion.replace(".", ""),
+  "datastore_" + binaryVersion.replace(".", ""),
   file("datastore_" + binaryVersion)
 ).settings(
   commonSettings,
@@ -125,7 +125,7 @@ lazy val datastore12 = datastoreProject("1.2", "1.2.0")
 lazy val datastore13 = datastoreProject("1.3", "1.3.0")
 
 lazy val test: Project = Project(
-  "shapeless-datatype-test",
+  "test",
   file("test")
 ).settings(
   commonSettings ++ noPublishSettings,
