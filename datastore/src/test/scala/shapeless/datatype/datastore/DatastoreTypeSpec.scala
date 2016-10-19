@@ -1,6 +1,6 @@
 package shapeless.datatype.datastore
 
-import org.scalacheck.Prop.forAll
+import org.scalacheck.Prop.{all, forAll}
 import org.scalacheck.Shapeless._
 import org.scalacheck._
 import shapeless._
@@ -19,9 +19,12 @@ class DatastoreTypeSpec extends Properties("DatastoreType") {
                                gen: LabelledGeneric.Aux[A, L],
                                fromL: FromEntity[L],
                                toL: ToEntity[L],
-                               rm: RecordMatcher[L]): Boolean = {
+                               rm: RecordMatcher[L]): Prop = {
     val rmt = RecordMatcherType[A]
-    t.fromEntity(t.toEntity(m)).exists(rmt(_, m))
+    all(
+      t.fromEntity(t.toEntity(m)).exists(rmt(_, m)),
+      t.fromEntityBuilder(t.toEntityBuilder(m)).exists(rmt(_, m))
+    )
   }
 
   property("required") = forAll { m: Required => roundTrip(m) }
