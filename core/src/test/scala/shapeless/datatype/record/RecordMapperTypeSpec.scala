@@ -6,6 +6,8 @@ import org.scalacheck._
 import shapeless._
 import shapeless.datatype.SerializableUtils
 
+import scala.language.implicitConversions
+
 object RecordMapperRecords {
   case class RequiredA(intField: Int, longField: Long, stringField: String)
   case class RequiredB(intField: Int, longField: Long, stringField: Array[Byte])
@@ -29,8 +31,8 @@ class RecordMapperTypeSpec extends Properties("RecordMapperType") {
 
   import RecordMapperRecords._
 
-  implicit def s2b(x: String) = x.getBytes
-  implicit def b2s(x: Array[Byte]) = new String(x)
+  implicit def s2b(x: String): Array[Byte] = x.getBytes
+  implicit def b2s(x: Array[Byte]): String = new String(x)
 
   class RoundTrip[B] {
     def from[A, LA <: HList, LB <: HList](a: A, t: RecordMapperType[A, B] = RecordMapperType[A, B])
