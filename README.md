@@ -66,7 +66,7 @@ val m = RecordMatcherType[Record]
 Record("a", "RecordA", 10) == Record("A", "RECORDA", 10)  // false
 
 // compareStrings is applied to all String fields
-m(Record("a", "RecordA", 10) == Record("A", "RECORDA", 10))  // true
+m(Record("a", "RecordA", 10), Record("A", "RECORDA", 10))  // true
 ```
 
 ## LensMatcher
