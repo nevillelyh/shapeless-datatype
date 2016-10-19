@@ -6,12 +6,12 @@ import org.scalacheck.Prop.forAll
 import org.scalacheck.Shapeless._
 import org.scalacheck._
 import shapeless._
-import shapeless.datatype.SerializableUtils
 import shapeless.datatype.record._
 
 class BigQueryTypeSpec extends Properties("BigQueryType") {
 
-  import shapeless.datatype.Records._
+  import shapeless.datatype.test.Records._
+  import shapeless.datatype.test.SerializableUtils._
 
   val mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
 
@@ -37,7 +37,7 @@ class BigQueryTypeSpec extends Properties("BigQueryType") {
   property("nested") = forAll { m: Nested => roundTrip(m) }
   property("seq types") = forAll { m: SeqTypes => roundTrip(m) }
 
-  val t = SerializableUtils.ensureSerializable(BigQueryType[Nested])
+  val t = ensureSerializable(BigQueryType[Nested])
   property("serializable") = forAll { m: Nested => roundTrip(m, t) }
 
   implicit val arbDate = Arbitrary(Gen.const(LocalDate.now()))

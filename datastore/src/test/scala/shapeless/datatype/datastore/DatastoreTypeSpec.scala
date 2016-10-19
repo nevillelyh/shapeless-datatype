@@ -4,12 +4,12 @@ import org.scalacheck.Prop.{all, forAll}
 import org.scalacheck.Shapeless._
 import org.scalacheck._
 import shapeless._
-import shapeless.datatype.SerializableUtils
 import shapeless.datatype.record._
 
 class DatastoreTypeSpec extends Properties("DatastoreType") {
 
-  import shapeless.datatype.Records._
+  import shapeless.datatype.test.Records._
+  import shapeless.datatype.test.SerializableUtils._
 
   implicit def compareByteArrays(x: Array[Byte], y: Array[Byte]) = java.util.Arrays.equals(x, y)
   implicit def compareIntArrays(x: Array[Int], y: Array[Int]) = java.util.Arrays.equals(x, y)
@@ -34,7 +34,7 @@ class DatastoreTypeSpec extends Properties("DatastoreType") {
   property("nested") = forAll { m: Nested => roundTrip(m) }
   property("seq types") = forAll { m: SeqTypes => roundTrip(m) }
 
-  val t = SerializableUtils.ensureSerializable(DatastoreType[Nested])
+  val t = ensureSerializable(DatastoreType[Nested])
   property("serializable") = forAll { m: Nested => roundTrip(m, t) }
 
 }

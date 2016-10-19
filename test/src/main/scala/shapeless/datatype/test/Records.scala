@@ -1,4 +1,4 @@
-package shapeless.datatype
+package shapeless.datatype.test
 
 import com.google.protobuf.ByteString
 import org.joda.time.Instant

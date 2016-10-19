@@ -1,4 +1,4 @@
-package shapeless.datatype
+package shapeless.datatype.test
 
 import java.{io => jio}
 

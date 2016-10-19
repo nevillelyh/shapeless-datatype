@@ -4,7 +4,6 @@ import org.scalacheck.Prop.forAll
 import org.scalacheck.Shapeless._
 import org.scalacheck._
 import shapeless._
-import shapeless.datatype.SerializableUtils
 
 import scala.language.implicitConversions
 
@@ -30,6 +29,7 @@ object RecordMapperRecords {
 class RecordMapperTypeSpec extends Properties("RecordMapperType") {
 
   import RecordMapperRecords._
+  import shapeless.datatype.test.SerializableUtils._
 
   implicit def s2b(x: String): Array[Byte] = x.getBytes
   implicit def b2s(x: Array[Byte]): String = new String(x)
@@ -51,7 +51,7 @@ class RecordMapperTypeSpec extends Properties("RecordMapperType") {
   property("mixed") = forAll { m: MixedA => roundTripTo[MixedB].from(m) }
   property("nested") = forAll { m: NestedA => roundTripTo[NestedB].from(m) }
 
-  val t = SerializableUtils.ensureSerializable(RecordMapperType[NestedA, NestedB])
+  val t = ensureSerializable(RecordMapperType[NestedA, NestedB])
   property("serializable") = forAll { m: NestedA => roundTripTo[NestedB].from(m, t) }
 
 }

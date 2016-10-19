@@ -4,12 +4,12 @@ import org.scalacheck.Prop.{BooleanOperators, all, forAll}
 import org.scalacheck.Shapeless._
 import org.scalacheck._
 import shapeless._
-import shapeless.datatype.SerializableUtils
 import shapeless.poly._
 
 class RecordMatcherTypeSpec extends Properties("RecordMatcherType") {
 
-  import shapeless.datatype.Records._
+  import shapeless.datatype.test.Records._
+  import shapeless.datatype.test.SerializableUtils._
 
   // always generate [-π, π] for Double
   implicit val arbDouble = Arbitrary(Gen.chooseNum(-math.Pi, math.Pi))
@@ -39,7 +39,7 @@ class RecordMatcherTypeSpec extends Properties("RecordMatcherType") {
   property("mixed") = forAll { m: Mixed => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
   property("nested") = forAll { m: Nested => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
 
-  val t = SerializableUtils.ensureSerializable(RecordMatcherType[Nested])
+  val t = ensureSerializable(RecordMatcherType[Nested])
   property("serializable") = forAll { m: Nested => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
 
 }

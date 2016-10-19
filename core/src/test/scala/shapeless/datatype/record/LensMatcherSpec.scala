@@ -4,11 +4,11 @@ import org.scalacheck.Prop.{BooleanOperators, all, forAll}
 import org.scalacheck.Shapeless._
 import org.scalacheck._
 import shapeless._
-import shapeless.datatype.SerializableUtils
 
 class LensMatcherSpec extends Properties("LensMatcher") {
 
-  import shapeless.datatype.Records._
+  import shapeless.datatype.test.Records._
+  import shapeless.datatype.test.SerializableUtils._
 
   // always generate alphabet string for String
   implicit val arbString = Arbitrary(Gen.alphaStr)
@@ -57,7 +57,7 @@ class LensMatcherSpec extends Properties("LensMatcher") {
     )
   }
 
-  val t = SerializableUtils.ensureSerializable(mMulti)
+  val t = ensureSerializable(mMulti)
   property("serializable") = forAll { m: Nested =>
     all(
       "equal self"         |: mMulti(m, m),
