@@ -4,6 +4,7 @@ shapeless-datatype
 [![Build Status](https://travis-ci.org/nevillelyh/shapeless-datatype.svg?branch=master)](https://travis-ci.org/nevillelyh/shapeless-datatype)
 [![codecov.io](https://codecov.io/github/nevillelyh/shapeless-datatype/coverage.svg?branch=master)](https://codecov.io/github/nevillelyh/shapeless-datatype?branch=master)
 [![GitHub license](https://img.shields.io/github/license/nevillelyh/shapeless-datatype.svg)](./LICENSE)
+[![Maven Central](https://img.shields.io/maven-central/v/me.lyh/shapeless-datatype-core_2.11.svg)](https://maven-badges.herokuapp.com/maven-central/me.lyh/shapeless-datatype-core_2.11)
 
 [Shapeless](https://github.com/milessabin/shapeless) utilities for common data types
 
