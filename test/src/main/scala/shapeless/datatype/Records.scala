@@ -37,8 +37,8 @@ object Records {
                    stringFieldR: List[String],
                    byteStringFieldR: List[ByteString], byteArrayFieldR: List[Array[Byte]],
                    timestampFieldR: List[Instant])
-  case class Nested(required: Int, optional: Option[Int], repeated: List[Int],
-                    requiredN: Mixed, optionalN: Option[Mixed], repeatedN: List[Mixed])
+  case class Nested(longField: Long, longFieldO: Option[Long], longFieldR: List[Long],
+                    mixedField: Mixed, mixedFieldO: Option[Mixed], mixedFieldR: List[Mixed])
   case class SeqTypes(array: Array[Int], list: List[Int], vector: Vector[Int])
 
   implicit val arbByteString = Arbitrary(Gen.alphaStr.map(ByteString.copyFromUtf8))
