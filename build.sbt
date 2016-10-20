@@ -7,7 +7,7 @@ val jodaTimeVersion = "2.9.4"
 val paradiseVersion = "2.1.0"
 val protobufVersion = "3.1.0"
 val scalacheckShapelessVersion = "1.1.1"
-val scalacheckVersion = "1.13.2"
+val scalacheckVersion = "1.13.3"
 val shapelessVersion = "2.3.2"
 
 val commonSettings = Seq(
