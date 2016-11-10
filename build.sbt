@@ -6,24 +6,19 @@ val jacksonVersion = "2.8.4"
 val jodaTimeVersion = "2.9.4"
 val paradiseVersion = "2.1.0"
 val protobufVersion = "3.1.0"
-val scalacheckShapelessVersion = "1.1.1"
-val scalacheckVersion = "1.13.3"
+val scalacheckShapelessVersion = "1.1.3"
+val scalacheckVersion = "1.13.4"
 val shapelessVersion = "2.3.2"
+
+def jdkVersion(scalaBinaryVersion: String) = if (scalaBinaryVersion == "2.12") "1.8" else "1.7"
 
 val commonSettings = Seq(
   organization := "me.lyh",
 
-  scalaVersion := "2.11.8",
-  crossScalaVersions := Seq("2.10.6", "2.11.8"),
-  scalacOptions ++= Seq("-target:jvm-1.7", "-deprecation", "-feature", "-unchecked"),
+  scalaVersion := "2.12.0",
+  crossScalaVersions := Seq("2.11.8", "2.12.0"),
+  scalacOptions ++= Seq("-target:jvm-" + jdkVersion(scalaBinaryVersion.value), "-deprecation", "-feature", "-unchecked"),
   javacOptions ++= Seq("-source", "1.7", "-target", "1.7", "-Xlint:unchecked"),
-
-  libraryDependencies ++= (
-    if (scalaBinaryVersion.value == "2.10")
-      Seq(compilerPlugin("org.scalamacros" % "paradise" % paradiseVersion cross CrossVersion.full))
-    else
-      Nil
-  ),
 
   // Release settings
   releaseCrossBuild             := true,
