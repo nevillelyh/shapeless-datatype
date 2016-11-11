@@ -79,6 +79,7 @@ lazy val core: Project = Project(
   "core",
   file("core")
 ).settings(
+  moduleName := "shapeless-datatype-core",
   commonSettings,
   description := "Shapeless utilities for common data types",
   libraryDependencies ++= Seq(
@@ -92,6 +93,7 @@ lazy val bigquery: Project = Project(
   "bigquery",
   file("bigquery")
 ).settings(
+  moduleName := "shapeless-datatype-bigquery",
   commonSettings,
   description := "Shapeless utilities for Google Cloud BigQuery",
   libraryDependencies ++= Seq(
