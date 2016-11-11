@@ -11,7 +11,7 @@ class LensMatcher[A, L <: HList](val root: OpticDefns.RootLens[A], val hs: L) ex
   : LensMatcher[A, ElemMatcher[Elem] :: L] =
     new LensMatcher(root, (lensFn(root), matchFn) :: hs)
 
-  private object matchFolder extends Poly2 {
+  object matchFolder extends Poly2 {
     implicit def default[Elem] = at[(A, A, Boolean), ElemMatcher[Elem]] { (z, m) =>
       val (l, r, b) = z
       val (lensA, cmp) = m
