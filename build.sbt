@@ -16,9 +16,16 @@ val commonSettings = Seq(
   organization := "me.lyh",
 
   scalaVersion := "2.12.0",
-  crossScalaVersions := Seq("2.11.8", "2.12.0"),
+  crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0"),
   scalacOptions ++= Seq("-target:jvm-" + jdkVersion(scalaBinaryVersion.value), "-deprecation", "-feature", "-unchecked"),
   javacOptions ++= Seq("-source", "1.7", "-target", "1.7", "-Xlint:unchecked"),
+
+  libraryDependencies ++= (
+    if (scalaBinaryVersion.value == "2.10")
+      Seq(compilerPlugin("org.scalamacros" % "paradise" % paradiseVersion cross CrossVersion.full))
+    else
+      Nil
+  ),
 
   // Release settings
   releaseCrossBuild             := true,
