@@ -6,7 +6,7 @@ val jacksonVersion = "2.8.4"
 val jodaTimeVersion = "2.9.4"
 val paradiseVersion = "2.1.0"
 val protobufVersion = "3.1.0"
-val scalacheckShapelessVersion = "1.1.3"
+val scalacheckShapelessVersion = "1.1.4"
 val scalacheckVersion = "1.13.4"
 val shapelessVersion = "2.3.2"
 
