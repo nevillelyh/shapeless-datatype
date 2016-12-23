@@ -34,7 +34,6 @@ class RecordMatcherSpec extends Properties("RecordMatcher") {
 
   property("required") = forAll { m: Required => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
   property("optional") = forAll { m: Optional => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
-  property("coproduct") = forAll { m: Color => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
   property("repeated") = forAll { m: Repeated => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
   property("mixed") = forAll { m: Mixed => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
   property("nested") = forAll { m: Nested => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
