@@ -5,6 +5,10 @@ import org.joda.time.Instant
 import org.scalacheck._
 
 object Records {
+  case class UserId(id: Long)
+
+  case class User(userId: UserId, name: String)
+
   case class Required(booleanField: Boolean,
                       intField: Int, longField: Long, floatField: Float, doubleField: Double,
                       stringField: String,

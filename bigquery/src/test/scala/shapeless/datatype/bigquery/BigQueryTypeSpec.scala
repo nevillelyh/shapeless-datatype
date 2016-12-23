@@ -18,6 +18,8 @@ class BigQueryTypeSpec extends Properties("BigQueryType") {
   implicit def compareByteArrays(x: Array[Byte], y: Array[Byte]) = java.util.Arrays.equals(x, y)
   implicit def compareIntArrays(x: Array[Int], y: Array[Int]) = java.util.Arrays.equals(x, y)
 
+  implicit val userId = BigQueryMappableType.longBigQueryMappableType.xmap(UserId.apply)(_.id)
+
   def roundTrip[A, L](m: A, t: BigQueryType[A] = BigQueryType[A])
                               (implicit
                                gen: LabelledGeneric.Aux[A, L],
@@ -31,6 +33,7 @@ class BigQueryTypeSpec extends Properties("BigQueryType") {
   }
 
   property("required") = forAll { m: Required => roundTrip(m) }
+  property("user with xmap") = forAll { m: User => roundTrip(m) }
   property("coproduct") = forAll { m: Color => roundTrip(m) }
   property("optional") = forAll { m: Optional => roundTrip(m) }
   property("repeated") = forAll { m: Repeated => roundTrip(m) }
