@@ -24,8 +24,7 @@ class DatastoreTypeSpec extends Properties("DatastoreType") {
     val rm = RecordMatcher[A]
     all(
       t.fromEntity(t.toEntity(m)).exists(rm(_, m)),
-      t.fromEntityBuilder(t.toEntityBuilder(m)).exists(rm(_, m))
-    )
+      t.fromEntityBuilder(t.toEntityBuilder(m)).exists(rm(_, m)))
   }
 
   property("required") = forAll { m: Required => roundTrip(m) }
