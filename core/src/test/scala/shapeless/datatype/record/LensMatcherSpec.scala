@@ -35,8 +35,7 @@ class LensMatcherSpec extends Properties("LensMatcher") {
       "equal self"     |: mL(m, m),
       "equal negate"   |: mL(m, lensL.modify(m)(-_)),
       "not equal inc"  |: !mL(m, lensL.modify(m)(_ + 1L)),
-      "not equal rest" |: !mL(m, lensML.modify(m)(_ + 1L))
-    )
+      "not equal rest" |: !mL(m, lensML.modify(m)(_ + 1L)))
   }
 
   property("nested") = forAll { m: Nested =>
@@ -44,8 +43,7 @@ class LensMatcherSpec extends Properties("LensMatcher") {
       "equal self"     |: mML(m, m),
       "equal negate"   |: mML(m, lensML.modify(m)(-_)),
       "not equal inc"  |: !mML(m, lensML.modify(m)(_ + 1L)),
-      "not equal rest" |: !mML(m, lensL.modify(m)(_ + 1L))
-    )
+      "not equal rest" |: !mML(m, lensL.modify(m)(_ + 1L)))
   }
 
   property("multi") = forAll { m: Nested =>
@@ -56,8 +54,28 @@ class LensMatcherSpec extends Properties("LensMatcher") {
       "equal negate+upper" |: mMulti(m, lensMS.modify(lensML.modify(m)(-_))(_.toUpperCase)),
       "not equal inc"      |: !mMulti(m, lensML.modify(m)(_ + 1L)),
       "not equal append"   |: !mMulti(m, lensMS.modify(m)(_ + "!")),
-      "not equal rest"     |: !mMulti(m, lensL.modify(m)(_ + 1L))
-    )
+      "not equal rest"     |: !mMulti(m, lensL.modify(m)(_ + 1L)))
+  }
+
+  property("wrap") = forAll { xs: List[Nested] =>
+    val wrapped = xs.map(x => mMulti.wrap(x))
+    val withNegate = xs.map(x => lensML.modify(x)(-_)).map(x => mMulti.wrap(x))
+    val withUpper = xs.map(x => lensMS.modify(x)(_.toUpperCase)).map(x => mMulti.wrap(x))
+    val withNegateAndUpper = xs
+      .map(x => lensML.modify(x)(-_))
+      .map(x => lensMS.modify(x)(_.toUpperCase))
+      .map(x => mMulti.wrap(x))
+    val withInc = xs.map(x => lensML.modify(x)(_ + 1L)).map(x => mMulti.wrap(x))
+    val withAppend = xs.map(x => lensMS.modify(x)(_ + "!")).map(x => mMulti.wrap(x))
+    val withRest = xs.map(x => lensL.modify(x)(_ + 1L)).map(x => mMulti.wrap(x))
+    all(
+      "equal self"         |: equivalent(wrapped, wrapped),
+      "equal negate"       |: equivalent(wrapped, withNegate),
+      "equal upper"        |: equivalent(wrapped, withUpper),
+      "equal negate+upper" |: equivalent(wrapped, withNegateAndUpper),
+      "not equal inc"      |: !equivalent(wrapped, withInc),
+      "not equal append"   |: !equivalent(wrapped, withAppend),
+      "not equal rest"     |: !equivalent(wrapped, withRest))
   }
 
 }

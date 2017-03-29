@@ -23,6 +23,24 @@ class LensMatcher[A, L <: HList](val root: OpticDefns.RootLens[A], val hs: L) ex
     val (l1: A, r1: A, b1: Boolean) = hs.foldLeft((l, r, true))(matchFolder)
     l1 == r1 && b1
   }
+
+  def wrap(value: A)(implicit lf: LeftFolder[L, (A, A, Boolean), matchFolder.type]): Wrapped =
+    new Wrapped(value, lf)
+
+  class Wrapped private[record] (val value: A,
+                                 private val lf: LeftFolder[L, (A, A, Boolean), matchFolder.type])
+    extends Serializable {
+    override def hashCode(): Int = value.hashCode()
+    override def equals(obj: Any): Boolean = obj match {
+      case w: Wrapped =>
+        val (l1, r1, b1: Boolean) = hs.foldLeft((value, w.value, true))(matchFolder)(lf)
+        l1 == r1 && b1
+      case v: A =>
+        val (l1, r1, b1: Boolean) = hs.foldLeft((value, v, true))(matchFolder)(lf)
+        l1 == r1 && b1
+      case _ => false
+    }
+  }
 }
 
 object LensMatcher {
