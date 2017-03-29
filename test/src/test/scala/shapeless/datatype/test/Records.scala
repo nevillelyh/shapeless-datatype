@@ -31,4 +31,7 @@ object Records {
 
   implicit val arbByteString = Arbitrary(Gen.alphaStr.map(ByteString.copyFromUtf8))
   implicit val arbInstant = Arbitrary(Gen.const(Instant.now()))
+
+  def equivalent[A](xs: List[A], ys: List[A]): Boolean =
+    xs.size == ys.size && xs.forall(ys.contains)
 }

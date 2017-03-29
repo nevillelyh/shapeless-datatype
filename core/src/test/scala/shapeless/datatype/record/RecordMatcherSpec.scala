@@ -39,4 +39,15 @@ class RecordMatcherSpec extends Properties("RecordMatcher") {
   property("mixed") = forAll { m: Mixed => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
   property("nested") = forAll { m: Nested => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
 
+  property("wrap") = forAll { xs: List[Nested] =>
+    val t = ensureSerializable(RecordMatcher[Nested])
+    val wrapped = xs.map(x => t.wrap(x))
+    val withNegate = xs.map(x => everywhere(negate)(x)).map(x => t.wrap(x))
+    val withInc = xs.map(x => everywhere(inc)(x)).map(x => t.wrap(x))
+    all(
+      "equal self"    |: equivalent(wrapped, wrapped),
+      "equal negate"  |: equivalent(wrapped, withNegate),
+      "not equal inc" |: !equivalent(wrapped, withInc))
+  }
+
 }

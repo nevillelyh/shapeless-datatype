@@ -102,6 +102,22 @@ class RecordMatcher[A] extends Serializable {
                                     gen: LabelledGeneric.Aux[A, L],
                                     mr: MatchRecord[L])
   : Boolean = mr(gen.to(l), gen.to(r))
+
+  def wrap[L <: HList](value: A)(implicit
+                                 gen: LabelledGeneric.Aux[A, L],
+                                 mr: MatchRecord[L])
+  : Wrapped[L] = new Wrapped[L](value, gen, mr)
+
+  class Wrapped[L <: HList] private[record] (val value: A,
+                                             private val gen: LabelledGeneric.Aux[A, L],
+                                             private val mr: MatchRecord[L]) extends Serializable {
+    override def hashCode(): Int = value.hashCode()
+    override def equals(obj: Any): Boolean = obj match {
+      case w: Wrapped[L] => mr(gen.to(value), gen.to(w.value))
+      case v: A => mr(gen.to(value), gen.to(v))
+      case _ => false
+    }
+  }
 }
 
 object RecordMatcher{
