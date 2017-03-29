@@ -6,11 +6,30 @@ import shapeless.labelled.{FieldType, field}
 import scala.collection.generic.CanBuildFrom
 import scala.language.higherKinds
 
-trait FromMappable[L <: HList, M] {
+trait FromMappable[L, M] {
   def apply(m: M): Option[L]
 }
 
-trait LowPriorityFromMappable1 {
+trait CoproductFromMappable {
+  implicit def generic[T, R, M](implicit gen: LabelledGeneric.Aux[T, R], repr: FromMappable[R, M], mbt: BaseMappableType[M]): FromMappable[T, M] = new FromMappable[T, M] {
+    override def apply(m: M): Option[T] = repr(m).map(x => gen.from(x))
+  }
+
+
+  implicit def cnilFromMappable[M]: FromMappable[CNil, M] = new FromMappable[CNil, M] {
+    override def apply(m: M): Option[CNil] = None
+  }
+
+  implicit def cconsFromMappable[M, K <: Symbol, V, T <: Coproduct](implicit key: Witness.Aux[K], mt: BaseMappableType[M], sv: FromMappable[V, M], st: Lazy[FromMappable[T, M]]): FromMappable[FieldType[K, V] :+: T, M] = new FromMappable[FieldType[K, V] :+: T, M] {
+    override def apply(m: M): Option[:+:[FieldType[K, V], T]] = {
+      if(mt.get(m, s"__${key.value.name}").nonEmpty) sv(m).map(v => Inl(field[K](v)))
+      else st.value(m).map(Inr.apply)
+    }
+
+  }
+}
+
+trait LowPriorityFromMappable1 extends CoproductFromMappable {
   implicit def hconsFromMappable1[K <: Symbol, V, T <: HList, M]
   (implicit wit: Witness.Aux[K], mt: MappableType[M, V], fromT: Lazy[FromMappable[T, M]])
   : FromMappable[FieldType[K, V] :: T, M] = new FromMappable[FieldType[K, V] :: T, M] {
@@ -96,7 +115,7 @@ trait LowPriorityFromMappableSeq0 extends LowPriorityFromMappableOption0 {
 }
 
 object FromMappable extends LowPriorityFromMappableSeq0 {
-  implicit def hnilFromMappable[M]: FromMappable[HNil, M] = new FromMappable[HNil, M] {
+  implicit def hnilFromMappable[M](implicit mbt: BaseMappableType[M]): FromMappable[HNil, M] = new FromMappable[HNil, M] {
     override def apply(m: M): Option[HNil] = Some(HNil)
   }
 }

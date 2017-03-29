@@ -22,15 +22,14 @@ class RecordMatcherSpec extends Properties("RecordMatcher") {
   object inc extends ->((x: Double) => x + 1.0)
   implicit def compareDoubles(x: Double, y: Double) = math.abs(x) == math.abs(y)
 
-  def test[A, L <: HList](original: A, withNegate: A, withInc: A,
-                          t: RecordMatcher[A] = RecordMatcher[A])
+  def test[A, L](original: A, withNegate: A, withInc: A)
                          (implicit
                           gen: LabelledGeneric.Aux[A, L],
-                          mr: MatchRecord[L]): Prop = {
+                          mr: MatchRecord[A]): Prop = {
     all(
-      "equal self"    |: t(original, original),
-      "equal negate"  |: t(original, withNegate),
-      "not equal inc" |: !t(original, withInc))
+      "equal self"    |: mr(original, original),
+      "equal negate"  |: mr(original, withNegate),
+      "not equal inc" |: !mr(original, withInc))
   }
 
   property("required") = forAll { m: Required => test(m, everywhere(negate)(m), everywhere(inc)(m)) }

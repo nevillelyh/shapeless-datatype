@@ -5,11 +5,29 @@ import shapeless.labelled.FieldType
 
 import scala.language.higherKinds
 
-trait MatchRecord[L <: HList] {
+trait MatchRecord[L] {
   def apply(l: L, r: L): Boolean
 }
 
-trait LowPriorityMatchRecordBase {
+trait CoproductMatchRecord {
+  implicit def generic[T, R](implicit gen: LabelledGeneric.Aux[T, R], repr: MatchRecord[R]): MatchRecord[T] = new MatchRecord[T] {
+    override def apply(l: T, r: T): Boolean = repr(gen.to(l), gen.to(r))
+  }
+
+  implicit val cnilMatchRecord: MatchRecord[CNil] = new MatchRecord[CNil] {
+    override def apply(l: CNil, r: CNil) = true
+  }
+
+  implicit def cconsMatchRecord[K <: Symbol, H, T <: Coproduct](implicit W: Witness.Aux[K], H: MatchRecord[H], T: Lazy[MatchRecord[T]]): MatchRecord[FieldType[K, H] :+: T] = new MatchRecord[FieldType[K, H] :+: T] {
+    override def apply(l: FieldType[K, H] :+: T, r: FieldType[K, H] :+: T): Boolean = (l, r) match {
+      case (Inl(left), Inl(right)) => H(left, right)
+      case (Inr(left), Inr(right)) => T.value(left, right)
+      case _ => false
+    }
+  }
+}
+
+trait LowPriorityMatchRecordBase extends CoproductMatchRecord {
   implicit def hconsMatchRecordBase[K <: Symbol, V, T <: HList]
   (implicit mrT: Lazy[MatchRecord[T]])
   : MatchRecord[FieldType[K, V] :: T] = new MatchRecord[FieldType[K, V] :: T] {
@@ -98,10 +116,7 @@ object MatchRecord extends LowPriorityMatchRecordSeq0 {
 }
 
 class RecordMatcher[A] extends Serializable {
-  def apply[L <: HList](l: A, r: A)(implicit
-                                    gen: LabelledGeneric.Aux[A, L],
-                                    mr: MatchRecord[L])
-  : Boolean = mr(gen.to(l), gen.to(r))
+  def apply(l: A, r: A)(implicit M: MatchRecord[A]) = M(l, r)
 }
 
 object RecordMatcher{

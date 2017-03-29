@@ -5,11 +5,29 @@ import shapeless.labelled.FieldType
 
 import scala.language.higherKinds
 
-trait ToMappable[L <: HList, M] {
+trait ToMappable[L, M] {
   def apply(l: L): M
 }
 
-trait LowPriorityToMappable1 {
+trait CoproductToMappable {
+
+  implicit def generic[T, R, M](implicit gen: LabelledGeneric.Aux[T, R], repr: ToMappable[R, M]): ToMappable[T, M] = new ToMappable[T, M] {
+    override def apply(l: T): M = repr(gen.to(l))
+  }
+
+  implicit def cnilToMappable[M](implicit mbt: BaseMappableType[M]): ToMappable[CNil, M] = new ToMappable[CNil, M] {
+    override def apply(l: CNil): M = mbt.base
+  }
+
+  implicit def cconsToMappable[M, K <: Symbol, V, T <: Coproduct](implicit key: Witness.Aux[K], mbt: BaseMappableType[M], sv: ToMappable[V, M], st: ToMappable[T, M]): ToMappable[FieldType[K, V] :+: T, M] = new ToMappable[FieldType[K, V] :+: T, M] {
+    override def apply(l: :+:[FieldType[K, V], T]): M = l match {
+      case Inl(v) => mbt.put(s"__${key.value.name}", mbt.base, sv(v))
+      case Inr(r) => st.apply(r)
+    }
+  }
+}
+
+trait LowPriorityToMappable1 extends CoproductToMappable {
   implicit def hconsToMappable1[K <: Symbol, V, T <: HList, M]
   (implicit wit: Witness.Aux[K], mt: MappableType[M, V], toT: Lazy[ToMappable[T, M]])
   : ToMappable[FieldType[K, V] :: T, M] = new ToMappable[FieldType[K, V] :: T, M] {

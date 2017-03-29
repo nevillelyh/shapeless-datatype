@@ -8,9 +8,14 @@ import shapeless.datatype.mappable.{BaseMappableType, MappableType}
 
 import scala.collection.JavaConverters._
 
-trait BaseBigQueryMappableType[V] extends MappableType[TableRow, V] {
+trait BaseBigQueryMappableType[V] extends MappableType[TableRow, V] { self =>
   def from(value: AnyRef): V
   def to(value: V): AnyRef
+
+  final def xmap[W](f: V => W)(g: W => V) = new BaseBigQueryMappableType[W] {
+    override def from(value: AnyRef): W = f(self.from(value))
+    override def to(value: W): AnyRef = self.to(g(value))
+  }
 
   override def get(m: TableRow, key: String): Option[V] =
     Option(m.get(key)).map(from)
