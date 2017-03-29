@@ -17,11 +17,14 @@ class LensMatcherSpec extends Properties("LensMatcher") {
   // always generate non-empty List[T]
   implicit def arbList[T](implicit arb: Arbitrary[T]) = Arbitrary(Gen.nonEmptyListOf(arb.arbitrary))
 
-  val mL = LensMatcher[Nested].on(_ >> 'longField)(math.abs(_) == math.abs(_))
-  val mML = LensMatcher[Nested].on(_ >> 'mixedField >> 'longField)(math.abs(_) == math.abs(_))
-  val mMulti = LensMatcher[Nested]
-    .on(_ >> 'mixedField >> 'longField)(math.abs(_) == math.abs(_))
-    .on(_ >> 'mixedField >> 'stringField)(_.toLowerCase == _.toLowerCase)
+  val mL = ensureSerializable(
+    LensMatcher[Nested].on(_ >> 'longField)(math.abs(_) == math.abs(_)))
+  val mML = ensureSerializable(
+    LensMatcher[Nested].on(_ >> 'mixedField >> 'longField)(math.abs(_) == math.abs(_)))
+  val mMulti = ensureSerializable(
+    LensMatcher[Nested]
+      .on(_ >> 'mixedField >> 'longField)(math.abs(_) == math.abs(_))
+      .on(_ >> 'mixedField >> 'stringField)(_.toLowerCase == _.toLowerCase))
 
   val lensL = lens[Nested] >> 'longField
   val lensML = lens[Nested] >> 'mixedField >> 'longField
@@ -53,15 +56,6 @@ class LensMatcherSpec extends Properties("LensMatcher") {
       "equal negate+upper" |: mMulti(m, lensMS.modify(lensML.modify(m)(-_))(_.toUpperCase)),
       "not equal inc"      |: !mMulti(m, lensML.modify(m)(_ + 1L)),
       "not equal append"   |: !mMulti(m, lensMS.modify(m)(_ + "!")),
-      "not equal rest"     |: !mMulti(m, lensL.modify(m)(_ + 1L))
-    )
-  }
-
-  val t = ensureSerializable(mMulti)
-  property("serializable") = forAll { m: Nested =>
-    all(
-      "equal self"         |: mMulti(m, m),
-      "equal negate+upper" |: mMulti(m, lensMS.modify(lensML.modify(m)(-_))(_.toUpperCase)),
       "not equal rest"     |: !mMulti(m, lensL.modify(m)(_ + 1L))
     )
   }

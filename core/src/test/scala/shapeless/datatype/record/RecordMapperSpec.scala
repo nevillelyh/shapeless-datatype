@@ -35,13 +35,15 @@ class RecordMapperSpec extends Properties("RecordMapper") {
   implicit def b2s(x: Array[Byte]): String = new String(x)
 
   class RoundTrip[B] {
-    def from[A, LA <: HList, LB <: HList](a: A, t: RecordMapper[A, B] = RecordMapper[A, B])
+    def from[A, LA <: HList, LB <: HList](a: A)
                                          (implicit
                                           genA: LabelledGeneric.Aux[A, LA],
                                           genB: LabelledGeneric.Aux[B, LB],
                                           mrA: MapRecord[LA, LB],
-                                          mrB: MapRecord[LB, LA]): Boolean =
+                                          mrB: MapRecord[LB, LA]): Boolean = {
+      val t = ensureSerializable(RecordMapper[A, B])
       t.from(t.to(a)) == a
+    }
   }
   def roundTripTo[B]: RoundTrip[B] = new RoundTrip[B]
 
@@ -50,8 +52,5 @@ class RecordMapperSpec extends Properties("RecordMapper") {
   property("repeated") = forAll { m: RepeatedA => roundTripTo[RepeatedB].from(m) }
   property("mixed") = forAll { m: MixedA => roundTripTo[MixedB].from(m) }
   property("nested") = forAll { m: NestedA => roundTripTo[NestedB].from(m) }
-
-  val t = ensureSerializable(RecordMapper[NestedA, NestedB])
-  property("serializable") = forAll { m: NestedA => roundTripTo[NestedB].from(m, t) }
 
 }

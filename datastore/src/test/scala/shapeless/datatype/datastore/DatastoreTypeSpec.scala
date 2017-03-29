@@ -14,12 +14,13 @@ class DatastoreTypeSpec extends Properties("DatastoreType") {
   implicit def compareByteArrays(x: Array[Byte], y: Array[Byte]) = java.util.Arrays.equals(x, y)
   implicit def compareIntArrays(x: Array[Int], y: Array[Int]) = java.util.Arrays.equals(x, y)
 
-  def roundTrip[A, L <: HList](m: A, t: DatastoreType[A] = DatastoreType[A])
+  def roundTrip[A, L <: HList](m: A)
                               (implicit
                                gen: LabelledGeneric.Aux[A, L],
                                fromL: FromEntity[L],
                                toL: ToEntity[L],
                                mr: MatchRecord[L]): Prop = {
+    val t = ensureSerializable(DatastoreType[A])
     val rm = RecordMatcher[A]
     all(
       t.fromEntity(t.toEntity(m)).exists(rm(_, m)),
@@ -33,8 +34,5 @@ class DatastoreTypeSpec extends Properties("DatastoreType") {
   property("mixed") = forAll { m: Mixed => roundTrip(m) }
   property("nested") = forAll { m: Nested => roundTrip(m) }
   property("seq types") = forAll { m: SeqTypes => roundTrip(m) }
-
-  val t = ensureSerializable(DatastoreType[Nested])
-  property("serializable") = forAll { m: Nested => roundTrip(m, t) }
 
 }

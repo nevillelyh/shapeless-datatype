@@ -18,12 +18,13 @@ class BigQueryTypeSpec extends Properties("BigQueryType") {
   implicit def compareByteArrays(x: Array[Byte], y: Array[Byte]) = java.util.Arrays.equals(x, y)
   implicit def compareIntArrays(x: Array[Int], y: Array[Int]) = java.util.Arrays.equals(x, y)
 
-  def roundTrip[A, L <: HList](m: A, t: BigQueryType[A] = BigQueryType[A])
+  def roundTrip[A, L <: HList](m: A)
                               (implicit
                                gen: LabelledGeneric.Aux[A, L],
                                fromL: FromTableRow[L],
                                toL: ToTableRow[L],
                                mr: MatchRecord[L]): Boolean = {
+    val t = ensureSerializable(BigQueryType[A])
     val tr1 = t.toTableRow(m)
     val tr2 = mapper.readValue(mapper.writeValueAsString(tr1), classOf[TableRow])
     val rm = RecordMatcher[A]
@@ -36,9 +37,6 @@ class BigQueryTypeSpec extends Properties("BigQueryType") {
   property("mixed") = forAll { m: Mixed => roundTrip(m) }
   property("nested") = forAll { m: Nested => roundTrip(m) }
   property("seq types") = forAll { m: SeqTypes => roundTrip(m) }
-
-  val t = ensureSerializable(BigQueryType[Nested])
-  property("serializable") = forAll { m: Nested => roundTrip(m, t) }
 
   implicit val arbDate = Arbitrary(Gen.const(LocalDate.now()))
   implicit val arbTime = Arbitrary(Gen.const(LocalTime.now()))

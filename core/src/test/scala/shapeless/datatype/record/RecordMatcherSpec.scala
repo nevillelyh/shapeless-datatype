@@ -22,11 +22,11 @@ class RecordMatcherSpec extends Properties("RecordMatcher") {
   object inc extends ->((x: Double) => x + 1.0)
   implicit def compareDoubles(x: Double, y: Double) = math.abs(x) == math.abs(y)
 
-  def test[A, L <: HList](original: A, withNegate: A, withInc: A,
-                          t: RecordMatcher[A] = RecordMatcher[A])
+  def test[A, L <: HList](original: A, withNegate: A, withInc: A)
                          (implicit
                           gen: LabelledGeneric.Aux[A, L],
                           mr: MatchRecord[L]): Prop = {
+    val t = ensureSerializable(RecordMatcher[A])
     all(
       "equal self"    |: t(original, original),
       "equal negate"  |: t(original, withNegate),
@@ -38,8 +38,5 @@ class RecordMatcherSpec extends Properties("RecordMatcher") {
   property("repeated") = forAll { m: Repeated => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
   property("mixed") = forAll { m: Mixed => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
   property("nested") = forAll { m: Nested => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
-
-  val t = ensureSerializable(RecordMatcher[Nested])
-  property("serializable") = forAll { m: Nested => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
 
 }
