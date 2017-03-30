@@ -30,16 +30,20 @@ class LensMatcher[A, L <: HList](val root: OpticDefns.RootLens[A], val hs: L) ex
   class Wrapped private[record] (val value: A,
                                  private val lf: LeftFolder[L, (A, A, Boolean), matchFolder.type])
     extends Serializable {
+    override def toString: String = value.toString
     override def hashCode(): Int = value.hashCode()
-    override def equals(obj: Any): Boolean = obj match {
-      case w: Wrapped =>
-        val (l1, r1, b1: Boolean) = hs.foldLeft((value, w.value, true))(matchFolder)(lf)
+    override def equals(obj: Any): Boolean =
+      if (obj.getClass == classOf[Wrapped]) {
+        val that = obj.asInstanceOf[Wrapped]
+        val (l1, r1, b1: Boolean) = hs.foldLeft((value, that.value, true))(matchFolder)(lf)
         l1 == r1 && b1
-      case v: A =>
-        val (l1, r1, b1: Boolean) = hs.foldLeft((value, v, true))(matchFolder)(lf)
+      } else if (obj.getClass == value.getClass) {
+        val that = obj.asInstanceOf[A]
+        val (l1, r1, b1: Boolean) = hs.foldLeft((value, that, true))(matchFolder)(lf)
         l1 == r1 && b1
-      case _ => false
-    }
+      } else {
+        false
+      }
   }
 }
 

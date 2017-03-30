@@ -111,12 +111,16 @@ class RecordMatcher[A] extends Serializable {
   class Wrapped[L <: HList] private[record] (val value: A,
                                              private val gen: LabelledGeneric.Aux[A, L],
                                              private val mr: MatchRecord[L]) extends Serializable {
+    override def toString: String = value.toString
     override def hashCode(): Int = value.hashCode()
-    override def equals(obj: Any): Boolean = obj match {
-      case w: Wrapped[L] => mr(gen.to(value), gen.to(w.value))
-      case v: A => mr(gen.to(value), gen.to(v))
-      case _ => false
-    }
+    override def equals(obj: Any): Boolean =
+      if (obj.getClass == classOf[Wrapped[_]]) {
+        mr(gen.to(value), gen.to(obj.asInstanceOf[Wrapped[L]].value))
+      } else if (obj.getClass == value.getClass) {
+        mr(gen.to(value), gen.to(obj.asInstanceOf[A]))
+      } else {
+        false
+      }
   }
 }
 
