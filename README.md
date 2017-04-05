@@ -116,6 +116,8 @@ case class City(name: String, code: String, lat: Double, long: Double)
 val t = DatastoreType[City]
 val r = t.toEntity(City("New York", "NYC", 40.730610, -73.935242))
 val c = t.fromEntity(r)
+val b = t.toEntityBuilder(City("New York", "NYC", 40.730610, -73.935242))
+val d = t.fromEntityBuilder(r)
 ```
 
 # License
