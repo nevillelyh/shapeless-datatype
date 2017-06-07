@@ -1,11 +1,11 @@
 name := "shapeless-datatype"
 description := "Shapeless utilities for common data types"
 
-val bigqueryVersion = "v2-rev317-1.22.0"
-val jacksonVersion = "2.8.8"
+val bigqueryVersion = "v2-rev350-1.22.0"
+val jacksonVersion = "2.8.8.1"
 val jodaTimeVersion = "2.9.9"
 val paradiseVersion = "2.1.0"
-val protobufVersion = "3.1.0"
+val protobufVersion = "3.3.0"
 val scalacheckShapelessVersion = "1.1.5"
 val scalacheckVersion = "1.13.5"
 val shapelessVersion = "2.3.2"
@@ -15,8 +15,8 @@ def jdkVersion(scalaBinaryVersion: String) = if (scalaBinaryVersion == "2.12") "
 val commonSettings = Seq(
   organization := "me.lyh",
 
-  scalaVersion := "2.12.1",
-  crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.1"),
+  scalaVersion := "2.12.2",
+  crossScalaVersions := Seq("2.10.6", "2.11.11", "2.12.2"),
   scalacOptions ++= Seq("-target:jvm-" + jdkVersion(scalaBinaryVersion.value), "-deprecation", "-feature", "-unchecked"),
   javacOptions ++= Seq("-source", "1.7", "-target", "1.7", "-Xlint:unchecked"),
 
