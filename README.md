@@ -14,7 +14,7 @@ This library includes the following modules.
 
 - `shapeless-datatype-core`
 - `shapeless-datatype-bigquery`
-- `shapeless-datatype-datastore`
+- `shapeless-datatype-datastore_1.[123]`
 
 Due to library dependency `shapeless-datatype-datastore` is built for different versions of Datastore client, e.g. `shapeless-datatype-datastore_1.3` for `datastore-v1-proto-client` 1.3.0.
 
@@ -54,7 +54,6 @@ m.from(Point2(0.5, -0.5, "a")) // Point1(0.5,-0.5,a)
 `RecordMatcher[T]` performs equality check of instances of case class `T` with custom logic based on field types.
 
 ```scala
-import shapeless._
 import shapeless.datatype.record._
 
 case class Record(id: String, name: String, value: Int)
@@ -74,7 +73,6 @@ m(Record("a", "RecordA", 10), Record("A", "RECORDA", 10))  // true
 `LensMatcher[T]` performs equality check of instances of case class `T` with custom logic based on Lenses.
 
 ```scala
-import shapeless._
 import shapeless.datatype.record._
 
 case class Record(id: String, name: String, value: Int)
@@ -93,7 +91,6 @@ m(Record("a", "foo", 10), Record("A", "bar", 10))  // true
 `BigQueryType[T]` maps bewteen case class `T` and BigQuery `TableRow`.
 
 ```scala
-import shapeless._
 import shapeless.datatype.bigquery._
 
 case class City(name: String, code: String, lat: Double, long: Double)
@@ -108,7 +105,6 @@ val c = t.fromTableRow(r)
 `DatastoreType[T]` maps between case class `T` and Datastore `Entity` or `Entity.Builder`.
 
 ```scala
-import shapeless._
 import shapeless.datatype.datastore._
 
 case class City(name: String, code: String, lat: Double, long: Double)
@@ -117,7 +113,7 @@ val t = DatastoreType[City]
 val r = t.toEntity(City("New York", "NYC", 40.730610, -73.935242))
 val c = t.fromEntity(r)
 val b = t.toEntityBuilder(City("New York", "NYC", 40.730610, -73.935242))
-val d = t.fromEntityBuilder(r)
+val d = t.fromEntityBuilder(b)
 ```
 
 # License
