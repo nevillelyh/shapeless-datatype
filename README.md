@@ -89,7 +89,7 @@ m(Record("a", "foo", 10), Record("A", "bar", 10))  // true
 
 # BigQueryType
 
-`BigQueryType[T]` maps bewteen case class `T` and BigQuery `TableRow`.
+`BigQueryType[T]` maps bewteen case class `T` and [BigQuery](https://cloud.google.com/bigquery/) `TableRow`.
 
 ```scala
 import shapeless.datatype.bigquery._
@@ -103,7 +103,7 @@ val c = t.fromTableRow(r)
 
 # DatastoreType
 
-`DatastoreType[T]` maps between case class `T` and Datastore `Entity` or `Entity.Builder`.
+`DatastoreType[T]` maps between case class `T` and [Cloud Datastore](https://cloud.google.com/datastore/) `Entity` or `Entity.Builder` Protobuf types.
 
 ```scala
 import shapeless.datatype.datastore._
@@ -119,7 +119,7 @@ val d = t.fromEntityBuilder(b)
 
 # TensorFlowType
 
-`TensorFlowType[T]` maps between case class `T` and TensorFlowType `Example` or `Example.Builder`.
+`TensorFlowType[T]` maps between case class `T` and [TensorFlow](https://www.tensorflow.org/) `Example` or `Example.Builder` Protobuf types.
 
 ```scala
 import shapeless.datatype.tensorflow._
