@@ -9,6 +9,7 @@ val protobufVersion = "3.2.0"
 val scalacheckShapelessVersion = "1.1.5"
 val scalacheckVersion = "1.13.5"
 val shapelessVersion = "2.3.2"
+val tensorflowVersion = "1.1.0"
 
 def jdkVersion(scalaBinaryVersion: String) = if (scalaBinaryVersion == "2.12") "1.8" else "1.7"
 
@@ -72,6 +73,7 @@ lazy val root: Project = Project(
   datastore11,
   datastore12,
   datastore13,
+  tensorflow,
   test
 )
 
@@ -127,6 +129,21 @@ def datastoreProject(binaryVersion: String, version: String): Project = Project(
 lazy val datastore11 = datastoreProject("1.1", "1.1.0")
 lazy val datastore12 = datastoreProject("1.2", "1.2.0")
 lazy val datastore13 = datastoreProject("1.3", "1.3.0")
+
+lazy val tensorflow: Project = Project(
+  "tensorflow",
+  file("tensorflow")
+).settings(
+  moduleName := "shapeless-datatype-tensorflow",
+  commonSettings,
+  description := "Shapeless utilities for TensorFlow",
+  libraryDependencies ++= Seq(
+    "org.tensorflow" % "proto" % tensorflowVersion
+  )
+).dependsOn(
+  core,
+  test % "test->test"
+)
 
 lazy val test: Project = Project(
   "test",

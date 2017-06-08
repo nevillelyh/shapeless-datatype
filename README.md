@@ -15,6 +15,7 @@ This library includes the following modules.
 - `shapeless-datatype-core`
 - `shapeless-datatype-bigquery`
 - `shapeless-datatype-datastore_1.[123]`
+- `shapeless-datatype-tensorflow`
 
 Due to library dependency `shapeless-datatype-datastore` is built for different versions of Datastore client, e.g. `shapeless-datatype-datastore_1.3` for `datastore-v1-proto-client` 1.3.0.
 
@@ -114,6 +115,22 @@ val r = t.toEntity(City("New York", "NYC", 40.730610, -73.935242))
 val c = t.fromEntity(r)
 val b = t.toEntityBuilder(City("New York", "NYC", 40.730610, -73.935242))
 val d = t.fromEntityBuilder(b)
+```
+
+# TensorFlowType
+
+`TensorFlowType[T]` maps between case class `T` and TensorFlowType `Example` or `Example.Builder`.
+
+```scala
+import shapeless.datatype.tensorflow._
+
+case class Data(floats: Array[Float], longs: Array[Long], strings: List[String], label: String)
+
+val t = TensorFlowType[Data]
+val r = t.toExample(Data(Array(1.5f, 2.5f), Array(1L, 2L), List("a", "b"), "x"))
+val c = t.fromExample(r)
+val b = t.toExampleBuilder(Data(Array(1.5f, 2.5f), Array(1L, 2L), List("a", "b"), "x"))
+val d = t.fromExampleBuilder(b)
 ```
 
 # License
