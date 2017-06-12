@@ -6,7 +6,7 @@ import org.scalacheck._
 import shapeless._
 import shapeless.datatype.record._
 
-class DatastoreTypeSpec extends Properties("DatastoreType") {
+object DatastoreTypeSpec extends Properties("DatastoreType") {
 
   import shapeless.datatype.test.Records._
   import shapeless.datatype.test.SerializableUtils._

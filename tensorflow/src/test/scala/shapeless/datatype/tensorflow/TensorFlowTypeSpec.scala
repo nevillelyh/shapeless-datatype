@@ -10,7 +10,7 @@ import shapeless.datatype.record._
 
 import scala.collection.JavaConverters._
 
-class TensorFlowTypeSpec extends Properties("TensorFlowType") {
+object TensorFlowTypeSpec extends Properties("TensorFlowType") {
 
   import shapeless.datatype.test.Records._
   import shapeless.datatype.test.SerializableUtils._

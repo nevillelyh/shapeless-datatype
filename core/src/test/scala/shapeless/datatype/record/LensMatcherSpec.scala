@@ -5,7 +5,7 @@ import org.scalacheck.Shapeless._
 import org.scalacheck._
 import shapeless._
 
-class LensMatcherSpec extends Properties("LensMatcher") {
+object LensMatcherSpec extends Properties("LensMatcher") {
 
   import shapeless.datatype.test.Records._
   import shapeless.datatype.test.SerializableUtils._

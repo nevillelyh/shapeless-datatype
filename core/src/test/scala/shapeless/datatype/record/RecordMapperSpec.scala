@@ -26,7 +26,7 @@ object RecordMapperRecords {
                      requiredN: MixedB, optionalN: Option[MixedB], repeatedN: List[MixedB])
 }
 
-class RecordMapperSpec extends Properties("RecordMapper") {
+object RecordMapperSpec extends Properties("RecordMapper") {
 
   import RecordMapperRecords._
   import shapeless.datatype.test.SerializableUtils._

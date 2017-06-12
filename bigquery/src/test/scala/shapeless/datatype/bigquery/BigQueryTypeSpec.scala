@@ -8,7 +8,7 @@ import org.scalacheck._
 import shapeless._
 import shapeless.datatype.record._
 
-class BigQueryTypeSpec extends Properties("BigQueryType") {
+object BigQueryTypeSpec extends Properties("BigQueryType") {
 
   import shapeless.datatype.test.Records._
   import shapeless.datatype.test.SerializableUtils._

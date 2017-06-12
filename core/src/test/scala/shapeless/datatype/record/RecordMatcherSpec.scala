@@ -6,7 +6,7 @@ import org.scalacheck._
 import shapeless._
 import shapeless.poly._
 
-class RecordMatcherSpec extends Properties("RecordMatcher") {
+object RecordMatcherSpec extends Properties("RecordMatcher") {
 
   import shapeless.datatype.test.Records._
   import shapeless.datatype.test.SerializableUtils._
