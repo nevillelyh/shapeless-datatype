@@ -1,6 +1,7 @@
 name := "shapeless-datatype"
 description := "Shapeless utilities for common data types"
 
+val avroVersion = "1.8.2"
 val bigqueryVersion = "v2-rev350-1.22.0"
 val jacksonVersion = "2.8.8.1"
 val jodaTimeVersion = "2.9.9"
@@ -71,6 +72,7 @@ lazy val root: Project = Project(
   commonSettings ++ noPublishSettings
 ).aggregate(
   core,
+  avro,
   bigquery,
   datastore11,
   datastore12,
@@ -90,6 +92,22 @@ lazy val core: Project = Project(
     "com.chuusai" %% "shapeless" % shapelessVersion
   )
 ).dependsOn(
+  test % "test->test"
+)
+
+lazy val avro: Project = Project(
+  "avro",
+  file("avro")
+).settings(
+  moduleName := "shapeless-datatype-avro",
+  commonSettings,
+  description := "Shapeless utilities for Apache Avro",
+  libraryDependencies ++= Seq(
+    "org.apache.avro" % "avro" % avroVersion,
+    "org.scala-lang" % "scala-reflect" % scalaVersion.value
+  )
+).dependsOn(
+  core,
   test % "test->test"
 )
 

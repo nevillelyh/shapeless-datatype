@@ -13,6 +13,7 @@ shapeless-datatype
 This library includes the following modules.
 
 - `shapeless-datatype-core`
+- `shapeless-datatype-avro`
 - `shapeless-datatype-bigquery`
 - `shapeless-datatype-datastore_1.[123]`
 - `shapeless-datatype-tensorflow`
@@ -85,6 +86,20 @@ val m = LensMatcher[Record]
 
 Record("a", "foo", 10) == Record("A", "bar", 10)  // false
 m(Record("a", "foo", 10), Record("A", "bar", 10))  // true
+```
+
+# AvroType
+
+`AvroType[T]` maps bewteen case class `T` and [Avro](http://avro.apache.org/) `GenericRecord`.
+
+```scala
+import shapeless.datatype.avro._
+
+case class City(name: String, code: String, lat: Double, long: Double)
+
+val t = AvroType[City]
+val r = t.toGenericRecord(City("New York", "NYC", 40.730610, -73.935242))
+val c = t.fromGenericRecord(r)
 ```
 
 # BigQueryType
