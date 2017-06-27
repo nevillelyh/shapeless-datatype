@@ -16,3 +16,5 @@ trait MappableType[M, V] {
   def put(key: String, value: Option[V], tail: M): M
   def put(key: String, values: Seq[V], tail: M): M
 }
+
+trait CanNest[M]
