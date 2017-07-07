@@ -9,14 +9,14 @@ import shapeless.datatype.mappable.{BaseMappableType, MappableType}
 import scala.collection.JavaConverters._
 
 trait BaseBigQueryMappableType[V] extends MappableType[TableRow, V] {
-  def from(value: AnyRef): V
-  def to(value: V): AnyRef
+  def from(value: Any): V
+  def to(value: V): Any
 
   override def get(m: TableRow, key: String): Option[V] =
     Option(m.get(key)).map(from)
   override def getAll(m: TableRow, key: String): Seq[V] =
     if (m.containsKey(key))
-      m.get(key).asInstanceOf[java.util.List[AnyRef]].asScala.map(from)
+      m.get(key).asInstanceOf[java.util.List[Any]].asScala.map(from)
     else
       Nil
 
@@ -36,13 +36,13 @@ trait BaseBigQueryMappableType[V] extends MappableType[TableRow, V] {
 
 trait BigQueryMappableType {
   implicit val bigQueryBaseMappableType = new BaseMappableType[TableRow] {
-    override def base: TableRow = new java.util.LinkedHashMap[String, AnyRef]()
+    override def base: TableRow = new java.util.LinkedHashMap[String, Any]()
 
     override def get(m: TableRow, key: String): Option[TableRow] =
       Option(m.get(key)).map(_.asInstanceOf[TableRow])
     override def getAll(m: TableRow, key: String): Seq[TableRow] =
       Option(m.get(key)).toSeq
-        .flatMap(_.asInstanceOf[java.util.List[AnyRef]].asScala.map(_.asInstanceOf[TableRow]))
+        .flatMap(_.asInstanceOf[java.util.List[Any]].asScala.map(_.asInstanceOf[TableRow]))
 
     override def put(key: String, value: TableRow, tail: TableRow): TableRow = {
       tail.put(key, value)
@@ -58,12 +58,12 @@ trait BigQueryMappableType {
     }
   }
 
-  private def at[T](fromFn: AnyRef => T, toFn: T => AnyRef) = new BaseBigQueryMappableType[T] {
-    override def from(value: AnyRef): T = fromFn(value)
-    override def to(value: T): AnyRef = toFn(value)
+  private def at[T](fromFn: Any => T, toFn: T => Any) = new BaseBigQueryMappableType[T] {
+    override def from(value: Any): T = fromFn(value)
+    override def to(value: T): Any = toFn(value)
   }
 
-  private def id[T](x: T): AnyRef = x.asInstanceOf[AnyRef]
+  private def id[T](x: T): Any = x.asInstanceOf[Any]
   implicit val booleanBigQueryMappableType = at[Boolean](_.toString.toBoolean, id)
   implicit val intBigQueryMappableType = at[Int](_.toString.toInt, id)
   implicit val longBigQueryMappableType = at[Long](_.toString.toLong, id)
@@ -130,17 +130,17 @@ private object TimestampConverter {
     .toFormatter
     .withZoneUTC()
 
-  def toInstant(v: AnyRef): Instant = timestampParser.parseDateTime(v.toString).toInstant
-  def fromInstant(i: Instant): AnyRef = timestampPrinter.print(i)
+  def toInstant(v: Any): Instant = timestampParser.parseDateTime(v.toString).toInstant
+  def fromInstant(i: Instant): Any = timestampPrinter.print(i)
 
-  def toLocalDate(v: AnyRef): LocalDate = dateParser.parseLocalDate(v.toString)
-  def fromLocalDate(d: LocalDate): AnyRef = datePrinter.print(d)
+  def toLocalDate(v: Any): LocalDate = dateParser.parseLocalDate(v.toString)
+  def fromLocalDate(d: LocalDate): Any = datePrinter.print(d)
 
-  def toLocalTime(v: AnyRef): LocalTime = timeParser.parseLocalTime(v.toString)
-  def fromLocalTime(t: LocalTime): AnyRef = timePrinter.print(t)
+  def toLocalTime(v: Any): LocalTime = timeParser.parseLocalTime(v.toString)
+  def fromLocalTime(t: LocalTime): Any = timePrinter.print(t)
 
-  def toLocalDateTime(v: AnyRef): LocalDateTime = datetimeParser.parseLocalDateTime(v.toString)
-  def fromLocalDateTime(dt: LocalDateTime): AnyRef = datetimePrinter.print(dt)
+  def toLocalDateTime(v: Any): LocalDateTime = datetimeParser.parseLocalDateTime(v.toString)
+  def fromLocalDateTime(dt: LocalDateTime): Any = datetimePrinter.print(dt)
 
 }
 
