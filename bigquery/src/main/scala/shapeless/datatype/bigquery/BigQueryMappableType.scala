@@ -42,7 +42,7 @@ trait BigQueryMappableType {
       Option(m.get(key)).map(_.asInstanceOf[TableRow])
     override def getAll(m: TableRow, key: String): Seq[TableRow] =
       Option(m.get(key)).toSeq
-        .flatMap(_.asInstanceOf[java.util.List[Any]].asScala.map(_.asInstanceOf[TableRow]))
+        .flatMap(_.asInstanceOf[java.util.List[TableRow]].asScala)
 
     override def put(key: String, value: TableRow, tail: TableRow): TableRow = {
       tail.put(key, value)
