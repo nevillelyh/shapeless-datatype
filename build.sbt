@@ -5,7 +5,7 @@ val bigqueryVersion = "v2-rev350-1.22.0"
 val jacksonVersion = "2.8.8.1"
 val jodaTimeVersion = "2.9.9"
 val paradiseVersion = "2.1.0"
-val protobufVersion = "3.2.0"
+val protobufVersion = "3.3.1"
 val scalacheckShapelessVersion = "1.1.5"
 val scalacheckVersion = "1.13.5"
 val shapelessVersion = "2.3.2"
@@ -27,6 +27,8 @@ val commonSettings = Seq(
     else
       Nil
   ),
+  // protobuf-lite is an older subset of protobuf-java and causes issues
+  excludeDependencies += "com.google.protobuf" % "protobuf-lite",
 
   // Release settings
   releaseCrossBuild             := true,
