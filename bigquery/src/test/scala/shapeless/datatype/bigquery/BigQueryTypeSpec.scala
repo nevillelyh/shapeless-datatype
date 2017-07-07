@@ -1,6 +1,7 @@
 package shapeless.datatype.bigquery
 
 import com.fasterxml.jackson.databind.{ObjectMapper, SerializationFeature}
+import com.google.api.services.bigquery.model.TableRow
 import org.joda.time.{Instant, LocalDate, LocalDateTime, LocalTime}
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Shapeless._

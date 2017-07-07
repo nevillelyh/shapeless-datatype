@@ -8,51 +8,51 @@ import shapeless.datatype.mappable.{BaseMappableType, MappableType}
 
 import scala.collection.JavaConverters._
 
-trait BaseBigQueryMappableType[V] extends MappableType[TableRow, V] {
+trait BaseBigQueryMappableType[V] extends MappableType[BigQueryMap, V] {
   def from(value: Any): V
   def to(value: V): Any
 
-  override def get(m: TableRow, key: String): Option[V] =
+  override def get(m: BigQueryMap, key: String): Option[V] =
     Option(m.get(key)).map(from)
-  override def getAll(m: TableRow, key: String): Seq[V] =
+  override def getAll(m: BigQueryMap, key: String): Seq[V] =
     if (m.containsKey(key))
       m.get(key).asInstanceOf[java.util.List[Any]].asScala.map(from)
     else
       Nil
 
-  override def put(key: String, value: V, tail: TableRow): TableRow = {
+  override def put(key: String, value: V, tail: BigQueryMap): BigQueryMap = {
     tail.put(key, to(value))
     tail
   }
-  override def put(key: String, value: Option[V], tail: TableRow): TableRow = {
+  override def put(key: String, value: Option[V], tail: BigQueryMap): BigQueryMap = {
     value.foreach(v => tail.put(key, to(v)))
     tail
   }
-  override def put(key: String, values: Seq[V], tail: TableRow): TableRow = {
+  override def put(key: String, values: Seq[V], tail: BigQueryMap): BigQueryMap = {
     tail.put(key, values.map(to).asJava)
     tail
   }
 }
 
 trait BigQueryMappableType {
-  implicit val bigQueryBaseMappableType = new BaseMappableType[TableRow] {
-    override def base: TableRow = new java.util.LinkedHashMap[String, Any]()
+  implicit val bigQueryBaseMappableType = new BaseMappableType[BigQueryMap] {
+    override def base: BigQueryMap = new java.util.LinkedHashMap[String, Any]()
 
-    override def get(m: TableRow, key: String): Option[TableRow] =
-      Option(m.get(key)).map(_.asInstanceOf[TableRow])
-    override def getAll(m: TableRow, key: String): Seq[TableRow] =
+    override def get(m: BigQueryMap, key: String): Option[BigQueryMap] =
+      Option(m.get(key)).map(_.asInstanceOf[BigQueryMap])
+    override def getAll(m: BigQueryMap, key: String): Seq[BigQueryMap] =
       Option(m.get(key)).toSeq
-        .flatMap(_.asInstanceOf[java.util.List[TableRow]].asScala)
+        .flatMap(_.asInstanceOf[java.util.List[BigQueryMap]].asScala)
 
-    override def put(key: String, value: TableRow, tail: TableRow): TableRow = {
+    override def put(key: String, value: BigQueryMap, tail: BigQueryMap): BigQueryMap = {
       tail.put(key, value)
       tail
     }
-    override def put(key: String, value: Option[TableRow], tail: TableRow): TableRow = {
+    override def put(key: String, value: Option[BigQueryMap], tail: BigQueryMap): BigQueryMap = {
       value.foreach(v => tail.put(key, v))
       tail
     }
-    override def put(key: String, values: Seq[TableRow], tail: TableRow): TableRow = {
+    override def put(key: String, values: Seq[BigQueryMap], tail: BigQueryMap): BigQueryMap = {
       tail.put(key, values.asJava)
       tail
     }

@@ -4,9 +4,9 @@ import shapeless._
 import shapeless.datatype.mappable.{CanNest, FromMappable, ToMappable}
 
 package object bigquery extends BigQueryMappableType {
-  type TableRow = java.util.Map[String, Any]
-  type FromTableRow[L <: HList] = FromMappable[L, TableRow]
-  type ToTableRow[L <: HList] = ToMappable[L, TableRow]
+  type BigQueryMap = java.util.Map[String, Any]
+  type FromTableRow[L <: HList] = FromMappable[L, BigQueryMap]
+  type ToTableRow[L <: HList] = ToMappable[L, BigQueryMap]
 
-  implicit object BigQueryCanNest extends CanNest[TableRow]
+  implicit object BigQueryCanNest extends CanNest[BigQueryMap]
 }
