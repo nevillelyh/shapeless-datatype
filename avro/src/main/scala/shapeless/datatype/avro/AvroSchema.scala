@@ -1,7 +1,7 @@
 package shapeless.datatype.avro
 
-import org.apache.avro.{JsonProperties, Schema}
 import org.apache.avro.Schema.Field
+import org.apache.avro.{JsonProperties, Schema}
 
 import scala.collection.JavaConverters._
 import scala.reflect.runtime.universe._
@@ -46,9 +46,12 @@ object AvroSchema {
     new Field(name, schema, null, default)
   }
 
+  // FIXME: use Java 8 computeIfAbsent
+  private val m = scala.collection.concurrent.TrieMap.empty[TypeTag[_], Schema]
+
   def apply[T: TypeTag]: Schema = {
     val tt = implicitly[TypeTag[T]]
-    toSchema(tt.tpe)._1
+    m.getOrElseUpdate(tt, toSchema(tt.tpe)._1)
   }
 
 }
