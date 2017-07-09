@@ -46,12 +46,12 @@ object AvroSchema {
     new Field(name, schema, null, default)
   }
 
-  // FIXME: use Java 8 computeIfAbsent
-  private val m = scala.collection.concurrent.TrieMap.empty[TypeTag[_], Schema]
+  private val m = new java.util.concurrent.ConcurrentHashMap[TypeTag[_], Schema]()
 
-  def apply[T: TypeTag]: Schema = {
-    val tt = implicitly[TypeTag[T]]
-    m.getOrElseUpdate(tt, toSchema(tt.tpe)._1)
-  }
+  def apply[T: TypeTag]: Schema = m.computeIfAbsent(
+    implicitly[TypeTag[T]],
+    new java.util.function.Function[TypeTag[_], Schema] {
+      override def apply(t: TypeTag[_]): Schema = toSchema(t.tpe)._1
+    })
 
 }

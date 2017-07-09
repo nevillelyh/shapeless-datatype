@@ -12,15 +12,13 @@ val scalacheckVersion = "1.13.5"
 val shapelessVersion = "2.3.2"
 val tensorflowVersion = "1.2.0"
 
-def jdkVersion(scalaBinaryVersion: String) = if (scalaBinaryVersion == "2.12") "1.8" else "1.7"
-
 val commonSettings = Seq(
   organization := "me.lyh",
 
   scalaVersion := "2.12.2",
   crossScalaVersions := Seq("2.11.11", "2.12.2"),
-  scalacOptions ++= Seq("-target:jvm-" + jdkVersion(scalaBinaryVersion.value), "-deprecation", "-feature", "-unchecked"),
-  javacOptions ++= Seq("-source", "1.7", "-target", "1.7", "-Xlint:unchecked"),
+  scalacOptions ++= Seq("-target:jvm-1.8", "-deprecation", "-feature", "-unchecked"),
+  javacOptions ++= Seq("-source", "1.8", "-target", "1.8", "-Xlint:unchecked"),
 
   libraryDependencies ++= (
     if (scalaBinaryVersion.value == "2.10")
