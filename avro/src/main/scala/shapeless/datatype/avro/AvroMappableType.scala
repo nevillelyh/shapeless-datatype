@@ -1,5 +1,7 @@
 package shapeless.datatype.avro
 
+import java.nio.ByteBuffer
+
 import org.apache.avro.Schema
 import org.apache.avro.generic.{GenericData, GenericRecord}
 import shapeless.datatype.mappable.{BaseMappableType, MappableType}
@@ -66,8 +68,17 @@ trait AvroMappableType {
   implicit val longAvroMappableType = at[Long]
   implicit val floatAvroMappableType = at[Float]
   implicit val doubleAvroMappableType = at[Double]
-  implicit val stringAvroMappableType = at[String]
-  implicit val byteArrayAvroMappableType = at[Array[Byte]]
+  implicit val stringAvroMappableType = new BaseAvroMappableType[String] {
+    override def from(value: Any): String = value.toString
+    override def to(value: String): Any = value.asInstanceOf[Any]
+  }
+  implicit val byteArrayAvroMappableType = new BaseAvroMappableType[Array[Byte]] {
+    override def from(value: Any): Array[Byte] = {
+      val bb = value.asInstanceOf[ByteBuffer]
+      java.util.Arrays.copyOfRange(bb.array(), bb.position(), bb.limit())
+    }
+    override def to(value: Array[Byte]): Any = ByteBuffer.wrap(value)
+  }
 
 }
 

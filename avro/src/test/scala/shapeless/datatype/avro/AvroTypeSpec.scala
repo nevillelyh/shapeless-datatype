@@ -1,5 +1,9 @@
 package shapeless.datatype.avro
 
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
+
+import org.apache.avro.generic.{GenericDatumReader, GenericDatumWriter, GenericRecord}
+import org.apache.avro.io.{DecoderFactory, EncoderFactory}
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Shapeless._
 import org.scalacheck._
@@ -23,7 +27,22 @@ object AvroTypeSpec extends Properties("AvroType") {
                                mr: MatchRecord[L]): Boolean = {
     val t = ensureSerializable(AvroType[A])
     val rm = RecordMatcher[A]
-    t.fromGenericRecord(t.toGenericRecord(m)).exists(rm(_, m))
+    t.fromGenericRecord(roundTrip(t.toGenericRecord(m))).exists(rm(_, m))
+  }
+
+  def roundTrip(r: GenericRecord): GenericRecord = {
+    val writer = new GenericDatumWriter[GenericRecord](r.getSchema)
+    val baos = new ByteArrayOutputStream()
+    val encoder = EncoderFactory.get().binaryEncoder(baos, null)
+    writer.write(r, encoder)
+    encoder.flush()
+    baos.close()
+    val bytes = baos.toByteArray
+
+    val reader = new GenericDatumReader[GenericRecord](r.getSchema)
+    val bais = new ByteArrayInputStream(bytes)
+    val decoder = DecoderFactory.get().binaryDecoder(bais, null)
+    reader.read(null, decoder)
   }
 
   property("required") = forAll { m: Required => roundTrip(m) }
