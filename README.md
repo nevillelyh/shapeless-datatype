@@ -100,6 +100,8 @@ case class City(name: String, code: String, lat: Double, long: Double)
 val t = AvroType[City]
 val r = t.toGenericRecord(City("New York", "NYC", 40.730610, -73.935242))
 val c = t.fromGenericRecord(r)
+
+AvroSchema[City]
 ```
 
 # BigQueryType
@@ -114,6 +116,8 @@ case class City(name: String, code: String, lat: Double, long: Double)
 val t = BigQueryType[City]
 val r = t.toTableRow(City("New York", "NYC", 40.730610, -73.935242))
 val c = t.fromTableRow(r)
+
+BigQuerySchema[City]
 ```
 
 # DatastoreType
