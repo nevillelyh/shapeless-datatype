@@ -117,6 +117,7 @@ lazy val bigquery: Project = Project(
   commonSettings,
   description := "Shapeless utilities for Google Cloud BigQuery",
   libraryDependencies ++= Seq(
+    "org.scala-lang" % "scala-reflect" % scalaVersion.value,
     "com.google.apis" % "google-api-services-bigquery" % bigqueryVersion,
     "com.google.protobuf" % "protobuf-java" % protobufVersion % "provided",
     "joda-time" % "joda-time" % jodaTimeVersion % "provided",

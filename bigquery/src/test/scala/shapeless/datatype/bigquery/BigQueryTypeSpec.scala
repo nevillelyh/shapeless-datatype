@@ -9,6 +9,8 @@ import org.scalacheck._
 import shapeless._
 import shapeless.datatype.record._
 
+import scala.reflect.runtime.universe._
+
 object BigQueryTypeSpec extends Properties("BigQueryType") {
 
   import shapeless.datatype.test.Records._
@@ -19,12 +21,13 @@ object BigQueryTypeSpec extends Properties("BigQueryType") {
   implicit def compareByteArrays(x: Array[Byte], y: Array[Byte]) = java.util.Arrays.equals(x, y)
   implicit def compareIntArrays(x: Array[Int], y: Array[Int]) = java.util.Arrays.equals(x, y)
 
-  def roundTrip[A, L <: HList](m: A)
+  def roundTrip[A: TypeTag, L <: HList](m: A)
                               (implicit
                                gen: LabelledGeneric.Aux[A, L],
                                fromL: FromTableRow[L],
                                toL: ToTableRow[L],
                                mr: MatchRecord[L]): Boolean = {
+    BigQuerySchema[A] // FIXME: verify the generated schema
     val t = ensureSerializable(BigQueryType[A])
     val tr1 = t.toTableRow(m)
     val tr2 = mapper.readValue(mapper.writeValueAsString(tr1), classOf[TableRow])
