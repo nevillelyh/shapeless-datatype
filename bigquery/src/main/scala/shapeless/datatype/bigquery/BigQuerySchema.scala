@@ -60,7 +60,5 @@ object BigQuerySchema {
       override def apply(t: TypeTag[_]): TableSchema =
         new TableSchema().setFields(toFields(t.tpe).toList.asJava)
     })
-  def main(args: Array[String]): Unit = {
-  }
 
 }
