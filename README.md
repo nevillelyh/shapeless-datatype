@@ -111,8 +111,7 @@ import shapeless.datatype.avro._
 import java.net.URI
 import org.apache.avro.Schema
 
-implicit val uriAvroType = AvroType.at[URI](Schema.Type.STRING)(
-  v => URI.create(v.toString), _.toString)
+implicit val uriAvroType = AvroType.at[URI](Schema.Type.STRING)(v => URI.create(v.toString), _.toString)
 
 case class Page(uri: URI, rank: Int)
 
@@ -145,8 +144,7 @@ Custom types are also supported.
 import shapeless.datatype.bigquery._
 import java.net.URI
 
-implicit val uriBigQueryType = BigQueryType.at[URI]("STRING")(
-  v => URI.create(v.toString), _.toString)
+implicit val uriBigQueryType = BigQueryType.at[URI]("STRING")(v => URI.create(v.toString), _.toString)
 
 case class Page(uri: URI, rank: Int)
 
