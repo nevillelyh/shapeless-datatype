@@ -37,6 +37,8 @@ object AvroSchema {
       val name = t.typeSymbol.name.toString
       val pkg = t.typeSymbol.owner.fullName
       (Schema.createRecord(name, null, pkg, false, fields.asJava), null)
+
+    case t if customTypes.contains(t.toString) => (Schema.create(customTypes(t.toString)), null)
   }
 
   private def toField(s: Symbol): Field = {
@@ -46,9 +48,13 @@ object AvroSchema {
     new Field(name, schema, null, default)
   }
 
-  private val m = new java.util.concurrent.ConcurrentHashMap[TypeTag[_], Schema]()
+  private val customTypes = scala.collection.mutable.Map[String, Schema.Type]()
+  private val cachedSchemas = new java.util.concurrent.ConcurrentHashMap[TypeTag[_], Schema]()
 
-  def apply[T: TypeTag]: Schema = m.computeIfAbsent(
+  private[avro] def register(tpe: Type, schemaType: Schema.Type): Unit =
+    customTypes += tpe.toString -> schemaType
+
+  def apply[T: TypeTag]: Schema = cachedSchemas.computeIfAbsent(
     implicitly[TypeTag[T]],
     new java.util.function.Function[TypeTag[_], Schema] {
       override def apply(t: TypeTag[_]): Schema = toSchema(t.tpe)._1

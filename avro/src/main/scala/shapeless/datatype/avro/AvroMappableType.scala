@@ -58,9 +58,9 @@ trait AvroMappableType {
     }
   }
 
-  private def at[T] = new BaseAvroMappableType[T] {
-    override def from(value: Any): T = value.asInstanceOf[T]
-    override def to(value: T): Any = value.asInstanceOf[Any]
+  private def at[V] = new BaseAvroMappableType[V] {
+    override def from(value: Any): V = value.asInstanceOf[V]
+    override def to(value: V): Any = value.asInstanceOf[Any]
   }
 
   implicit val booleanAvroMappableType = at[Boolean]

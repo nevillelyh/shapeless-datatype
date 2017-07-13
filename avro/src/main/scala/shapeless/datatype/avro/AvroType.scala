@@ -1,5 +1,6 @@
 package shapeless.datatype.avro
 
+import org.apache.avro.Schema
 import org.apache.avro.generic.GenericRecord
 import shapeless._
 
@@ -16,4 +17,12 @@ class AvroType[A: TypeTag] extends Serializable {
 
 object AvroType {
   def apply[A: TypeTag]: AvroType[A] = new AvroType[A]
+
+  def at[V: TypeTag](schemaType: Schema.Type)(fromFn: Any => V, toFn: V => Any): BaseAvroMappableType[V] = {
+    AvroSchema.register(implicitly[TypeTag[V]].tpe, schemaType)
+    new BaseAvroMappableType[V] {
+      override def from(value: Any): V = fromFn(value)
+      override def to(value: V): Any = toFn(value)
+    }
+  }
 }
