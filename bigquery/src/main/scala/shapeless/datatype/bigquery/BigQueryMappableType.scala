@@ -1,7 +1,6 @@
 package shapeless.datatype.bigquery
 
 import com.google.common.io.BaseEncoding
-import com.google.protobuf.ByteString
 import org.joda.time._
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatterBuilder}
 import shapeless.datatype.mappable.{BaseMappableType, MappableType}
@@ -70,9 +69,6 @@ trait BigQueryMappableType {
   implicit val floatBigQueryMappableType = at[Float](_.toString.toFloat, id)
   implicit val doubleBigQueryMappableType = at[Double](_.toString.toDouble, id)
   implicit val stringBigQueryMappableType = at[String](_.toString, id)
-  implicit val byteStringBigQueryMappableType = at[ByteString](
-    x => ByteString.copyFrom(BaseEncoding.base64().decode(x.toString)),
-    x => BaseEncoding.base64().encode(x.toByteArray))
   implicit val byteArrayBigQueryMappableType = at[Array[Byte]](
     x => BaseEncoding.base64().decode(x.toString),
     x => BaseEncoding.base64().encode(x))

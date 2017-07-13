@@ -4,6 +4,8 @@ import java.net.URI
 
 import com.fasterxml.jackson.databind.{ObjectMapper, SerializationFeature}
 import com.google.api.services.bigquery.model.TableRow
+import com.google.common.io.BaseEncoding
+import com.google.protobuf.ByteString
 import org.joda.time.{Instant, LocalDate, LocalDateTime, LocalTime}
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Shapeless._
@@ -37,6 +39,9 @@ object BigQueryTypeSpec extends Properties("BigQueryType") {
     t.fromTableRow(tr2).exists(rm(_, m))
   }
 
+  implicit val byteStringBigQueryMappableType = BigQueryType.at[ByteString]("BYTES")(
+    x => ByteString.copyFrom(BaseEncoding.base64().decode(x.toString)),
+    x => BaseEncoding.base64().encode(x.toByteArray))
   property("required") = forAll { m: Required => roundTrip(m) }
   property("optional") = forAll { m: Optional => roundTrip(m) }
   property("repeated") = forAll { m: Repeated => roundTrip(m) }

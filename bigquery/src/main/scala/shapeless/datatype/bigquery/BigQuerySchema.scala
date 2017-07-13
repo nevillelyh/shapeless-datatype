@@ -1,7 +1,6 @@
 package shapeless.datatype.bigquery
 
 import com.google.api.services.bigquery.model.{TableFieldSchema, TableSchema}
-import com.google.protobuf.ByteString
 import org.joda.time.{Instant, LocalDate, LocalDateTime, LocalTime}
 
 import scala.collection.JavaConverters._
@@ -24,7 +23,6 @@ object BigQuerySchema {
     case t if t =:= typeOf[Float] => ("FLOAT", Nil)
     case t if t =:= typeOf[Double]  => ("FLOAT", Nil)
     case t if t =:= typeOf[String] => ("STRING", Nil)
-    case t if t =:= typeOf[ByteString] => ("BYTES", Nil)
     case t if t =:= typeOf[Array[Byte]] => ("BYTES", Nil)
     case t if t =:= typeOf[Instant] => ("TIMESTAMP", Nil)
     case t if t =:= typeOf[LocalDate] => ("DATE", Nil)

@@ -119,7 +119,6 @@ lazy val bigquery: Project = Project(
   libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-reflect" % scalaVersion.value,
     "com.google.apis" % "google-api-services-bigquery" % bigqueryVersion,
-    "com.google.protobuf" % "protobuf-java" % protobufVersion % "provided",
     "joda-time" % "joda-time" % jodaTimeVersion % "provided",
     "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion % "test"
   )
