@@ -1,5 +1,7 @@
 package shapeless.datatype.test
 
+import java.net.URI
+
 import com.google.protobuf.ByteString
 import org.joda.time.Instant
 import org.scalacheck._
@@ -28,7 +30,9 @@ object Records {
   case class Nested(longField: Long, longFieldO: Option[Long], longFieldR: List[Long],
                     mixedField: Mixed, mixedFieldO: Option[Mixed], mixedFieldR: List[Mixed])
   case class SeqTypes(array: Array[Int], list: List[Int], vector: Vector[Int])
+  case class Custom(uriField: URI, uriFieldO: Option[URI], uriFieldR: List[URI])
 
   implicit val arbByteString = Arbitrary(Gen.alphaStr.map(ByteString.copyFromUtf8))
   implicit val arbInstant = Arbitrary(Gen.const(Instant.now()))
+  implicit val arbUri = Arbitrary(Gen.alphaStr.map(URI.create))
 }

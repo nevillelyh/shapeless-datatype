@@ -1,5 +1,7 @@
 package shapeless.datatype.tensorflow
 
+import java.net.URI
+
 import org.joda.time.Instant
 import org.scalacheck.Prop.{all, forAll}
 import org.scalacheck.Shapeless._
@@ -48,5 +50,10 @@ object TensorFlowTypeSpec extends Properties("TensorFlowType") {
   property("repeated") = forAll { m: Repeated => roundTrip(m) }
   property("mixed") = forAll { m: Mixed => roundTrip(m) }
   property("seq types") = forAll { m: SeqTypes => roundTrip(m) }
+
+  implicit val uriTensorFlowType = TensorFlowType.at[URI](
+    TensorFlowType.toStrings(_).map(URI.create),
+    xs => TensorFlowType.fromStrings(xs.map(_.toString)))
+  property("custom") = forAll { m: Custom => roundTrip(m)}
 
 }
