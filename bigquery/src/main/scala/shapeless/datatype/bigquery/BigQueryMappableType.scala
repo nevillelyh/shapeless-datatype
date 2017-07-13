@@ -79,7 +79,6 @@ trait BigQueryMappableType {
   implicit val localTimeBigQueryMappableType = at[LocalTime](toLocalTime, fromLocalTime)
   implicit val localDateTimeBigQueryMappableType =
     at[LocalDateTime](toLocalDateTime, fromLocalDateTime)
-
 }
 
 private object TimestampConverter {
@@ -139,5 +138,3 @@ private object TimestampConverter {
   def fromLocalDateTime(dt: LocalDateTime): Any = datetimePrinter.print(dt)
 
 }
-
-object BigQueryMappableType extends BigQueryMappableType

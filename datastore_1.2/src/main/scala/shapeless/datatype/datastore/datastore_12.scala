@@ -42,5 +42,3 @@ trait DatastoreMappableType extends DatastoreMappableTypes {
       tail.putProperties(key, makeValue(values.map(v => makeValue(v).build()).asJava).build())
   }
 }
-
-object DatastoreMappableType extends DatastoreMappableType

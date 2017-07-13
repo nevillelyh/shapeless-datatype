@@ -79,7 +79,6 @@ trait AvroMappableType {
     }
     override def to(value: Array[Byte]): Any = ByteBuffer.wrap(value)
   }
-
 }
 
 case class AvroBuilder private (m: MMap[String, Any] = MMap.empty) {

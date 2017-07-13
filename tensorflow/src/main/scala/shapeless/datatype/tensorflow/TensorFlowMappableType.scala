@@ -44,5 +44,3 @@ trait TensorFlowMappableType {
   implicit val byteArrayTensorFlowMappableType = at[Array[Byte]](toByteArrays, fromByteArrays)
   implicit val stringTensorFlowMappableType = at[String](toStrings, fromStrings)
 }
-
-object TensorFlowMappableType extends TensorFlowMappableType

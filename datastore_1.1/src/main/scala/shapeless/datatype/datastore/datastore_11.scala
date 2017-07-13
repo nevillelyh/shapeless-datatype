@@ -56,5 +56,3 @@ trait DatastoreMappableType extends DatastoreMappableTypes {
     }
   }
 }
-
-object DatastoreMappableType extends DatastoreMappableType
