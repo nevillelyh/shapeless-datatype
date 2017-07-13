@@ -47,7 +47,7 @@ object BigQueryTypeSpec extends Properties("BigQueryType") {
   property("repeated") = forAll { m: Repeated => roundTrip(m) }
   property("mixed") = forAll { m: Mixed => roundTrip(m) }
   property("nested") = forAll { m: Nested => roundTrip(m) }
-  property("seq types") = forAll { m: SeqTypes => roundTrip(m) }
+  property("seqs") = forAll { m: Seqs => roundTrip(m) }
 
   implicit val arbDate = Arbitrary(Gen.const(LocalDate.now()))
   implicit val arbTime = Arbitrary(Gen.const(LocalTime.now()))
