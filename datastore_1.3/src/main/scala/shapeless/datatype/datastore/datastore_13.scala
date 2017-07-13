@@ -45,27 +45,16 @@ trait DatastoreMappableType {
       tail.putProperties(key, makeValue(values.map(v => makeValue(v).build()).asJava).build())
   }
 
-  private def at[T](fromFn: Value => T, toFn: T => Value) = new BaseDatastoreMappableType[T] {
-    override def from(value: Value): T = fromFn(value)
-    override def to(value: T): Value = toFn(value)
-  }
+  import DatastoreType.at
 
-  implicit val booleanEntityMappableType =
-    at[Boolean](_.getBooleanValue, makeValue(_).build())
-  implicit val intDatastoreMappableType =
-    at[Int](_.getIntegerValue.toInt, makeValue(_).build())
-  implicit val longEntityMappableType =
-    at[Long](_.getIntegerValue, makeValue(_).build())
-  implicit val floatEntityMappableType =
-    at[Float](_.getDoubleValue.toFloat, makeValue(_).build())
-  implicit val doubleEntityMappableType =
-    at[Double](_.getDoubleValue, makeValue(_).build())
-  implicit val stringEntityMappableType =
-    at[String](_.getStringValue, makeValue(_).build())
-  implicit val byteStringEntityMappableType =
-    at[ByteString](_.getBlobValue, makeValue(_).build())
-  implicit val byteArrayEntityMappableType =
-    at[Array[Byte]](_.getBlobValue.toByteArray, v => makeValue(ByteString.copyFrom(v)).build())
+  implicit val booleanEntityMappableType = at[Boolean](_.getBooleanValue, makeValue(_).build())
+  implicit val intDatastoreMappableType = at[Int](_.getIntegerValue.toInt, makeValue(_).build())
+  implicit val longEntityMappableType = at[Long](_.getIntegerValue, makeValue(_).build())
+  implicit val floatEntityMappableType = at[Float](_.getDoubleValue.toFloat, makeValue(_).build())
+  implicit val doubleEntityMappableType = at[Double](_.getDoubleValue, makeValue(_).build())
+  implicit val stringEntityMappableType = at[String](_.getStringValue, makeValue(_).build())
+  implicit val byteStringEntityMappableType = at[ByteString](_.getBlobValue, makeValue(_).build())
+  implicit val byteArrayEntityMappableType = at[Array[Byte]](_.getBlobValue.toByteArray, v => makeValue(ByteString.copyFrom(v)).build())
   implicit val timestampEntityMappableType = at[Instant](toInstant, fromInstant)
 
   private def toInstant(v: Value): Instant = {

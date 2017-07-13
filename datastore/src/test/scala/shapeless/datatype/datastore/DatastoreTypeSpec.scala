@@ -1,5 +1,8 @@
 package shapeless.datatype.datastore
 
+import java.net.URI
+
+import com.google.datastore.v1.client.DatastoreHelper._
 import org.scalacheck.Prop.{all, forAll}
 import org.scalacheck.Shapeless._
 import org.scalacheck._
@@ -33,5 +36,9 @@ object DatastoreTypeSpec extends Properties("DatastoreType") {
   property("mixed") = forAll { m: Mixed => roundTrip(m) }
   property("nested") = forAll { m: Nested => roundTrip(m) }
   property("seq types") = forAll { m: SeqTypes => roundTrip(m) }
+
+  implicit val uriDatastoreType = DatastoreType.at[URI](
+    v => URI.create(v.getStringValue), u => makeValue(u.toString).build())
+  property("custom") = forAll { m: Custom => roundTrip(m)}
 
 }

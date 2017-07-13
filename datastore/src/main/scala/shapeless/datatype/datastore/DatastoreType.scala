@@ -1,6 +1,6 @@
 package shapeless.datatype.datastore
 
-import com.google.datastore.v1.Entity
+import com.google.datastore.v1.{Entity, Value}
 import shapeless._
 
 class DatastoreType[A] extends Serializable {
@@ -31,4 +31,10 @@ class DatastoreType[A] extends Serializable {
 
 object DatastoreType {
   def apply[A]: DatastoreType[A] = new DatastoreType[A]
+
+  def at[V](fromFn: Value => V, toFn: V => Value): BaseDatastoreMappableType[V] =
+    new BaseDatastoreMappableType[V] {
+      override def from(value: Value): V = fromFn(value)
+      override def to(value: V): Value = toFn(value)
+    }
 }
