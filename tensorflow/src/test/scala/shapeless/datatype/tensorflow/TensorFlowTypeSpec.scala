@@ -21,17 +21,6 @@ object TensorFlowTypeSpec extends Properties("TensorFlowType") {
   implicit def compareIntArrays(x: Array[Int], y: Array[Int]) = java.util.Arrays.equals(x, y)
   implicit def compareDouble(x: Double, y: Double) = x.toFloat == y.toFloat
 
-  implicit val timestampTensorFlowMappableType = new BaseTensorFlowMappableType[Instant] {
-    override def fromSeq(value: Feature): Seq[Instant] =
-      value.getInt64List.getValueList.asScala.map(new Instant(_))
-    override def toSeq(value: Seq[Instant]): Feature =
-      Feature.newBuilder().setInt64List(
-          Int64List
-            .newBuilder()
-            .addAllValue(value.map(_.getMillis.asInstanceOf[java.lang.Long]).asJava)
-      ).build()
-  }
-
   def roundTrip[A, L <: HList](m: A)
                               (implicit
                                gen: LabelledGeneric.Aux[A, L],
@@ -45,6 +34,9 @@ object TensorFlowTypeSpec extends Properties("TensorFlowType") {
       t.fromExampleBuilder(t.toExampleBuilder(m)).exists(rm(_, m)))
   }
 
+  implicit val timestampTensorFlowMappableType = TensorFlowType.at[Instant](
+    TensorFlowType.toLongs(_).map(new Instant(_)),
+    xs => TensorFlowType.fromLongs(xs.map(_.getMillis)))
   property("required") = forAll { m: Required => roundTrip(m) }
   property("optional") = forAll { m: Optional => roundTrip(m) }
   property("repeated") = forAll { m: Repeated => roundTrip(m) }
