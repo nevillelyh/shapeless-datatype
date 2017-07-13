@@ -1,5 +1,7 @@
 package shapeless.datatype.bigquery
 
+import java.net.URI
+
 import com.fasterxml.jackson.databind.{ObjectMapper, SerializationFeature}
 import com.google.api.services.bigquery.model.TableRow
 import org.joda.time.{Instant, LocalDate, LocalDateTime, LocalTime}
@@ -51,5 +53,9 @@ object BigQueryTypeSpec extends Properties("BigQueryType") {
                            time: LocalTime,
                            dateTime: LocalDateTime)
   property("date time types") = forAll { m: DateTimeTypes => roundTrip(m) }
+
+  implicit val uriBigQueryType = BigQueryType.at[URI]("STRING")(
+    v => URI.create(v.toString), _.toASCIIString)
+  property("custom") = forAll { m: Custom => roundTrip(m)}
 
 }

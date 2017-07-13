@@ -42,7 +42,10 @@ object BigQuerySchema {
       case t if t.erasure <:< typeOf[Traversable[_]].erasure || (t.erasure <:< typeOf[Array[_]] && !(t.typeArgs.head =:= typeOf[Byte])) => ("REPEATED", t.typeArgs.head)
       case t => ("REQUIRED", t)
     }
-    val (tpeParam, nestedParam) = rawType(valType)
+    val (tpeParam, nestedParam) = customTypes.get(valType.toString) match {
+      case Some(t) => (t, Nil)
+      case None => rawType(valType)
+    }
     val tfs = new TableFieldSchema().setMode(mode).setName(name).setType(tpeParam)
     if (nestedParam.nonEmpty) {
       tfs.setFields(nestedParam.toList.asJava)
@@ -52,9 +55,13 @@ object BigQuerySchema {
 
   private def toFields(t: Type): Iterable[TableFieldSchema] = t.decls.filter(isField).map(toField)
 
-  private val m = new java.util.concurrent.ConcurrentHashMap[TypeTag[_], TableSchema]()
+  private val customTypes = scala.collection.mutable.Map[String, String]()
+  private val cachedSchemas = new java.util.concurrent.ConcurrentHashMap[TypeTag[_], TableSchema]()
 
-  def apply[T: TypeTag]: TableSchema = m.computeIfAbsent(
+  private[bigquery] def register(tpe: Type, typeName: String): Unit =
+    customTypes += tpe.toString -> typeName
+
+  def apply[T: TypeTag]: TableSchema = cachedSchemas.computeIfAbsent(
     implicitly[TypeTag[T]],
     new java.util.function.Function[TypeTag[_], TableSchema] {
       override def apply(t: TypeTag[_]): TableSchema =
