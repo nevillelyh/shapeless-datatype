@@ -90,7 +90,7 @@ m(Record("a", "foo", 10), Record("A", "bar", 10))  // true
 
 # AvroType
 
-`AvroType[T]` maps bewteen case class `T` and [Avro](http://avro.apache.org/) `GenericRecord`.
+`AvroType[T]` maps bewteen case class `T` and [Avro](http://avro.apache.org/) `GenericRecord`. `AvroSchema[T]` generates schema for case class `T`.
 
 ```scala
 import shapeless.datatype.avro._
@@ -125,7 +125,7 @@ AvroSchema[Page]
 
 # BigQueryType
 
-`BigQueryType[T]` maps bewteen case class `T` and [BigQuery](https://cloud.google.com/bigquery/) `TableRow`.
+`BigQueryType[T]` maps bewteen case class `T` and [BigQuery](https://cloud.google.com/bigquery/) `TableRow`. `BigQuerySchema[T]` generates schema for case class `T`.
 
 ```scala
 import shapeless.datatype.bigquery._
