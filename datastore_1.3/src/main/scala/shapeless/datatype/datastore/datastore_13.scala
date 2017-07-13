@@ -27,7 +27,7 @@ trait BaseDatastoreMappableType[V] extends MappableType[Entity.Builder, V] {
     tail.putProperties(key, makeValue(values.map(to).asJava).build())
 }
 
-trait DatastoreMappableType {
+trait DatastoreMappableType extends DatastoreMappableTypes {
   implicit val datastoreBaseMappableType = new BaseMappableType[Entity.Builder] {
     override def base: Entity.Builder = Entity.newBuilder()
 
@@ -44,30 +44,6 @@ trait DatastoreMappableType {
     override def put(key: String, values: Seq[Entity.Builder], tail: Entity.Builder): Entity.Builder =
       tail.putProperties(key, makeValue(values.map(v => makeValue(v).build()).asJava).build())
   }
-
-  import DatastoreType.at
-
-  implicit val booleanEntityMappableType = at[Boolean](_.getBooleanValue, makeValue(_).build())
-  implicit val intDatastoreMappableType = at[Int](_.getIntegerValue.toInt, makeValue(_).build())
-  implicit val longEntityMappableType = at[Long](_.getIntegerValue, makeValue(_).build())
-  implicit val floatEntityMappableType = at[Float](_.getDoubleValue.toFloat, makeValue(_).build())
-  implicit val doubleEntityMappableType = at[Double](_.getDoubleValue, makeValue(_).build())
-  implicit val stringEntityMappableType = at[String](_.getStringValue, makeValue(_).build())
-  implicit val byteStringEntityMappableType = at[ByteString](_.getBlobValue, makeValue(_).build())
-  implicit val byteArrayEntityMappableType = at[Array[Byte]](_.getBlobValue.toByteArray, v => makeValue(ByteString.copyFrom(v)).build())
-  implicit val timestampEntityMappableType = at[Instant](toInstant, fromInstant)
-
-  private def toInstant(v: Value): Instant = {
-    val t = v.getTimestampValue
-    new Instant(t.getSeconds * DateTimeConstants.MILLIS_PER_SECOND + t.getNanos / 1000000)
-  }
-  private def fromInstant(i: Instant): Value = {
-    val t = Timestamp.newBuilder()
-      .setSeconds(i.getMillis / DateTimeConstants.MILLIS_PER_SECOND)
-      .setNanos((i.getMillis % 1000).toInt * 1000000)
-    Value.newBuilder().setTimestampValue(t).build()
-  }
-
 }
 
 object DatastoreMappableType extends DatastoreMappableType
