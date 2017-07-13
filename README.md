@@ -104,6 +104,25 @@ val c = t.fromGenericRecord(r)
 AvroSchema[City]
 ```
 
+Custom types are also supported.
+
+```scala
+import shapeless.datatype.avro._
+import java.net.URI
+import org.apache.avro.Schema
+
+implicit val uriAvroType = AvroType.at[URI](Schema.Type.STRING)(
+  v => URI.create(v.toString), _.toString)
+
+case class Page(uri: URI, rank: Int)
+
+val t = AvroType[Page]
+val r = t.toGenericRecord(Page(URI.create("www.google.com"), 42))
+val c = t.fromGenericRecord(r)
+
+AvroSchema[Page]
+```
+
 # BigQueryType
 
 `BigQueryType[T]` maps bewteen case class `T` and [BigQuery](https://cloud.google.com/bigquery/) `TableRow`.
@@ -118,6 +137,24 @@ val r = t.toTableRow(City("New York", "NYC", 40.730610, -73.935242))
 val c = t.fromTableRow(r)
 
 BigQuerySchema[City]
+```
+
+Custom types are also supported.
+
+```scala
+import shapeless.datatype.bigquery._
+import java.net.URI
+
+implicit val uriBigQueryType = BigQueryType.at[URI]("STRING")(
+  v => URI.create(v.toString), _.toString)
+
+case class Page(uri: URI, rank: Int)
+
+val t = BigQueryType[Page]
+val r = t.toTableRow(Page(URI.create("www.google.com"), 42))
+val c = t.fromTableRow(r)
+
+BigQuerySchema[Page]
 ```
 
 # DatastoreType
@@ -136,6 +173,26 @@ val b = t.toEntityBuilder(City("New York", "NYC", 40.730610, -73.935242))
 val d = t.fromEntityBuilder(b)
 ```
 
+Custom types are also supported.
+
+```scala
+import shapeless.datatype.datastore._
+import com.google.datastore.v1.client.DatastoreHelper._
+import java.net.URI
+
+implicit val uriDatastoreType = DatastoreType.at[URI](
+  v => URI.create(v.getStringValue),
+  u => makeValue(u.toString).build())
+
+case class Page(uri: URI, rank: Int)
+
+val t = DatastoreType[Page]
+val r = t.toEntity(Page(URI.create("www.google.com"), 42))
+val c = t.fromEntity(r)
+val b = t.toEntityBuilder(Page(URI.create("www.google.com"), 42))
+val d = t.fromEntityBuilder(b)
+```
+
 # TensorFlowType
 
 `TensorFlowType[T]` maps between case class `T` and [TensorFlow](https://www.tensorflow.org/) `Example` or `Example.Builder` Protobuf types.
@@ -149,6 +206,25 @@ val t = TensorFlowType[Data]
 val r = t.toExample(Data(Array(1.5f, 2.5f), Array(1L, 2L), List("a", "b"), "x"))
 val c = t.fromExample(r)
 val b = t.toExampleBuilder(Data(Array(1.5f, 2.5f), Array(1L, 2L), List("a", "b"), "x"))
+val d = t.fromExampleBuilder(b)
+```
+
+Custom types are also supported.
+
+```scala
+import shapeless.datatype.tensorflow._
+import java.net.URI
+
+implicit val uriTensorFlowType = TensorFlowType.at[URI](
+  TensorFlowType.toStrings(_).map(URI.create),
+  xs => TensorFlowType.fromStrings(xs.map(_.toString)))
+
+case class Page(uri: URI, rank: Int)
+
+val t = TensorFlowType[Page]
+val r = t.toExample(Page(URI.create("www.google.com"), 42))
+val c = t.fromExample(r)
+val b = t.toExampleBuilder(Page(URI.create("www.google.com"), 42))
 val d = t.fromExampleBuilder(b)
 ```
 
