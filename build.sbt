@@ -1,6 +1,7 @@
 name := "shapeless-datatype"
 description := "Shapeless utilities for common data types"
 
+val algebirdVersion = "0.13.0"
 val avroVersion = "1.8.2"
 val bigqueryVersion = "v2-rev350-1.22.0"
 val jacksonVersion = "2.8.8.1"
@@ -70,6 +71,7 @@ lazy val root: Project = Project(
   commonSettings ++ noPublishSettings
 ).aggregate(
   core,
+  algebird,
   avro,
   bigquery,
   datastore11,
@@ -90,6 +92,22 @@ lazy val core: Project = Project(
     "com.chuusai" %% "shapeless" % shapelessVersion
   )
 ).dependsOn(
+  test % "test->test"
+)
+
+lazy val algebird: Project = Project(
+  "algebird",
+  file("algebird")
+).settings(
+  moduleName := "shapeless-datatype-algebird",
+  commonSettings,
+  description := "Shapeless utilities for Twitter Algebird",
+  libraryDependencies ++= Seq(
+    "com.chuusai" %% "shapeless" % shapelessVersion,
+    "com.twitter" %% "algebird-core" % algebirdVersion
+  )
+).dependsOn(
+  core % "test",
   test % "test->test"
 )
 
