@@ -33,6 +33,6 @@ object Records {
   case class Custom(uriField: URI, uriFieldO: Option[URI], uriFieldR: List[URI])
 
   implicit val arbByteString = Arbitrary(Gen.alphaStr.map(ByteString.copyFromUtf8))
-  implicit val arbInstant = Arbitrary(Gen.const(Instant.now()))
+  implicit val arbInstant = Arbitrary(Gen.chooseNum(0, Int.MaxValue).map(new Instant(_)))
   implicit val arbUri = Arbitrary(Gen.alphaStr.map(URI.create))
 }

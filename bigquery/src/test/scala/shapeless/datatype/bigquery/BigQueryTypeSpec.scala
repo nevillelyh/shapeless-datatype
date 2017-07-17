@@ -49,9 +49,9 @@ object BigQueryTypeSpec extends Properties("BigQueryType") {
   property("nested") = forAll { m: Nested => roundTrip(m) }
   property("seqs") = forAll { m: Seqs => roundTrip(m) }
 
-  implicit val arbDate = Arbitrary(Gen.const(LocalDate.now()))
-  implicit val arbTime = Arbitrary(Gen.const(LocalTime.now()))
-  implicit val arbDateTime = Arbitrary(Gen.const(LocalDateTime.now()))
+  implicit val arbDate = Arbitrary(arbInstant.arbitrary.map(i => new LocalDate(i.getMillis)))
+  implicit val arbTime = Arbitrary(arbInstant.arbitrary.map(i => new LocalTime(i.getMillis)))
+  implicit val arbDateTime = Arbitrary(arbInstant.arbitrary.map(i => new LocalDateTime(i.getMillis)))
 
   case class DateTimeTypes(instant: Instant,
                            date: LocalDate,
