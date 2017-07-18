@@ -20,7 +20,7 @@ class LensMatcher[A, L <: HList](val root: OpticDefns.RootLens[A], val hs: L) ex
   }
 
   def apply(l: A, r: A)(implicit lf: LeftFolder[L, (A, A, Boolean), matchFolder.type]): Boolean = {
-    val (l1: A, r1: A, b1: Boolean) = hs.foldLeft((l, r, true))(matchFolder)
+    val (l1, r1, b1: Boolean) = hs.foldLeft((l, r, true))(matchFolder)
     l1 == r1 && b1
   }
 }
