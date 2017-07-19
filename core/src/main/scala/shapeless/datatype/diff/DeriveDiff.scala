@@ -12,8 +12,8 @@ trait DeriveDiff {
           override def delta(x: H :: T, y: H :: T): Delta =
             (ch.delta(x.head, y.head), ct.delta(x.tail, y.tail)) match {
               case (Delta.Zero, t) => t
-              case (h, Delta.Zero) => Delta.Product(Map(name -> h))
-              case (h, Delta.Product(m)) => Delta.Product(m + (name -> h))
+              case (h, Delta.Zero) => Delta.Product(name -> h :: Nil)
+              case (h, Delta.Product(xs)) => Delta.Product(name -> h :: xs)
               case _ => throw new IllegalStateException("This should never happen")
             }
         }

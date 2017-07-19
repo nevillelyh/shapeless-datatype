@@ -12,7 +12,7 @@ object Delta {
 
   case object Zero extends Delta
   case class Field(kind: Kind, value: Double) extends Delta
-  case class Product(deltas: Map[String, Delta]) extends Delta
+  case class Product(deltas: List[(String, Delta)]) extends Delta
 }
 
 trait Diff[T] extends Serializable {

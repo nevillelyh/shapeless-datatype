@@ -46,12 +46,12 @@ object DiffSpec extends Properties("Diff") {
     ("b", Diff(x.b, y.b)),
     ("c", Diff(x.c, y.c)),
     ("d", Diff(x.d, y.d))
-  ).filter(_._2 != Delta.Zero).toMap)
+  ).filter(_._2 != Delta.Zero))
 
   def diffB(x: B, y: B): Delta = Delta.Product(List(
     ("a", diffA(x.a, y.a)),
     ("b", Diff(x.b, y.b))
-  ).filter(_._2 != Delta.Zero).toMap)
+  ).filter(_._2 != Delta.Zero))
 
   property("flat") = forAll { p: P[A] =>
     all(
@@ -74,7 +74,7 @@ object DiffSpec extends Properties("Diff") {
     ("a", Diff(x.a, y.a)),
     ("b", Diff(x.b, y.b)),
     ("c", if (x.c.size == y.c.size) Delta.Zero else Delta.Field(Delta.Kind.Vector, y.c.size - x.c.size))
-  ).filter(_._2 != Delta.Zero).toMap)
+  ).filter(_._2 != Delta.Zero))
 
   implicit val listStringDiff =
     Diff.from[List[String]](Delta.Kind.Vector)((x, y) => y.size - x.size)
