@@ -81,7 +81,8 @@ trait AvroMappableType {
   }
 }
 
-case class AvroBuilder private (m: MMap[String, Any] = MMap.empty) {
+// FIXME: Scala 2.11+ private (m: MMap[String, Any] = MMap.empty)
+case class AvroBuilder(m: MMap[String, Any] = MMap.empty) {
   def put(key: String, value: Any): Unit = m += (key -> value)
   def build(schema: Schema): GenericRecord = {
     val r = new GenericData.Record(schema)

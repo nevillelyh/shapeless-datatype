@@ -8,13 +8,20 @@ import scala.reflect.runtime.universe._
 
 object BigQuerySchema {
 
+  // FIXME: Scala 2.11+ && !s.isConstructor
   private def isField(s: Symbol): Boolean =
-    s.isPublic && s.isMethod && !s.isSynthetic && !s.isConstructor
+    s.isPublic && s.isMethod && !s.isSynthetic && !s.asMethod.isConstructor
 
   private def isCaseClass(tpe: Type): Boolean =
     !tpe.toString.startsWith("scala.") &&
       List(typeOf[Product], typeOf[Serializable], typeOf[Equals])
         .forall(b => tpe.baseClasses.contains(b.typeSymbol))
+
+  // FIXME: Scala 2.11+ t.typeArgs.head
+  private def typeArgs(t: Type): List[Type] = {
+    val TypeRef(_, _, typeArgs) = t
+    typeArgs
+  }
 
   private def rawType(tpe: Type): (String, Iterable[TableFieldSchema]) = tpe match {
     case t if t =:= typeOf[Boolean] => ("BOOLEAN", Nil)
@@ -36,8 +43,8 @@ object BigQuerySchema {
     val tpe = s.asMethod.returnType
 
     val (mode, valType) = tpe match {
-      case t if t.erasure =:= typeOf[Option[_]].erasure => ("NULLABLE", t.typeArgs.head)
-      case t if t.erasure <:< typeOf[Traversable[_]].erasure || (t.erasure <:< typeOf[Array[_]] && !(t.typeArgs.head =:= typeOf[Byte])) => ("REPEATED", t.typeArgs.head)
+      case t if t.erasure =:= typeOf[Option[_]].erasure => ("NULLABLE", typeArgs(t).head)
+      case t if t.erasure <:< typeOf[Traversable[_]].erasure || (t.erasure <:< typeOf[Array[_]] && !(typeArgs(t).head =:= typeOf[Byte])) => ("REPEATED", typeArgs(t).head)
       case t => ("REQUIRED", t)
     }
     val (tpeParam, nestedParam) = customTypes.get(valType.toString) match {
@@ -51,19 +58,20 @@ object BigQuerySchema {
     tfs
   }
 
-  private def toFields(t: Type): Iterable[TableFieldSchema] = t.decls.filter(isField).map(toField)
+  // FIXME: Scala 2.11+ t.decls
+  private def toFields(t: Type): Iterable[TableFieldSchema] = t.declarations.filter(isField).map(toField)
 
   private val customTypes = scala.collection.mutable.Map[String, String]()
-  private val cachedSchemas = new java.util.concurrent.ConcurrentHashMap[TypeTag[_], TableSchema]()
+  // FIXME: Scala 2.11+ TypeTag[_]
+  private val cachedSchemas = scala.collection.concurrent.TrieMap.empty[Type, TableSchema]
 
   private[bigquery] def register(tpe: Type, typeName: String): Unit =
     customTypes += tpe.toString -> typeName
 
-  def apply[T: TypeTag]: TableSchema = cachedSchemas.computeIfAbsent(
-    implicitly[TypeTag[T]],
-    new java.util.function.Function[TypeTag[_], TableSchema] {
-      override def apply(t: TypeTag[_]): TableSchema =
-        new TableSchema().setFields(toFields(t.tpe).toList.asJava)
-    })
+  // FIXME: Scala 2.11+ implicitly[TypeTag[T]], remove synchronized
+  def apply[T: TypeTag]: TableSchema = {
+    val t = BigQuerySchema.synchronized(implicitly[TypeTag[T]].tpe)
+    cachedSchemas.getOrElseUpdate(t, BigQuerySchema.synchronized(new TableSchema().setFields(toFields(t).toList.asJava)))
+  }
 
 }
