@@ -26,11 +26,11 @@ object AvroTypeSpec extends Properties("AvroType") {
   implicit def compareIntArrays(x: Array[Int], y: Array[Int]) = java.util.Arrays.equals(x, y)
 
   def roundTrip[A: TypeTag, L <: HList](m: A)
-                              (implicit
-                               gen: LabelledGeneric.Aux[A, L],
-                               fromL: FromAvroRecord[L],
-                               toL: ToAvroRecord[L],
-                               mr: MatchRecord[L]): Boolean = {
+                                       (implicit
+                                        gen: LabelledGeneric.Aux[A, L],
+                                        fromL: FromAvroRecord[L],
+                                        toL: ToAvroRecord[L],
+                                        mr: MatchRecord[L]): Boolean = {
     val t = ensureSerializable(AvroType[A])
     val rm = RecordMatcher[A]
     t.fromGenericRecord(roundTripRecord(t.toGenericRecord(m))).exists(rm(_, m))
