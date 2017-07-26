@@ -26,11 +26,11 @@ object BigQueryTypeSpec extends Properties("BigQueryType") {
   implicit def compareIntArrays(x: Array[Int], y: Array[Int]) = java.util.Arrays.equals(x, y)
 
   def roundTrip[A: TypeTag, L <: HList](m: A)
-                              (implicit
-                               gen: LabelledGeneric.Aux[A, L],
-                               fromL: FromTableRow[L],
-                               toL: ToTableRow[L],
-                               mr: MatchRecord[L]): Boolean = {
+                                       (implicit
+                                        gen: LabelledGeneric.Aux[A, L],
+                                        fromL: FromTableRow[L],
+                                        toL: ToTableRow[L],
+                                        mr: MatchRecord[L]): Boolean = {
     BigQuerySchema[A] // FIXME: verify the generated schema
     val t = ensureSerializable(BigQueryType[A])
     val tr1 = t.toTableRow(m)
