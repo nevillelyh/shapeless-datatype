@@ -6,12 +6,12 @@ import shapeless._
 
 import scala.reflect.runtime.universe._
 
-class AvroType[A: TypeTag] extends Serializable {
+class AvroType[A] extends Serializable {
   def fromGenericRecord[L <: HList](m: GenericRecord)
                                    (implicit gen: LabelledGeneric.Aux[A, L], fromL: FromAvroRecord[L])
   : Option[A] = fromL(Right(m)).map(gen.from)
   def toGenericRecord[L <: HList](a: A)
-                                 (implicit gen: LabelledGeneric.Aux[A, L], toL: ToAvroRecord[L])
+                                 (implicit gen: LabelledGeneric.Aux[A, L], toL: ToAvroRecord[L], tt: TypeTag[A])
   : GenericRecord = toL(gen.to(a)).left.get.build(AvroSchema[A])
 }
 
