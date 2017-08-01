@@ -54,16 +54,14 @@ object BigQuerySchema {
   private def toFields(t: Type): Iterable[TableFieldSchema] = t.decls.filter(isField).map(toField)
 
   private val customTypes = scala.collection.mutable.Map[String, String]()
-  private val cachedSchemas = new java.util.concurrent.ConcurrentHashMap[TypeTag[_], TableSchema]()
+  private val cachedSchemas = scala.collection.concurrent.TrieMap.empty[TypeTag[_], TableSchema]
 
   private[bigquery] def register(tpe: Type, typeName: String): Unit =
     customTypes += tpe.toString -> typeName
 
-  def apply[T: TypeTag]: TableSchema = cachedSchemas.computeIfAbsent(
-    implicitly[TypeTag[T]],
-    new java.util.function.Function[TypeTag[_], TableSchema] {
-      override def apply(t: TypeTag[_]): TableSchema =
-        new TableSchema().setFields(toFields(t.tpe).toList.asJava)
-    })
+  def apply[T: TypeTag]: TableSchema = {
+    val tt = implicitly[TypeTag[T]]
+    cachedSchemas.getOrElseUpdate(tt, new TableSchema().setFields(toFields(tt.tpe).toList.asJava))
+  }
 
 }

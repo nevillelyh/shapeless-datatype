@@ -49,15 +49,14 @@ object AvroSchema {
   }
 
   private val customTypes = scala.collection.mutable.Map[String, Schema.Type]()
-  private val cachedSchemas = new java.util.concurrent.ConcurrentHashMap[TypeTag[_], Schema]()
+  private val cachedSchemas = scala.collection.concurrent.TrieMap.empty[TypeTag[_], Schema]
 
   private[avro] def register(tpe: Type, schemaType: Schema.Type): Unit =
     customTypes += tpe.toString -> schemaType
 
-  def apply[T: TypeTag]: Schema = cachedSchemas.computeIfAbsent(
-    implicitly[TypeTag[T]],
-    new java.util.function.Function[TypeTag[_], Schema] {
-      override def apply(t: TypeTag[_]): Schema = toSchema(t.tpe)._1
-    })
+  def apply[T: TypeTag]: Schema = {
+    val tt = implicitly[TypeTag[T]]
+    cachedSchemas.getOrElseUpdate(tt, toSchema(tt.tpe)._1)
+  }
 
 }
