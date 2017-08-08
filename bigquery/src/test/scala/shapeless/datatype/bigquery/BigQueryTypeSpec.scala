@@ -8,7 +8,7 @@ import com.google.common.io.BaseEncoding
 import com.google.protobuf.ByteString
 import org.joda.time.{Instant, LocalDate, LocalDateTime, LocalTime}
 import org.scalacheck.Prop.forAll
-import org.scalacheck.Shapeless._
+import org.scalacheck.ScalacheckShapeless._
 import org.scalacheck._
 import shapeless._
 import shapeless.datatype.record._

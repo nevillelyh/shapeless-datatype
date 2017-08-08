@@ -4,7 +4,7 @@ import java.net.URI
 
 import org.joda.time.Instant
 import org.scalacheck.Prop.{all, forAll}
-import org.scalacheck.Shapeless._
+import org.scalacheck.ScalacheckShapeless._
 import org.scalacheck._
 import org.tensorflow.example.{Feature, Int64List}
 import shapeless._

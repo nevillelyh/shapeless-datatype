@@ -4,7 +4,7 @@ import java.net.URI
 
 import com.google.datastore.v1.client.DatastoreHelper._
 import org.scalacheck.Prop.{all, forAll}
-import org.scalacheck.Shapeless._
+import org.scalacheck.ScalacheckShapeless._
 import org.scalacheck._
 import shapeless._
 import shapeless.datatype.record._
