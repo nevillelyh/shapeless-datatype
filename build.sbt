@@ -10,7 +10,7 @@ val protobufVersion = "3.3.1"
 val scalacheckShapelessVersion = "1.1.6"
 val scalacheckVersion = "1.13.5"
 val shapelessVersion = "2.3.2"
-val tensorflowVersion = "1.2.1"
+val tensorflowVersion = "1.3.0"
 
 def jdkVersion(scalaBinaryVersion: String) = if (scalaBinaryVersion == "2.12") "1.8" else "1.7"
 
