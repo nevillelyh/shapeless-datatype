@@ -29,26 +29,14 @@ val commonSettings = Seq(
   publishMavenStyle             := true,
   publishArtifact in Test       := false,
   sonatypeProfileName           := "me.lyh",
-  pomExtra                      := {
-    <url>https://github.com/nevillelyh/shapeless-datatype</url>
-    <licenses>
-      <license>
-        <name>Apache 2</name>
-        <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      </license>
-    </licenses>
-    <scm>
-      <url>git@github.com/nevillelyh/shapeless-datatype.git</url>
-      <connection>scm:git:git@github.com:nevillelyh/shapeless-datatype.git</connection>
-    </scm>
-    <developers>
-      <developer>
-        <id>sinisa_lyh</id>
-        <name>Neville Li</name>
-        <url>https://twitter.com/sinisa_lyh</url>
-      </developer>
-    </developers>
-  }
+
+  licenses := Seq("Apache 2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
+  homepage := Some(url("https://github.com/nevillelyh/shapeless-datatype")),
+  scmInfo := Some(ScmInfo(
+    url("https://github.com/nevillelyh/shapeless-datatype.git"),
+    "scm:git:git@github.com:nevillelyh/shapeless-datatype.git")),
+  developers := List(
+    Developer(id="sinisa_lyh", name="Neville Li", email="neville.lyh@gmail.com", url=url("https://twitter.com/sinisa_lyh")))
 )
 
 val noPublishSettings = Seq(
