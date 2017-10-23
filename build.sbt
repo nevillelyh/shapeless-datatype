@@ -2,21 +2,21 @@ name := "shapeless-datatype"
 description := "Shapeless utilities for common data types"
 
 val avroVersion = "1.8.2"
-val bigqueryVersion = "v2-rev354-1.22.0"
-val jacksonVersion = "2.9.0"
+val bigqueryVersion = "v2-rev367-1.22.0"
+val jacksonVersion = "2.9.3"
 val jodaTimeVersion = "2.9.9"
 val paradiseVersion = "2.1.0"
 val protobufVersion = "3.3.1"
-val scalacheckShapelessVersion = "1.1.6"
+val scalacheckShapelessVersion = "1.1.7"
 val scalacheckVersion = "1.13.5"
-val shapelessVersion = "2.3.2"
-val tensorflowVersion = "1.3.0"
+val shapelessVersion = "2.3.3"
+val tensorflowVersion = "1.4.0"
 
 val commonSettings = Seq(
   organization := "me.lyh",
 
-  scalaVersion := "2.12.3",
-  crossScalaVersions := Seq("2.11.11", "2.12.3"),
+  scalaVersion := "2.12.4",
+  crossScalaVersions := Seq("2.11.12", "2.12.4"),
   scalacOptions ++= Seq("-target:jvm-1.8", "-deprecation", "-feature", "-unchecked"),
 
   // protobuf-lite is an older subset of protobuf-java and causes issues
