@@ -9,7 +9,7 @@ import scala.reflect.runtime.universe._
 object BigQuerySchema {
 
   private def isField(s: Symbol): Boolean =
-    s.isPublic && s.isMethod && !s.isSynthetic && !s.isConstructor
+    s.isPublic && s.isMethod && !s.isSynthetic && !s.isConstructor && s.asMethod.isCaseAccessor
 
   private def isCaseClass(tpe: Type): Boolean =
     !tpe.toString.startsWith("scala.") &&
