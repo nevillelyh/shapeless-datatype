@@ -38,20 +38,20 @@ trait LowPriorityMapRecordOption1 extends LowPriorityMapRecord1 {
   }
 }
 
-trait LowPriorityMapRecordSeq1 extends LowPriorityMapRecordOption1 {
-  implicit def hconsMapRecordSeq1[K <: Symbol, V, W, TI <: HList, TO <: HList, S[_] <: Seq[_]]
+trait LowPriorityMapRecordIterable1 extends LowPriorityMapRecordOption1 {
+  implicit def hconsMapRecordIterable1[K <: Symbol, V, W, TI <: HList, TO <: HList, S[_] <: Iterable[_]]
   (implicit f: V => W, mrT: Lazy[MapRecord[TI, TO]],
    cbf: CanBuildFrom[_, W, S[W]])
   : MV[K, S[V], S[W], TI, TO] = new MV[K, S[V], S[W], TI, TO] {
     override def apply(l: FieldType[K, S[V]] :: TI): FieldType[K, S[W]] :: TO = {
       val b = cbf()
-      b ++= l.head.asInstanceOf[Seq[V]].map(f)
+      b ++= l.head.asInstanceOf[Iterable[V]].map(f)
       field[K](b.result()) :: mrT.value(l.tail)
     }
   }
 }
 
-trait LowPriorityMapRecord0 extends LowPriorityMapRecordSeq1 {
+trait LowPriorityMapRecord0 extends LowPriorityMapRecordIterable1 {
   implicit def hconsMapRecord0[K <: Symbol, V, W, HV <: HList, HW <: HList, TI <: HList, TO <: HList]
   (implicit genV: LabelledGeneric.Aux[V, HV], genW: LabelledGeneric.Aux[W, HW],
    mrH: Lazy[MapRecord[HV, HW]], mrT: Lazy[MapRecord[TI, TO]])
@@ -71,21 +71,21 @@ trait LowPriorityMapRecordOption0 extends LowPriorityMapRecord0 {
   }
 }
 
-trait LowPriorityMapRecordSeq0 extends LowPriorityMapRecordOption0 {
-  implicit def hconsMapRecordSeq0[K <: Symbol, V, W, HV <: HList, HW <: HList, TI <: HList, TO <: HList, S[_] <: Seq[_]]
+trait LowPriorityMapRecordIterable0 extends LowPriorityMapRecordOption0 {
+  implicit def hconsMapRecordIterable0[K <: Symbol, V, W, HV <: HList, HW <: HList, TI <: HList, TO <: HList, S[_] <: Iterable[_]]
   (implicit genV: LabelledGeneric.Aux[V, HV], genW: LabelledGeneric.Aux[W, HW],
    mrH: Lazy[MapRecord[HV, HW]], mrT: Lazy[MapRecord[TI, TO]],
    cbf: CanBuildFrom[_, W, S[W]])
   : MV[K, S[V], S[W], TI, TO] = new MV[K, S[V], S[W], TI, TO] {
     override def apply(l: FieldType[K, S[V]] :: TI): FieldType[K, S[W]] :: TO = {
       val b = cbf()
-      b ++=  l.head.asInstanceOf[Seq[V]].map(v => genW.from(mrH.value(genV.to(v))))
+      b ++=  l.head.asInstanceOf[Iterable[V]].map(v => genW.from(mrH.value(genV.to(v))))
       field[K](b.result()) :: mrT.value(l.tail)
     }
   }
 }
 
-object MapRecord extends LowPriorityMapRecordSeq0 {
+object MapRecord extends LowPriorityMapRecordIterable0 {
   implicit val hnilMapRecord: MapRecord[HNil, HNil] = new MapRecord[HNil, HNil] {
     override def apply(l: HNil): HNil = l
   }
