@@ -28,6 +28,11 @@ object RecordMapperRecords {
                     intList: List[Int], stringList: List[Array[Byte]],
                     intSet: Set[Int], stringSet: Set[Array[Byte]],
                     intMap: Map[String, Int]/*, stringMap: Map[String, Array[Byte]]*/)
+  case class MixedC(intField: Option[Int], stringField: Option[String],
+                    intFieldO: Option[Int], stringFieldO: Option[String],
+                    intList: Option[List[Int]], stringList: Option[List[String]],
+                    intSet: Option[Set[Int]], stringSet: Option[Set[String]],
+                    intMap: Option[Map[String, Int]]/*, stringMap: Option[Map[String, String]]*/)
   case class NestedA(required: String, optional: Option[String],
                      list: List[String], set: Set[String], map: Map[String, Int],
                      requiredN: MixedA, optionalN: Option[MixedA],
@@ -36,6 +41,10 @@ object RecordMapperRecords {
                      list: List[Array[Byte]], set: Set[Array[Byte]], map: Map[String, Int],
                      requiredN: MixedB, optionalN: Option[MixedB],
                      listN: List[MixedB], setN: Set[MixedB]/*, mapN: Map[String, MixedB]*/)
+  case class NestedC(required: Option[Array[Byte]], optional: Option[Array[Byte]],
+                     list: Option[List[String]], set: Option[Set[String]], map: Option[Map[String, Int]],
+                     requiredN: Option[MixedA], optionalN: Option[MixedA],
+                     listN: Option[List[MixedA]], setN: Option[Set[MixedA]]/*, mapN: Option[Map[String, MixedA]]*/)
 }
 
 object RecordMapperSpec extends Properties("RecordMapper") {
@@ -65,4 +74,14 @@ object RecordMapperSpec extends Properties("RecordMapper") {
   property("mixed") = forAll { m: MixedA => roundTripTo[MixedB].from(m) }
   property("nested") = forAll { m: NestedA => roundTripTo[NestedB].from(m) }
 
+  import UnsafeOptionExtractorImplicits._
+  property("required to optional with unsafe option extraction") = forAll {
+    m: RequiredA => roundTripTo[OptionalB].from(m)
+  }
+  property("mixed with unsafe option extraction") = forAll {
+    m: MixedA => roundTripTo[MixedC].from(m)
+  }
+  property("nested with unsafe option extraction") = forAll {
+    m: NestedA => roundTripTo[NestedC].from(m)
+  }
 }
