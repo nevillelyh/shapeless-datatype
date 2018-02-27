@@ -5,6 +5,7 @@ val avroVersion = "1.8.2"
 val bigqueryVersion = "v2-rev367-1.22.0"
 val jacksonVersion = "2.9.3"
 val jodaTimeVersion = "2.9.9"
+val magnoliaVersion = "0.7.1"
 val protobufVersion = "3.3.1"
 val scalacheckShapelessVersion = "1.1.7"
 val scalacheckVersion = "1.13.5"
@@ -68,7 +69,8 @@ lazy val core: Project = Project(
   commonSettings,
   description := "Shapeless utilities for common data types",
   libraryDependencies ++= Seq(
-    "com.chuusai" %% "shapeless" % shapelessVersion
+    "com.chuusai" %% "shapeless" % shapelessVersion,
+    "com.propensive" %% "magnolia" % magnoliaVersion,
   )
 ).dependsOn(
   test % "test->test"
