@@ -33,7 +33,7 @@ trait BaseBigQueryMappableType[V] extends MappableType[BigQueryMap, V] {
   }
 }
 
-trait BigQueryMappableType {
+trait BigQueryMappableType extends Serializable {
   implicit val bigQueryBaseMappableType = new BaseMappableType[BigQueryMap] {
     override def base: BigQueryMap = new java.util.LinkedHashMap[String, Any]()
 

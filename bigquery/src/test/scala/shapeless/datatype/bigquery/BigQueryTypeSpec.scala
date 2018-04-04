@@ -33,10 +33,13 @@ object BigQueryTypeSpec extends Properties("BigQueryType") {
                                         mr: MatchRecord[L]): Boolean = {
     BigQuerySchema[A] // FIXME: verify the generated schema
     val t = ensureSerializable(BigQueryType[A])
-    val tr1 = t.toTableRow(m)
-    val tr2 = mapper.readValue(mapper.writeValueAsString(tr1), classOf[TableRow])
+    val f1: SerializableFunction[A, TableRow] = (m: A) => t.toTableRow(m)
+    val f2: SerializableFunction[TableRow, Option[A]] = (m: TableRow) => t.fromTableRow(m)
+    val toFn = ensureSerializable(f1)
+    val fromFn = ensureSerializable(f2)
+    val copy = fromFn(mapper.readValue(mapper.writeValueAsString(toFn(m)), classOf[TableRow]))
     val rm = RecordMatcher[A]
-    t.fromTableRow(tr2).exists(rm(_, m))
+    copy.exists(rm(_, m))
   }
 
   implicit val byteStringBigQueryMappableType = BigQueryType.at[ByteString]("BYTES")(

@@ -19,4 +19,6 @@ object SerializableUtils {
   def ensureSerializable[T <: Serializable](value: T): T =
     deserializeFromByteArray(serializeToByteArray(value)).asInstanceOf[T]
 
+  trait SerializableFunction[A, B] extends (A => B) with Serializable
+
 }

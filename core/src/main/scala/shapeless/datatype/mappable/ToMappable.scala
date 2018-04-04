@@ -5,7 +5,7 @@ import shapeless.labelled.FieldType
 
 import scala.language.higherKinds
 
-trait ToMappable[L <: HList, M] {
+trait ToMappable[L <: HList, M] extends Serializable {
   def apply(l: L): M
 }
 

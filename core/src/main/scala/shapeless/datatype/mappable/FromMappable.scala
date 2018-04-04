@@ -6,7 +6,7 @@ import shapeless.labelled.{FieldType, field}
 import scala.collection.generic.CanBuildFrom
 import scala.language.higherKinds
 
-trait FromMappable[L <: HList, M] {
+trait FromMappable[L <: HList, M] extends Serializable {
   def apply(m: M): Option[L]
 }
 

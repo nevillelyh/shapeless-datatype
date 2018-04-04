@@ -2,6 +2,7 @@ package shapeless.datatype.datastore
 
 import java.net.URI
 
+import com.google.datastore.v1.Entity
 import com.google.datastore.v1.client.DatastoreHelper._
 import org.scalacheck.Prop.{all, forAll}
 import org.scalacheck.ScalacheckShapeless._
@@ -24,10 +25,32 @@ object DatastoreTypeSpec extends Properties("DatastoreType") {
                                toL: ToEntity[L],
                                mr: MatchRecord[L]): Prop = {
     val t = ensureSerializable(DatastoreType[A])
+    val f1: SerializableFunction[A, Entity] =
+      new SerializableFunction[A, Entity] {
+        override def apply(m: A): Entity = t.toEntity(m)
+      }
+    val f2: SerializableFunction[Entity, Option[A]] =
+      new SerializableFunction[Entity, Option[A]] {
+        override def apply(m: Entity): Option[A] = t.fromEntity(m)
+      }
+    val f3: SerializableFunction[A, Entity.Builder] =
+      new SerializableFunction[A, Entity.Builder] {
+        override def apply(m: A): Entity.Builder = t.toEntityBuilder(m)
+      }
+    val f4: SerializableFunction[Entity.Builder, Option[A]] =
+      new SerializableFunction[Entity.Builder, Option[A]] {
+        override def apply(m: Entity.Builder): Option[A] = t.fromEntityBuilder(m)
+      }
+    val toFn1 = ensureSerializable(f1)
+    val fromFn1 = ensureSerializable(f2)
+    val toFn2 = ensureSerializable(f3)
+    val fromFn2 = ensureSerializable(f4)
+    val copy1 = fromFn1(toFn1(m))
+    val copy2 = fromFn2(toFn2(m))
     val rm = RecordMatcher[A]
     all(
-      t.fromEntity(t.toEntity(m)).exists(rm(_, m)),
-      t.fromEntityBuilder(t.toEntityBuilder(m)).exists(rm(_, m)))
+      copy1.exists(rm(_, m)),
+      copy2.exists(rm(_, m)))
   }
 
   property("required") = forAll { m: Required => roundTrip(m) }

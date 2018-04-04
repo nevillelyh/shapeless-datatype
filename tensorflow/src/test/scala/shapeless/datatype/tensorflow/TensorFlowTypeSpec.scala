@@ -6,11 +6,9 @@ import org.joda.time.Instant
 import org.scalacheck.Prop.{all, forAll}
 import org.scalacheck.ScalacheckShapeless._
 import org.scalacheck._
-import org.tensorflow.example.{Feature, Int64List}
+import org.tensorflow.example.Example
 import shapeless._
 import shapeless.datatype.record._
-
-import scala.collection.JavaConverters._
 
 object TensorFlowTypeSpec extends Properties("TensorFlowType") {
 
@@ -28,10 +26,32 @@ object TensorFlowTypeSpec extends Properties("TensorFlowType") {
                                toL: ToFeatures[L],
                                mr: MatchRecord[L]): Prop = {
     val t = ensureSerializable(TensorFlowType[A])
+    val f1: SerializableFunction[A, Example] =
+      new SerializableFunction[A, Example] {
+        override def apply(m: A): Example = t.toExample(m)
+      }
+    val f2: SerializableFunction[Example, Option[A]] =
+      new SerializableFunction[Example, Option[A]] {
+        override def apply(m: Example): Option[A] = t.fromExample(m)
+      }
+    val f3: SerializableFunction[A, Example.Builder] =
+      new SerializableFunction[A, Example.Builder] {
+        override def apply(m: A): Example.Builder = t.toExampleBuilder(m)
+      }
+    val f4: SerializableFunction[Example.Builder, Option[A]] =
+      new SerializableFunction[Example.Builder, Option[A]] {
+        override def apply(m: Example.Builder): Option[A] = t.fromExampleBuilder(m)
+      }
+    val toFn1 = ensureSerializable(f1)
+    val fromFn1 = ensureSerializable(f2)
+    val toFn2 = ensureSerializable(f3)
+    val fromFn2 = ensureSerializable(f4)
+    val copy1 = fromFn1(toFn1(m))
+    val copy2 = fromFn2(toFn2(m))
     val rm = RecordMatcher[A]
     all(
-      t.fromExample(t.toExample(m)).exists(rm(_, m)),
-      t.fromExampleBuilder(t.toExampleBuilder(m)).exists(rm(_, m)))
+      copy1.exists(rm(_, m)),
+      copy2.exists(rm(_, m)))
   }
 
   implicit val timestampTensorFlowMappableType = TensorFlowType.at[Instant](

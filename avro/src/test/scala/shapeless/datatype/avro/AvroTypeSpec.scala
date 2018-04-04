@@ -32,8 +32,19 @@ object AvroTypeSpec extends Properties("AvroType") {
                                         toL: ToAvroRecord[L],
                                         mr: MatchRecord[L]): Boolean = {
     val t = ensureSerializable(AvroType[A])
+    val f1: SerializableFunction[A, GenericRecord] =
+      new SerializableFunction[A, GenericRecord] {
+        override def apply(m: A): GenericRecord = t.toGenericRecord(m)
+      }
+    val f2: SerializableFunction[GenericRecord, Option[A]] =
+      new SerializableFunction[GenericRecord, Option[A]] {
+        override def apply(m: GenericRecord): Option[A] = t.fromGenericRecord(m)
+      }
+    val toFn = ensureSerializable(f1)
+    val fromFn = ensureSerializable(f2)
+    val copy = fromFn(roundTripRecord(toFn(m)))
     val rm = RecordMatcher[A]
-    t.fromGenericRecord(roundTripRecord(t.toGenericRecord(m))).exists(rm(_, m))
+    copy.exists(rm(_, m))
   }
 
   def roundTripRecord(r: GenericRecord): GenericRecord = {
