@@ -33,8 +33,14 @@ object BigQueryTypeSpec extends Properties("BigQueryType") {
                                         mr: MatchRecord[L]): Boolean = {
     BigQuerySchema[A] // FIXME: verify the generated schema
     val t = ensureSerializable(BigQueryType[A])
-    val f1: SerializableFunction[A, TableRow] = (m: A) => t.toTableRow(m)
-    val f2: SerializableFunction[TableRow, Option[A]] = (m: TableRow) => t.fromTableRow(m)
+    val f1: SerializableFunction[A, TableRow] =
+      new SerializableFunction[A, TableRow] {
+        override def apply(m: A): TableRow = t.toTableRow(m)
+      }
+    val f2: SerializableFunction[TableRow, Option[A]] =
+      new SerializableFunction[TableRow, Option[A]] {
+        override def apply(m: TableRow): Option[A] = t.fromTableRow(m)
+      }
     val toFn = ensureSerializable(f1)
     val fromFn = ensureSerializable(f2)
     val copy = fromFn(mapper.readValue(mapper.writeValueAsString(toFn(m)), classOf[TableRow]))
