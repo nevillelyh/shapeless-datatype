@@ -6,16 +6,16 @@ val bigqueryVersion = "v2-rev367-1.22.0"
 val jacksonVersion = "2.9.3"
 val jodaTimeVersion = "2.9.9"
 val protobufVersion = "3.3.1"
-val scalacheckShapelessVersion = "1.1.7"
-val scalacheckVersion = "1.13.5"
+val scalacheckShapelessVersion = "1.2.0-1"
+val scalacheckVersion = "1.14.0"
 val shapelessVersion = "2.3.3"
-val tensorflowVersion = "1.7.0"
+val tensorflowVersion = "1.11.0"
 
 val commonSettings = Seq(
   organization := "me.lyh",
 
-  scalaVersion := "2.12.6",
-  crossScalaVersions := Seq("2.11.12", "2.12.6"),
+  scalaVersion := "2.12.7",
+  crossScalaVersions := Seq("2.11.12", "2.12.7"),
   scalacOptions ++= Seq("-target:jvm-1.8", "-deprecation", "-feature", "-unchecked"),
 
   // protobuf-lite is an older subset of protobuf-java and causes issues
@@ -152,7 +152,7 @@ lazy val test: Project = Project(
   description := "Shapeless utilities for common data types - shared code for unit test",
   libraryDependencies ++= Seq(
     "org.scalacheck" %% "scalacheck" % scalacheckVersion,
-    "com.github.alexarchambault" %% "scalacheck-shapeless_1.13" % scalacheckShapelessVersion,
+    "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % scalacheckShapelessVersion,
     "com.google.protobuf" % "protobuf-java" % protobufVersion,
     "joda-time" % "joda-time" % jodaTimeVersion
   )
