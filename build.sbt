@@ -3,7 +3,7 @@ description := "Shapeless utilities for common data types"
 
 val avroVersion = "1.8.2"
 val bigqueryVersion = "v2-rev367-1.22.0"
-val jacksonVersion = "2.9.8"
+val jacksonVersion = "2.9.9"
 val jodaTimeVersion = "2.10.2"
 val protobufVersion = "3.7.1"
 val scalacheckShapelessVersion = "1.2.2"
