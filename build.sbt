@@ -1,7 +1,7 @@
 name := "shapeless-datatype"
 description := "Shapeless utilities for common data types"
 
-val avroVersion = "1.8.2"
+val avroVersion = "1.9.0"
 val bigqueryVersion = "v2-rev367-1.22.0"
 val jacksonVersion = "2.9.9"
 val jodaTimeVersion = "2.10.2"
