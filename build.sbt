@@ -125,7 +125,7 @@ def datastoreProject(binaryVersion: String, version: String): Project = Project(
   core,
   test % "test->test"
 )
-lazy val datastore11 = datastoreProject("1.1", "1.1.0")
+lazy val datastore11 = datastoreProject("1.1", "1.6.0")
 lazy val datastore12 = datastoreProject("1.2", "1.2.0")
 lazy val datastore13 = datastoreProject("1.3", "1.3.0")
 
