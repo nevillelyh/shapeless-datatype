@@ -45,7 +45,7 @@ val noPublishSettings = Seq(
 )
 
 lazy val root: Project = Project(
-  "root",
+  "shapeless-datatype",
   file(".")
 ).settings(
   commonSettings ++ noPublishSettings
