@@ -29,7 +29,7 @@ object Records {
                    longFieldR: List[Long], doubleFieldR: List[Double], stringFieldR: List[String])
   case class Nested(longField: Long, longFieldO: Option[Long], longFieldR: List[Long],
                     mixedField: Mixed, mixedFieldO: Option[Mixed], mixedFieldR: List[Mixed])
-  case class Seqs(array: Array[Int], list: List[Int], vector: Vector[Int])
+  case class Iterables(/*array: Array[Int], */list: List[Int], vector: Vector[Int], set: Set[Int])
   case class Custom(uriField: URI, uriFieldO: Option[URI], uriFieldR: List[URI])
 
   implicit val arbByteString = Arbitrary(Gen.alphaStr.map(ByteString.copyFromUtf8))

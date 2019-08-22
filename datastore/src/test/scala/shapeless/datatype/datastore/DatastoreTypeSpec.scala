@@ -58,7 +58,7 @@ object DatastoreTypeSpec extends Properties("DatastoreType") {
   property("repeated") = forAll { m: Repeated => roundTrip(m) }
   property("mixed") = forAll { m: Mixed => roundTrip(m) }
   property("nested") = forAll { m: Nested => roundTrip(m) }
-  property("seqs") = forAll { m: Seqs => roundTrip(m) }
+  property("iterables") = forAll { m: Iterables => roundTrip(m) }
 
   implicit val uriDatastoreType = DatastoreType.at[URI](
     v => URI.create(v.getStringValue), u => makeValue(u.toString).build())

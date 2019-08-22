@@ -71,7 +71,7 @@ object AvroTypeSpec extends Properties("AvroType") {
   property("repeated") = forAll { m: Repeated => roundTrip(m) }
   property("mixed") = forAll { m: Mixed => roundTrip(m) }
   property("nested") = forAll { m: Nested => roundTrip(m) }
-  property("seqs") = forAll { m: Seqs => roundTrip(m) }
+  property("iterables") = forAll { m: Iterables => roundTrip(m) }
 
   implicit val uriAvroType = AvroType.at[URI](Schema.Type.STRING)(
     v => URI.create(v.toString), _.toString)
