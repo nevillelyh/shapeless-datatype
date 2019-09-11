@@ -48,17 +48,17 @@ object TensorFlowType {
     f.getInt64List.getValueList.asScala.map(x => if (x > 0) true else false).toSeq
 
   def fromLongs(xs: Seq[Long]): Feature.Builder =
-    Feature.newBuilder().setInt64List(
-      Int64List.newBuilder().addAllValue(xs.asInstanceOf[Seq[java.lang.Long]].asJava))
-  def toLongs(f: Feature): Seq[Long] = f.getInt64List.getValueList.asScala.asInstanceOf[Seq[Long]]
+    Feature.newBuilder().setInt64List(xs.foldLeft(Int64List.newBuilder())(_.addValue(_)).build())
+  def toLongs(f: Feature): Seq[Long] =
+    f.getInt64List.getValueList.asScala.toSeq.asInstanceOf[Seq[Long]]
 
   def fromInts(xs: Seq[Int]): Feature.Builder = fromLongs(xs.map(_.toLong))
   def toInts(f: Feature): Seq[Int] = toLongs(f).map(_.toInt)
 
   def fromFloats(xs: Seq[Float]): Feature.Builder =
-    Feature.newBuilder().setFloatList(
-      FloatList.newBuilder().addAllValue(xs.asInstanceOf[Seq[java.lang.Float]].asJava))
-  def toFloats(f: Feature): Seq[Float] = f.getFloatList.getValueList.asScala.asInstanceOf[Seq[Float]]
+    Feature.newBuilder().setFloatList(xs.foldLeft(FloatList.newBuilder())(_.addValue(_)).build())
+  def toFloats(f: Feature): Seq[Float] =
+    f.getFloatList.getValueList.asScala.toSeq.asInstanceOf[Seq[Float]]
 
   def fromDoubles(xs: Seq[Double]): Feature.Builder = fromFloats(xs.map(_.toFloat))
   def toDoubles(f: Feature): Seq[Double] = toFloats(f).map(_.toDouble)
