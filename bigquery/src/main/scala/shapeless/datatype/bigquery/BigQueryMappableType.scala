@@ -15,7 +15,7 @@ trait BaseBigQueryMappableType[V] extends MappableType[BigQueryMap, V] {
     Option(m.get(key)).map(from)
   override def getAll(m: BigQueryMap, key: String): Seq[V] =
     if (m.containsKey(key))
-      m.get(key).asInstanceOf[java.util.List[Any]].asScala.map(from)
+      m.get(key).asInstanceOf[java.util.List[Any]].asScala.map(from).toSeq
     else
       Nil
 
