@@ -45,7 +45,7 @@ object TensorFlowType {
     Feature.newBuilder().setInt64List(
       Int64List.newBuilder().addAllValue(xs.map(x => (if (x) 1L else 0L): java.lang.Long).asJava))
   def toBooleans(f: Feature): Seq[Boolean] =
-    f.getInt64List.getValueList.asScala.map(x => if (x > 0) true else false)
+    f.getInt64List.getValueList.asScala.map(x => if (x > 0) true else false).toSeq
 
   def fromLongs(xs: Seq[Long]): Feature.Builder =
     Feature.newBuilder().setInt64List(
@@ -65,7 +65,7 @@ object TensorFlowType {
 
   def fromByteStrings(xs: Seq[ByteString]): Feature.Builder =
     Feature.newBuilder().setBytesList(BytesList.newBuilder().addAllValue(xs.asJava))
-  def toByteStrings(f: Feature): Seq[ByteString] = f.getBytesList.getValueList.asScala
+  def toByteStrings(f: Feature): Seq[ByteString] = f.getBytesList.getValueList.asScala.toSeq
 
   def fromByteArrays(xs: Seq[Array[Byte]]): Feature.Builder = fromByteStrings(xs.map(ByteString.copyFrom))
   def toByteArrays(f: Feature): Seq[Array[Byte]] = toByteStrings(f).map(_.toByteArray)

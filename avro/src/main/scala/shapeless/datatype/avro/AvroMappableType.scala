@@ -17,7 +17,7 @@ trait BaseAvroMappableType[V] extends MappableType[AvroRecord, V] {
     Option(m.right.get.get(key)).map(from)
   override def getAll(m: AvroRecord, key: String): Seq[V] = m.right.get.get(key) match {
     case null => Nil
-    case v => v.asInstanceOf[java.util.List[Any]].asScala.map(from)
+    case v => v.asInstanceOf[java.util.List[Any]].asScala.map(from).toSeq
   }
 
   override def put(key: String, value: V, tail: AvroRecord): AvroRecord = {

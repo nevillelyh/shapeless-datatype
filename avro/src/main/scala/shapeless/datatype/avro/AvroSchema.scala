@@ -33,7 +33,7 @@ object AvroSchema {
       (Schema.createArray(s), java.util.Collections.emptyList())
 
     case t if isCaseClass(t) =>
-      val fields: List[Field] = t.decls.filter(isField).map(toField)(scala.collection.breakOut)
+      val fields: List[Field] = t.decls.filter(isField).map(toField).toList
       val name = t.typeSymbol.name.toString
       val pkg = t.typeSymbol.owner.fullName
       (Schema.createRecord(name, null, pkg, false, fields.asJava), null)
