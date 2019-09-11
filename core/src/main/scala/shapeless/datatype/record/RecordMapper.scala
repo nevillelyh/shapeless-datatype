@@ -58,11 +58,10 @@ trait LowPriorityMapRecordOption3 extends LowPriorityMapRecordOption4 {
 
 trait LowPriorityMapRecordIterable1 extends LowPriorityMapRecordOption3 {
   implicit def hconsMapRecordIterable1[K <: Symbol, V, W, TI <: HList, TO <: HList, S[_] <: Iterable[_]]
-  (implicit f: V => W, mrT: Lazy[MapRecord[TI, TO]],
-   cbf: CanBuildFrom[_, W, S[W]])
+  (implicit f: V => W, mrT: Lazy[MapRecord[TI, TO]], fc: FactoryCompat[W, S[W]])
   : MV[K, S[V], S[W], TI, TO] = new MV[K, S[V], S[W], TI, TO] {
     override def apply(l: FieldType[K, S[V]] :: TI): FieldType[K, S[W]] :: TO = {
-      val b = cbf()
+      val b = fc.newBuilder
       b ++= l.head.asInstanceOf[Iterable[V]].map(f)
       field[K](b.result()) :: mrT.value(l.tail)
     }
@@ -112,12 +111,11 @@ trait LowPriorityMapRecordOption0 extends LowPriorityMapRecordOption1 {
 trait LowPriorityMapRecordIterable0 extends LowPriorityMapRecordOption0 {
   implicit def hconsMapRecordIterable0[K <: Symbol, V, W, HV <: HList, HW <: HList, TI <: HList, TO <: HList, S[_] <: Iterable[_]]
   (implicit genV: LabelledGeneric.Aux[V, HV], genW: LabelledGeneric.Aux[W, HW],
-   mrH: Lazy[MapRecord[HV, HW]], mrT: Lazy[MapRecord[TI, TO]],
-   cbf: CanBuildFrom[_, W, S[W]])
+   mrH: Lazy[MapRecord[HV, HW]], mrT: Lazy[MapRecord[TI, TO]], fc: FactoryCompat[W, S[W]])
   : MV[K, S[V], S[W], TI, TO] = new MV[K, S[V], S[W], TI, TO] {
     override def apply(l: FieldType[K, S[V]] :: TI): FieldType[K, S[W]] :: TO = {
-      val b = cbf()
-      b ++=  l.head.asInstanceOf[Iterable[V]].map(v => genW.from(mrH.value(genV.to(v))))
+      val b = fc.newBuilder
+      b ++= l.head.asInstanceOf[Iterable[V]].map(v => genW.from(mrH.value(genV.to(v))))
       field[K](b.result()) :: mrT.value(l.tail)
     }
   }
