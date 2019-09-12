@@ -81,7 +81,7 @@ lazy val avro: Project = Project(
   commonSettings,
   description := "Shapeless utilities for Apache Avro",
   libraryDependencies ++= Seq(
-    "org.apache.avro" % "avro" % avroVersion,
+    "org.apache.avro" % "avro" % avroVersion % Provided,
     "org.scala-lang" % "scala-reflect" % scalaVersion.value
   )
 ).dependsOn(
@@ -98,9 +98,9 @@ lazy val bigquery: Project = Project(
   description := "Shapeless utilities for Google Cloud BigQuery",
   libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-    "com.google.apis" % "google-api-services-bigquery" % bigqueryVersion,
-    "joda-time" % "joda-time" % jodaTimeVersion % "provided",
-    "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion % "test"
+    "com.google.apis" % "google-api-services-bigquery" % bigqueryVersion % Provided,
+    "joda-time" % "joda-time" % jodaTimeVersion % Provided,
+    "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion % Test
   )
 ).dependsOn(
   core,
@@ -115,8 +115,8 @@ lazy val datastore: Project = Project(
   moduleName := "shapeless-datatype-datastore",
   description := "Shapeless utilities for Google Cloud Datastore",
   libraryDependencies ++= Seq(
-    "com.google.cloud.datastore" % "datastore-v1-proto-client" % datastoreVersion,
-    "joda-time" % "joda-time" % jodaTimeVersion % "provided"
+    "com.google.cloud.datastore" % "datastore-v1-proto-client" % datastoreVersion % Provided,
+    "joda-time" % "joda-time" % jodaTimeVersion % Provided
   )
 ).dependsOn(
   core,
@@ -131,7 +131,7 @@ lazy val tensorflow: Project = Project(
   commonSettings,
   description := "Shapeless utilities for TensorFlow",
   libraryDependencies ++= Seq(
-    "org.tensorflow" % "proto" % tensorflowVersion
+    "org.tensorflow" % "proto" % tensorflowVersion % Provided
   )
 ).dependsOn(
   core,
@@ -145,9 +145,9 @@ lazy val test: Project = Project(
   commonSettings ++ noPublishSettings,
   description := "Shapeless utilities for common data types - shared code for unit test",
   libraryDependencies ++= Seq(
-    "org.scalacheck" %% "scalacheck" % scalacheckVersion,
-    "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % scalacheckShapelessVersion,
-    "com.google.protobuf" % "protobuf-java" % protobufVersion,
-    "joda-time" % "joda-time" % jodaTimeVersion
+    "org.scalacheck" %% "scalacheck" % scalacheckVersion % Test,
+    "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % scalacheckShapelessVersion % Test,
+    "com.google.protobuf" % "protobuf-java" % protobufVersion % Test,
+    "joda-time" % "joda-time" % jodaTimeVersion % Test
   )
 )
