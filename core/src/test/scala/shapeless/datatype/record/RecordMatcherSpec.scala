@@ -1,6 +1,6 @@
 package shapeless.datatype.record
 
-import org.scalacheck.Prop.{BooleanOperators, all, forAll}
+import org.scalacheck.Prop.{propBoolean, all, forAll}
 import org.scalacheck.ScalacheckShapeless._
 import org.scalacheck._
 import shapeless._
