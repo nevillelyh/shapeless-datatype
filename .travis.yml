@@ -7,9 +7,9 @@ matrix:
       jdk: openjdk8
     - scala: 2.12.10
       jdk: oraclejdk11
-    - scala: 2.13.0
+    - scala: 2.13.1
       jdk: openjdk8
-    - scala: 2.13.0
+    - scala: 2.13.1
       jdk: oraclejdk11
 
 cache:
