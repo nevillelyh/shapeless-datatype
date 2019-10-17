@@ -15,8 +15,8 @@ val tensorflowVersion = "1.14.0"
 val commonSettings = Seq(
   organization := "me.lyh",
 
-  scalaVersion := "2.13.0",
-  crossScalaVersions := Seq("2.11.12", "2.12.10", "2.13.0"),
+  scalaVersion := "2.13.1",
+  crossScalaVersions := Seq("2.11.12", "2.12.10", "2.13.1"),
   scalacOptions ++= Seq("-target:jvm-1.8", "-deprecation", "-feature", "-unchecked"),
 
   // protobuf-lite is an older subset of protobuf-java and causes issues
