@@ -10,7 +10,7 @@ val protobufVersion = "3.10.0"
 val scalacheckShapelessVersion = "1.2.3"
 val scalacheckVersion = "1.14.2"
 val shapelessVersion = "2.3.3"
-val tensorflowVersion = "1.14.0"
+val tensorflowVersion = "1.15.0"
 
 val commonSettings = Seq(
   organization := "me.lyh",
