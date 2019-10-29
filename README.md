@@ -16,10 +16,8 @@ This library includes the following modules.
 - `shapeless-datatype-core`
 - `shapeless-datatype-avro`
 - `shapeless-datatype-bigquery`
-- `shapeless-datatype-datastore_1.[123]`
+- `shapeless-datatype-datastore`
 - `shapeless-datatype-tensorflow`
-
-Due to library dependency `shapeless-datatype-datastore` is built for different versions of Datastore client, e.g. `shapeless-datatype-datastore_1.3` for `datastore-v1-proto-client` 1.3.0.
 
 # Core
 
