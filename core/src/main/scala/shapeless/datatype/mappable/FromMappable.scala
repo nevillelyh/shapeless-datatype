@@ -1,36 +1,16 @@
 package shapeless.datatype.mappable
 
 import shapeless._
+import shapeless.datatype.shims.FactoryCompat
 import shapeless.labelled.{FieldType, field}
 
-import scala.collection.mutable
 import scala.language.higherKinds
 
 trait FromMappable[L <: HList, M] extends Serializable {
   def apply(m: M): Option[L]
 }
 
-trait SerializableCanBuildFrom {
-  // Workaround for CanBuildFrom not serializable
-  trait CanBuild[T, M] extends Serializable {
-    def apply(): mutable.Builder[T, M]
-  }
-
-  private def newCB[T, M](f: () => mutable.Builder[T, M]) = new CanBuild[T, M] {
-    override def apply(): mutable.Builder[T, M] = f()
-  }
-
-  // Collection types in _root_.scala.*
-  implicit def arrayCB[T: scala.reflect.ClassTag] = newCB(() => Array.newBuilder[T])
-  implicit def traversableCB[T] = newCB(() => Traversable.newBuilder[T])
-  implicit def iterableCB[T] = newCB(() => Iterable.newBuilder[T])
-  implicit def seqCB[T] = newCB(() => Seq.newBuilder[T])
-  implicit def indexedSeqCB[T] = newCB(() => IndexedSeq.newBuilder[T])
-  implicit def listCB[T] = newCB(() => List.newBuilder[T])
-  implicit def vectorCB[T] = newCB(() => Vector.newBuilder[T])
-}
-
-trait LowPriorityFromMappable1 extends SerializableCanBuildFrom {
+trait LowPriorityFromMappable1 {
   implicit def hconsFromMappable1[K <: Symbol, V, T <: HList, M]
   (implicit wit: Witness.Aux[K], mt: MappableType[M, V], fromT: Lazy[FromMappable[T, M]])
   : FromMappable[FieldType[K, V] :: T, M] = new FromMappable[FieldType[K, V] :: T, M] {
@@ -54,15 +34,11 @@ trait LowPriorityFromMappableOption1 extends LowPriorityFromMappable1 {
 trait LowPriorityFromMappableSeq1 extends LowPriorityFromMappableOption1 {
   implicit def hconsFromMappableSeq1[K <: Symbol, V, T <: HList, M, S[_]]
   (implicit wit: Witness.Aux[K], mt: MappableType[M, V], fromT: Lazy[FromMappable[T, M]],
-   cbf: CanBuild[V, S[V]], toSeq: S[V] => Seq[V])
+   fc: FactoryCompat[V, S[V]], ti: S[V] => Iterable[V])
   : FromMappable[FieldType[K, S[V]] :: T, M] = new FromMappable[FieldType[K, S[V]] :: T, M] {
     override def apply(m: M): Option[FieldType[K, S[V]] :: T] = for {
       t <- fromT.value(m)
-    } yield {
-      val b = cbf()
-      b ++= mt.getAll(m, wit.value.name)
-      field[K](b.result()) :: t
-    }
+    } yield field[K](fc.build(mt.getAll(m, wit.value.name))) :: t
   }
 }
 
@@ -100,17 +76,16 @@ trait LowPriorityFromMappableSeq0 extends LowPriorityFromMappableOption0 {
   implicit def hconsFromMappableSeq0[K <: Symbol, V, H <: HList, T <: HList, M: CanNest, S[_]]
   (implicit wit: Witness.Aux[K], gen: LabelledGeneric.Aux[V, H], bmt: BaseMappableType[M],
    fromH: Lazy[FromMappable[H, M]], fromT: Lazy[FromMappable[T, M]],
-   cbf: CanBuild[V, S[V]], toSeq: S[V] => Seq[V])
+   fc: FactoryCompat[V, S[V]], ti: S[V] => Iterable[V])
   : FromMappable[FieldType[K, S[V]] :: T, M] = new FromMappable[FieldType[K, S[V]] :: T, M] {
     override def apply(m: M): Option[FieldType[K, S[V]] :: T] = for {
       t <- fromT.value(m)
     } yield {
-      val b = cbf()
-      b ++= (for {
+      val o = fc.build(for {
         n <- bmt.getAll(m, wit.value.name)
         h <- fromH.value(n)
       } yield gen.from(h))
-      field[K](b.result()) :: t
+      field[K](o) :: t
     }
   }
 }

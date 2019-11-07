@@ -1,9 +1,9 @@
 package shapeless.datatype.record
 
 import shapeless._
+import shapeless.datatype.shims.FactoryCompat
 import shapeless.labelled.{FieldType, field}
 
-import scala.collection.generic.CanBuildFrom
 import scala.language.higherKinds
 
 trait MapRecord[LI <: HList, LO <: HList] {
