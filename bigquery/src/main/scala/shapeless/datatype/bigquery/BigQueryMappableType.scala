@@ -71,7 +71,8 @@ trait BigQueryMappableType extends Serializable {
   implicit val stringBigQueryMappableType = at[String](_.toString, id)
   implicit val byteArrayBigQueryMappableType = at[Array[Byte]](
     x => BaseEncoding.base64().decode(x.toString),
-    x => BaseEncoding.base64().encode(x))
+    x => BaseEncoding.base64().encode(x)
+  )
 
   import TimestampConverter._
   implicit val timestampBigQueryMappableType = at[Instant](toInstant, fromInstant)
@@ -82,20 +83,23 @@ trait BigQueryMappableType extends Serializable {
 }
 
 private object TimestampConverter {
-
   // FIXME: verify that these match BigQuery specification
   // TIMESTAMP
   // YYYY-[M]M-[D]D[ [H]H:[M]M:[S]S[.DDDDDD]][time zone]
   private val timestampPrinter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSSSSS ZZZ")
   private val timestampParser = new DateTimeFormatterBuilder()
     .append(DateTimeFormat.forPattern("yyyy-MM-dd"))
-    .appendOptional(new DateTimeFormatterBuilder()
-      .append(DateTimeFormat.forPattern(" HH:mm:ss").getParser)
-      .appendOptional(DateTimeFormat.forPattern(".SSSSSS").getParser)
-      .toParser)
-    .appendOptional(new DateTimeFormatterBuilder()
-      .append(null, Array(" ZZZ", "ZZ").map(p => DateTimeFormat.forPattern(p).getParser))
-      .toParser)
+    .appendOptional(
+      new DateTimeFormatterBuilder()
+        .append(DateTimeFormat.forPattern(" HH:mm:ss").getParser)
+        .appendOptional(DateTimeFormat.forPattern(".SSSSSS").getParser)
+        .toParser
+    )
+    .appendOptional(
+      new DateTimeFormatterBuilder()
+        .append(null, Array(" ZZZ", "ZZ").map(p => DateTimeFormat.forPattern(p).getParser))
+        .toParser
+    )
     .toFormatter
     .withZoneUTC()
 
@@ -118,10 +122,12 @@ private object TimestampConverter {
   private val datetimePrinter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")
   private val datetimeParser = new DateTimeFormatterBuilder()
     .append(DateTimeFormat.forPattern("yyyy-MM-dd"))
-    .appendOptional(new DateTimeFormatterBuilder()
-      .append(DateTimeFormat.forPattern(" HH:mm:ss").getParser)
-      .appendOptional(DateTimeFormat.forPattern(".SSSSSS").getParser)
-      .toParser)
+    .appendOptional(
+      new DateTimeFormatterBuilder()
+        .append(DateTimeFormat.forPattern(" HH:mm:ss").getParser)
+        .appendOptional(DateTimeFormat.forPattern(".SSSSSS").getParser)
+        .toParser
+    )
     .toFormatter
     .withZoneUTC()
 
@@ -136,5 +142,4 @@ private object TimestampConverter {
 
   def toLocalDateTime(v: Any): LocalDateTime = datetimeParser.parseLocalDateTime(v.toString)
   def fromLocalDateTime(dt: LocalDateTime): Any = datetimePrinter.print(dt)
-
 }

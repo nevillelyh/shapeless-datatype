@@ -18,19 +18,19 @@ import shapeless.datatype.record._
 import scala.reflect.runtime.universe._
 
 object AvroTypeSpec extends Properties("AvroType") {
-
   import shapeless.datatype.test.Records._
   import shapeless.datatype.test.SerializableUtils._
 
   implicit def compareByteArrays(x: Array[Byte], y: Array[Byte]) = java.util.Arrays.equals(x, y)
   implicit def compareIntArrays(x: Array[Int], y: Array[Int]) = java.util.Arrays.equals(x, y)
 
-  def roundTrip[A: TypeTag, L <: HList](m: A)
-                                       (implicit
-                                        gen: LabelledGeneric.Aux[A, L],
-                                        fromL: FromAvroRecord[L],
-                                        toL: ToAvroRecord[L],
-                                        mr: MatchRecord[L]): Boolean = {
+  def roundTrip[A: TypeTag, L <: HList](m: A)(
+    implicit
+    gen: LabelledGeneric.Aux[A, L],
+    fromL: FromAvroRecord[L],
+    toL: ToAvroRecord[L],
+    mr: MatchRecord[L]
+  ): Boolean = {
     val t = ensureSerializable(AvroType[A])
     val f1: SerializableFunction[A, GenericRecord] =
       new SerializableFunction[A, GenericRecord] {
@@ -63,18 +63,33 @@ object AvroTypeSpec extends Properties("AvroType") {
   }
 
   implicit val byteStringAvroType = AvroType.at[ByteString](Schema.Type.BYTES)(
-    v => ByteString.copyFrom(v.asInstanceOf[ByteBuffer]), v => ByteBuffer.wrap(v.toByteArray))
-  implicit val instantAvroType = AvroType.at[Instant](Schema.Type.LONG)(
-    v => new Instant(v.asInstanceOf[Long]), _.getMillis)
-  property("required") = forAll { m: Required => roundTrip(m) }
-  property("optional") = forAll { m: Optional => roundTrip(m) }
-  property("repeated") = forAll { m: Repeated => roundTrip(m) }
-  property("mixed") = forAll { m: Mixed => roundTrip(m) }
-  property("nested") = forAll { m: Nested => roundTrip(m) }
-  property("seqs") = forAll { m: Seqs => roundTrip(m) }
+    v => ByteString.copyFrom(v.asInstanceOf[ByteBuffer]),
+    v => ByteBuffer.wrap(v.toByteArray)
+  )
+  implicit val instantAvroType =
+    AvroType.at[Instant](Schema.Type.LONG)(v => new Instant(v.asInstanceOf[Long]), _.getMillis)
+  property("required") = forAll { m: Required =>
+    roundTrip(m)
+  }
+  property("optional") = forAll { m: Optional =>
+    roundTrip(m)
+  }
+  property("repeated") = forAll { m: Repeated =>
+    roundTrip(m)
+  }
+  property("mixed") = forAll { m: Mixed =>
+    roundTrip(m)
+  }
+  property("nested") = forAll { m: Nested =>
+    roundTrip(m)
+  }
+  property("seqs") = forAll { m: Seqs =>
+    roundTrip(m)
+  }
 
-  implicit val uriAvroType = AvroType.at[URI](Schema.Type.STRING)(
-    v => URI.create(v.toString), _.toString)
-  property("custom") = forAll { m: Custom => roundTrip(m)}
-
+  implicit val uriAvroType =
+    AvroType.at[URI](Schema.Type.STRING)(v => URI.create(v.toString), _.toString)
+  property("custom") = forAll { m: Custom =>
+    roundTrip(m)
+  }
 }

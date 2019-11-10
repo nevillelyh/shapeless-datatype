@@ -1,6 +1,6 @@
 package shapeless.datatype
 
-import scala.collection.{Factory, mutable}
+import scala.collection.{mutable, Factory}
 
 package object shims {
   // From https://github.com/pureconfig/pureconfig

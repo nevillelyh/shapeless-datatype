@@ -11,7 +11,6 @@ import shapeless._
 import shapeless.datatype.record._
 
 object TensorFlowTypeSpec extends Properties("TensorFlowType") {
-
   import shapeless.datatype.test.Records._
   import shapeless.datatype.test.SerializableUtils._
 
@@ -19,12 +18,13 @@ object TensorFlowTypeSpec extends Properties("TensorFlowType") {
   implicit def compareIntArrays(x: Array[Int], y: Array[Int]) = java.util.Arrays.equals(x, y)
   implicit def compareDouble(x: Double, y: Double) = x.toFloat == y.toFloat
 
-  def roundTrip[A, L <: HList](m: A)
-                              (implicit
-                               gen: LabelledGeneric.Aux[A, L],
-                               fromL: FromFeatures[L],
-                               toL: ToFeatures[L],
-                               mr: MatchRecord[L]): Prop = {
+  def roundTrip[A, L <: HList](m: A)(
+    implicit
+    gen: LabelledGeneric.Aux[A, L],
+    fromL: FromFeatures[L],
+    toL: ToFeatures[L],
+    mr: MatchRecord[L]
+  ): Prop = {
     val t = ensureSerializable(TensorFlowType[A])
     val f1: SerializableFunction[A, Example] =
       new SerializableFunction[A, Example] {
@@ -49,23 +49,34 @@ object TensorFlowTypeSpec extends Properties("TensorFlowType") {
     val copy1 = fromFn1(toFn1(m))
     val copy2 = fromFn2(toFn2(m))
     val rm = RecordMatcher[A]
-    all(
-      copy1.exists(rm(_, m)),
-      copy2.exists(rm(_, m)))
+    all(copy1.exists(rm(_, m)), copy2.exists(rm(_, m)))
   }
 
   implicit val timestampTensorFlowMappableType = TensorFlowType.at[Instant](
     TensorFlowType.toLongs(_).map(new Instant(_)),
-    xs => TensorFlowType.fromLongs(xs.map(_.getMillis)))
-  property("required") = forAll { m: Required => roundTrip(m) }
-  property("optional") = forAll { m: Optional => roundTrip(m) }
-  property("repeated") = forAll { m: Repeated => roundTrip(m) }
-  property("mixed") = forAll { m: Mixed => roundTrip(m) }
-  property("seqs") = forAll { m: Seqs => roundTrip(m) }
+    xs => TensorFlowType.fromLongs(xs.map(_.getMillis))
+  )
+  property("required") = forAll { m: Required =>
+    roundTrip(m)
+  }
+  property("optional") = forAll { m: Optional =>
+    roundTrip(m)
+  }
+  property("repeated") = forAll { m: Repeated =>
+    roundTrip(m)
+  }
+  property("mixed") = forAll { m: Mixed =>
+    roundTrip(m)
+  }
+  property("seqs") = forAll { m: Seqs =>
+    roundTrip(m)
+  }
 
   implicit val uriTensorFlowType = TensorFlowType.at[URI](
     TensorFlowType.toStrings(_).map(URI.create),
-    xs => TensorFlowType.fromStrings(xs.map(_.toString)))
-  property("custom") = forAll { m: Custom => roundTrip(m)}
-
+    xs => TensorFlowType.fromStrings(xs.map(_.toString))
+  )
+  property("custom") = forAll { m: Custom =>
+    roundTrip(m)
+  }
 }

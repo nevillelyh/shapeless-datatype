@@ -7,7 +7,6 @@ import scala.collection.JavaConverters._
 import scala.reflect.runtime.universe._
 
 object AvroSchema {
-
   private def isField(s: Symbol): Boolean =
     s.isPublic && s.isMethod && !s.isSynthetic && !s.isConstructor
 
@@ -17,12 +16,12 @@ object AvroSchema {
         .forall(b => tpe.baseClasses.contains(b.typeSymbol))
 
   private def toSchema(tpe: Type): (Schema, Any) = tpe match {
-    case t if t =:= typeOf[Boolean] => (Schema.create(Schema.Type.BOOLEAN), null)
-    case t if t =:= typeOf[Int] => (Schema.create(Schema.Type.INT), null)
-    case t if t =:= typeOf[Long] => (Schema.create(Schema.Type.LONG), null)
-    case t if t =:= typeOf[Float] => (Schema.create(Schema.Type.FLOAT), null)
-    case t if t =:= typeOf[Double] => (Schema.create(Schema.Type.DOUBLE), null)
-    case t if t =:= typeOf[String] => (Schema.create(Schema.Type.STRING), null)
+    case t if t =:= typeOf[Boolean]     => (Schema.create(Schema.Type.BOOLEAN), null)
+    case t if t =:= typeOf[Int]         => (Schema.create(Schema.Type.INT), null)
+    case t if t =:= typeOf[Long]        => (Schema.create(Schema.Type.LONG), null)
+    case t if t =:= typeOf[Float]       => (Schema.create(Schema.Type.FLOAT), null)
+    case t if t =:= typeOf[Double]      => (Schema.create(Schema.Type.DOUBLE), null)
+    case t if t =:= typeOf[String]      => (Schema.create(Schema.Type.STRING), null)
     case t if t =:= typeOf[Array[Byte]] => (Schema.create(Schema.Type.BYTES), null)
 
     case t if t.erasure =:= typeOf[Option[_]].erasure =>
@@ -58,5 +57,4 @@ object AvroSchema {
     val tt = implicitly[TypeTag[T]]
     cachedSchemas.getOrElseUpdate(tt, toSchema(tt.tpe)._1)
   }
-
 }

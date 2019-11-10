@@ -6,9 +6,9 @@ import shapeless.ops.hlist._
 class LensMatcher[A, L <: HList](val root: OpticDefns.RootLens[A], val hs: L) extends Serializable {
   type ElemMatcher[Elem] = (Lens[A, Elem], (Elem, Elem) => Boolean)
 
-  def on[Elem](lensFn: OpticDefns.RootLens[A] => Lens[A, Elem])
-              (matchFn: (Elem, Elem) => Boolean)
-  : LensMatcher[A, ElemMatcher[Elem] :: L] =
+  def on[Elem](
+    lensFn: OpticDefns.RootLens[A] => Lens[A, Elem]
+  )(matchFn: (Elem, Elem) => Boolean): LensMatcher[A, ElemMatcher[Elem] :: L] =
     new LensMatcher(root, (lensFn(root), matchFn) :: hs)
 
   object matchFolder extends Poly2 {

@@ -39,9 +39,17 @@ trait DatastoreMappableType extends DatastoreMappableTypes {
 
     override def put(key: String, value: Entity.Builder, tail: Entity.Builder): Entity.Builder =
       tail.putProperties(key, makeValue(value).build())
-    override def put(key: String, value: Option[Entity.Builder], tail: Entity.Builder): Entity.Builder =
+    override def put(
+      key: String,
+      value: Option[Entity.Builder],
+      tail: Entity.Builder
+    ): Entity.Builder =
       value.foldLeft(tail)((b, v) => b.putProperties(key, makeValue(v).build()))
-    override def put(key: String, values: Seq[Entity.Builder], tail: Entity.Builder): Entity.Builder =
+    override def put(
+      key: String,
+      values: Seq[Entity.Builder],
+      tail: Entity.Builder
+    ): Entity.Builder =
       tail.putProperties(key, makeValue(values.map(v => makeValue(v).build()).asJava).build())
   }
 }

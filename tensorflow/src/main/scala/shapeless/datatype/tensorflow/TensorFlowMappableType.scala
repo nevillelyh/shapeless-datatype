@@ -28,9 +28,21 @@ trait TensorFlowMappableType {
     override def base: Features.Builder = Features.newBuilder()
     override def get(m: Features.Builder, key: String): Option[Features.Builder] = ???
     override def getAll(m: Features.Builder, key: String): Seq[Features.Builder] = ???
-    override def put(key: String, value: Features.Builder, tail: Features.Builder): Features.Builder = ???
-    override def put(key: String, value: Option[Features.Builder], tail: Features.Builder): Features.Builder = ???
-    override def put(key: String, values: Seq[Features.Builder], tail: Features.Builder): Features.Builder = ???
+    override def put(
+      key: String,
+      value: Features.Builder,
+      tail: Features.Builder
+    ): Features.Builder = ???
+    override def put(
+      key: String,
+      value: Option[Features.Builder],
+      tail: Features.Builder
+    ): Features.Builder = ???
+    override def put(
+      key: String,
+      values: Seq[Features.Builder],
+      tail: Features.Builder
+    ): Features.Builder = ???
   }
 
   import TensorFlowType._

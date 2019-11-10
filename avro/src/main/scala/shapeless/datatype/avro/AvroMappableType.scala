@@ -17,7 +17,7 @@ trait BaseAvroMappableType[V] extends MappableType[AvroRecord, V] {
     Option(m.right.get.get(key)).map(from)
   override def getAll(m: AvroRecord, key: String): Seq[V] = m.right.get.get(key) match {
     case null => Nil
-    case v => v.asInstanceOf[java.util.List[Any]].asScala.map(from).toSeq
+    case v    => v.asInstanceOf[java.util.List[Any]].asScala.map(from).toSeq
   }
 
   override def put(key: String, value: V, tail: AvroRecord): AvroRecord = {
@@ -91,7 +91,9 @@ case class AvroBuilder private (m: MMap[String, Any] = MMap.empty) {
         val s = f.schema()
         val v = if (s.getType == Schema.Type.RECORD) {
           m(key).asInstanceOf[AvroBuilder].build(s)
-        } else if (s.getType == Schema.Type.UNION && s.getTypes.get(1).getType == Schema.Type.RECORD) {
+        } else if (s.getType == Schema.Type.UNION && s.getTypes
+                     .get(1)
+                     .getType == Schema.Type.RECORD) {
           m(key).asInstanceOf[AvroBuilder].build(s.getTypes.get(1))
         } else if (s.getType == Schema.Type.ARRAY && s.getElementType.getType == Schema.Type.RECORD) {
           m(key).asInstanceOf[Seq[AvroBuilder]].map(_.build(s.getElementType)).asJava
