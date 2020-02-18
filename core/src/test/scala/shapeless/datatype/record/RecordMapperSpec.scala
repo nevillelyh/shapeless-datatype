@@ -125,21 +125,11 @@ object RecordMapperSpec extends Properties("RecordMapper") {
   }
   def roundTripTo[B]: RoundTrip[B] = new RoundTrip[B]
 
-  property("required") = forAll { m: RequiredA =>
-    roundTripTo[RequiredB].from(m)
-  }
-  property("optional") = forAll { m: OptionalA =>
-    roundTripTo[OptionalB].from(m)
-  }
-  property("repeated") = forAll { m: RepeatedA =>
-    roundTripTo[RepeatedB].from(m)
-  }
-  property("mixed") = forAll { m: MixedA =>
-    roundTripTo[MixedB].from(m)
-  }
-  property("nested") = forAll { m: NestedA =>
-    roundTripTo[NestedB].from(m)
-  }
+  property("required") = forAll { m: RequiredA => roundTripTo[RequiredB].from(m) }
+  property("optional") = forAll { m: OptionalA => roundTripTo[OptionalB].from(m) }
+  property("repeated") = forAll { m: RepeatedA => roundTripTo[RepeatedB].from(m) }
+  property("mixed") = forAll { m: MixedA => roundTripTo[MixedB].from(m) }
+  property("nested") = forAll { m: NestedA => roundTripTo[NestedB].from(m) }
 
   import UnsafeOptionExtractorImplicits._
   property("required to optional with unsafe option extraction") = forAll { m: RequiredA =>

@@ -51,28 +51,14 @@ object DatastoreTypeSpec extends Properties("DatastoreType") {
     all(copy1.exists(rm(_, m)), copy2.exists(rm(_, m)))
   }
 
-  property("required") = forAll { m: Required =>
-    roundTrip(m)
-  }
-  property("optional") = forAll { m: Optional =>
-    roundTrip(m)
-  }
-  property("repeated") = forAll { m: Repeated =>
-    roundTrip(m)
-  }
-  property("mixed") = forAll { m: Mixed =>
-    roundTrip(m)
-  }
-  property("nested") = forAll { m: Nested =>
-    roundTrip(m)
-  }
-  property("seqs") = forAll { m: Seqs =>
-    roundTrip(m)
-  }
+  property("required") = forAll { m: Required => roundTrip(m) }
+  property("optional") = forAll { m: Optional => roundTrip(m) }
+  property("repeated") = forAll { m: Repeated => roundTrip(m) }
+  property("mixed") = forAll { m: Mixed => roundTrip(m) }
+  property("nested") = forAll { m: Nested => roundTrip(m) }
+  property("seqs") = forAll { m: Seqs => roundTrip(m) }
 
   implicit val uriDatastoreType =
     DatastoreType.at[URI](v => URI.create(v.getStringValue), u => makeValue(u.toString).build())
-  property("custom") = forAll { m: Custom =>
-    roundTrip(m)
-  }
+  property("custom") = forAll { m: Custom => roundTrip(m) }
 }

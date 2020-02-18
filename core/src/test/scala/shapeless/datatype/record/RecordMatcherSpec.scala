@@ -43,10 +43,6 @@ object RecordMatcherSpec extends Properties("RecordMatcher") {
   property("repeated") = forAll { m: Repeated =>
     test(m, everywhere(negate)(m), everywhere(inc)(m))
   }
-  property("mixed") = forAll { m: Mixed =>
-    test(m, everywhere(negate)(m), everywhere(inc)(m))
-  }
-  property("nested") = forAll { m: Nested =>
-    test(m, everywhere(negate)(m), everywhere(inc)(m))
-  }
+  property("mixed") = forAll { m: Mixed => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
+  property("nested") = forAll { m: Nested => test(m, everywhere(negate)(m), everywhere(inc)(m)) }
 }

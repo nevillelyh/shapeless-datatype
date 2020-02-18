@@ -52,24 +52,12 @@ object BigQueryTypeSpec extends Properties("BigQueryType") {
     x => ByteString.copyFrom(BaseEncoding.base64().decode(x.toString)),
     x => BaseEncoding.base64().encode(x.toByteArray)
   )
-  property("required") = forAll { m: Required =>
-    roundTrip(m)
-  }
-  property("optional") = forAll { m: Optional =>
-    roundTrip(m)
-  }
-  property("repeated") = forAll { m: Repeated =>
-    roundTrip(m)
-  }
-  property("mixed") = forAll { m: Mixed =>
-    roundTrip(m)
-  }
-  property("nested") = forAll { m: Nested =>
-    roundTrip(m)
-  }
-  property("seqs") = forAll { m: Seqs =>
-    roundTrip(m)
-  }
+  property("required") = forAll { m: Required => roundTrip(m) }
+  property("optional") = forAll { m: Optional => roundTrip(m) }
+  property("repeated") = forAll { m: Repeated => roundTrip(m) }
+  property("mixed") = forAll { m: Mixed => roundTrip(m) }
+  property("nested") = forAll { m: Nested => roundTrip(m) }
+  property("seqs") = forAll { m: Seqs => roundTrip(m) }
 
   implicit val arbDate = Arbitrary(arbInstant.arbitrary.map(i => new LocalDate(i.getMillis)))
   implicit val arbTime = Arbitrary(arbInstant.arbitrary.map(i => new LocalTime(i.getMillis)))
@@ -83,13 +71,9 @@ object BigQueryTypeSpec extends Properties("BigQueryType") {
     time: LocalTime,
     dateTime: LocalDateTime
   )
-  property("date time types") = forAll { m: DateTimeTypes =>
-    roundTrip(m)
-  }
+  property("date time types") = forAll { m: DateTimeTypes => roundTrip(m) }
 
   implicit val uriBigQueryType =
     BigQueryType.at[URI]("STRING")(v => URI.create(v.toString), _.toASCIIString)
-  property("custom") = forAll { m: Custom =>
-    roundTrip(m)
-  }
+  property("custom") = forAll { m: Custom => roundTrip(m) }
 }

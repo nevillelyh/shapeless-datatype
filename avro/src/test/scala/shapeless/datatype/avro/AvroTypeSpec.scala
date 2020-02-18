@@ -68,28 +68,14 @@ object AvroTypeSpec extends Properties("AvroType") {
   )
   implicit val instantAvroType =
     AvroType.at[Instant](Schema.Type.LONG)(v => new Instant(v.asInstanceOf[Long]), _.getMillis)
-  property("required") = forAll { m: Required =>
-    roundTrip(m)
-  }
-  property("optional") = forAll { m: Optional =>
-    roundTrip(m)
-  }
-  property("repeated") = forAll { m: Repeated =>
-    roundTrip(m)
-  }
-  property("mixed") = forAll { m: Mixed =>
-    roundTrip(m)
-  }
-  property("nested") = forAll { m: Nested =>
-    roundTrip(m)
-  }
-  property("seqs") = forAll { m: Seqs =>
-    roundTrip(m)
-  }
+  property("required") = forAll { m: Required => roundTrip(m) }
+  property("optional") = forAll { m: Optional => roundTrip(m) }
+  property("repeated") = forAll { m: Repeated => roundTrip(m) }
+  property("mixed") = forAll { m: Mixed => roundTrip(m) }
+  property("nested") = forAll { m: Nested => roundTrip(m) }
+  property("seqs") = forAll { m: Seqs => roundTrip(m) }
 
   implicit val uriAvroType =
     AvroType.at[URI](Schema.Type.STRING)(v => URI.create(v.toString), _.toString)
-  property("custom") = forAll { m: Custom =>
-    roundTrip(m)
-  }
+  property("custom") = forAll { m: Custom => roundTrip(m) }
 }

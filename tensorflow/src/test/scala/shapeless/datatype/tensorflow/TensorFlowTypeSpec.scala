@@ -56,27 +56,15 @@ object TensorFlowTypeSpec extends Properties("TensorFlowType") {
     TensorFlowType.toLongs(_).map(new Instant(_)),
     xs => TensorFlowType.fromLongs(xs.map(_.getMillis))
   )
-  property("required") = forAll { m: Required =>
-    roundTrip(m)
-  }
-  property("optional") = forAll { m: Optional =>
-    roundTrip(m)
-  }
-  property("repeated") = forAll { m: Repeated =>
-    roundTrip(m)
-  }
-  property("mixed") = forAll { m: Mixed =>
-    roundTrip(m)
-  }
-  property("seqs") = forAll { m: Seqs =>
-    roundTrip(m)
-  }
+  property("required") = forAll { m: Required => roundTrip(m) }
+  property("optional") = forAll { m: Optional => roundTrip(m) }
+  property("repeated") = forAll { m: Repeated => roundTrip(m) }
+  property("mixed") = forAll { m: Mixed => roundTrip(m) }
+  property("seqs") = forAll { m: Seqs => roundTrip(m) }
 
   implicit val uriTensorFlowType = TensorFlowType.at[URI](
     TensorFlowType.toStrings(_).map(URI.create),
     xs => TensorFlowType.fromStrings(xs.map(_.toString))
   )
-  property("custom") = forAll { m: Custom =>
-    roundTrip(m)
-  }
+  property("custom") = forAll { m: Custom => roundTrip(m) }
 }
