@@ -11,8 +11,8 @@ trait FromMappable[L <: HList, M] extends Serializable {
 }
 
 trait LowPriorityFromMappable1 {
-  implicit def hconsFromMappable1[K <: Symbol, V, T <: HList, M](
-    implicit wit: Witness.Aux[K],
+  implicit def hconsFromMappable1[K <: Symbol, V, T <: HList, M](implicit
+    wit: Witness.Aux[K],
     mt: MappableType[M, V],
     fromT: Lazy[FromMappable[T, M]]
   ): FromMappable[FieldType[K, V] :: T, M] = new FromMappable[FieldType[K, V] :: T, M] {
@@ -25,8 +25,8 @@ trait LowPriorityFromMappable1 {
 }
 
 trait LowPriorityFromMappableOption1 extends LowPriorityFromMappable1 {
-  implicit def hconsFromMappableOption1[K <: Symbol, V, T <: HList, M](
-    implicit wit: Witness.Aux[K],
+  implicit def hconsFromMappableOption1[K <: Symbol, V, T <: HList, M](implicit
+    wit: Witness.Aux[K],
     mt: MappableType[M, V],
     fromT: Lazy[FromMappable[T, M]]
   ): FromMappable[FieldType[K, Option[V]] :: T, M] =
@@ -39,8 +39,8 @@ trait LowPriorityFromMappableOption1 extends LowPriorityFromMappable1 {
 }
 
 trait LowPriorityFromMappableSeq1 extends LowPriorityFromMappableOption1 {
-  implicit def hconsFromMappableSeq1[K <: Symbol, V, T <: HList, M, S[_]](
-    implicit wit: Witness.Aux[K],
+  implicit def hconsFromMappableSeq1[K <: Symbol, V, T <: HList, M, S[_]](implicit
+    wit: Witness.Aux[K],
     mt: MappableType[M, V],
     fromT: Lazy[FromMappable[T, M]],
     fc: FactoryCompat[V, S[V]],
@@ -54,8 +54,8 @@ trait LowPriorityFromMappableSeq1 extends LowPriorityFromMappableOption1 {
 }
 
 trait LowPriorityFromMappable0 extends LowPriorityFromMappableSeq1 {
-  implicit def hconsFromMappable0[K <: Symbol, V, H <: HList, T <: HList, M: CanNest](
-    implicit wit: Witness.Aux[K],
+  implicit def hconsFromMappable0[K <: Symbol, V, H <: HList, T <: HList, M: CanNest](implicit
+    wit: Witness.Aux[K],
     gen: LabelledGeneric.Aux[V, H],
     bmt: BaseMappableType[M],
     fromH: Lazy[FromMappable[H, M]],
@@ -71,8 +71,8 @@ trait LowPriorityFromMappable0 extends LowPriorityFromMappableSeq1 {
 }
 
 trait LowPriorityFromMappableOption0 extends LowPriorityFromMappable0 {
-  implicit def hconsFromMappableOption0[K <: Symbol, V, H <: HList, T <: HList, M: CanNest](
-    implicit wit: Witness.Aux[K],
+  implicit def hconsFromMappableOption0[K <: Symbol, V, H <: HList, T <: HList, M: CanNest](implicit
+    wit: Witness.Aux[K],
     gen: LabelledGeneric.Aux[V, H],
     bmt: BaseMappableType[M],
     fromH: Lazy[FromMappable[H, M]],
@@ -94,7 +94,8 @@ trait LowPriorityFromMappableOption0 extends LowPriorityFromMappable0 {
 
 trait LowPriorityFromMappableSeq0 extends LowPriorityFromMappableOption0 {
   implicit def hconsFromMappableSeq0[K <: Symbol, V, H <: HList, T <: HList, M: CanNest, S[_]](
-    implicit wit: Witness.Aux[K],
+    implicit
+    wit: Witness.Aux[K],
     gen: LabelledGeneric.Aux[V, H],
     bmt: BaseMappableType[M],
     fromH: Lazy[FromMappable[H, M]],

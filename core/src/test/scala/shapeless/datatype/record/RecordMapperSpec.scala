@@ -112,8 +112,7 @@ object RecordMapperSpec extends Properties("RecordMapper") {
   implicit def b2s(x: Array[Byte]): String = new String(x)
 
   class RoundTrip[B] {
-    def from[A, LA <: HList, LB <: HList](a: A)(
-      implicit
+    def from[A, LA <: HList, LB <: HList](a: A)(implicit
       genA: LabelledGeneric.Aux[A, LA],
       genB: LabelledGeneric.Aux[B, LB],
       mrA: MapRecord[LA, LB],

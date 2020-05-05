@@ -13,8 +13,8 @@ trait MapRecord[LI <: HList, LO <: HList] {
 trait LowPriorityMapRecordBase {
   type MV[K, V, W, TI <: HList, TO <: HList] =
     MapRecord[FieldType[K, V] :: TI, FieldType[K, W] :: TO]
-  implicit def hconsMapRecordBase[K <: Symbol, V, W, TI <: HList, TO <: HList](
-    implicit mrT: Lazy[MapRecord[TI, TO]]
+  implicit def hconsMapRecordBase[K <: Symbol, V, W, TI <: HList, TO <: HList](implicit
+    mrT: Lazy[MapRecord[TI, TO]]
   ): MV[K, V, V, TI, TO] = new MV[K, V, V, TI, TO] {
     override def apply(l: FieldType[K, V] :: TI): FieldType[K, V] :: TO =
       l.head :: mrT.value(l.tail)
@@ -22,8 +22,8 @@ trait LowPriorityMapRecordBase {
 }
 
 trait LowPriorityMapRecord1 extends LowPriorityMapRecordBase {
-  implicit def hconsMapRecord1[K <: Symbol, V, W, TI <: HList, TO <: HList](
-    implicit f: V => W,
+  implicit def hconsMapRecord1[K <: Symbol, V, W, TI <: HList, TO <: HList](implicit
+    f: V => W,
     mrT: Lazy[MapRecord[TI, TO]]
   ): MV[K, V, W, TI, TO] = new MV[K, V, W, TI, TO] {
     override def apply(l: FieldType[K, V] :: TI): FieldType[K, W] :: TO =
@@ -32,8 +32,8 @@ trait LowPriorityMapRecord1 extends LowPriorityMapRecordBase {
 }
 
 trait LowPriorityMapRecordOption5 extends LowPriorityMapRecord1 {
-  implicit def hconsMapRecordOption5[K <: Symbol, V, W, TI <: HList, TO <: HList](
-    implicit f: V => W,
+  implicit def hconsMapRecordOption5[K <: Symbol, V, W, TI <: HList, TO <: HList](implicit
+    f: V => W,
     mrT: Lazy[MapRecord[TI, TO]],
     extractor: UnsafeOptionExtractor[V]
   ): MV[K, Option[V], W, TI, TO] = new MV[K, Option[V], W, TI, TO] {
@@ -43,8 +43,8 @@ trait LowPriorityMapRecordOption5 extends LowPriorityMapRecord1 {
 }
 
 trait LowPriorityMapRecordOption4 extends LowPriorityMapRecordOption5 {
-  implicit def hconsMapRecordOption4[K <: Symbol, V, W, TI <: HList, TO <: HList](
-    implicit f: V => W,
+  implicit def hconsMapRecordOption4[K <: Symbol, V, W, TI <: HList, TO <: HList](implicit
+    f: V => W,
     mrT: Lazy[MapRecord[TI, TO]]
   ): MV[K, V, Option[W], TI, TO] = new MV[K, V, Option[W], TI, TO] {
     override def apply(l: FieldType[K, V] :: TI): FieldType[K, Option[W]] :: TO =
@@ -53,8 +53,8 @@ trait LowPriorityMapRecordOption4 extends LowPriorityMapRecordOption5 {
 }
 
 trait LowPriorityMapRecordOption3 extends LowPriorityMapRecordOption4 {
-  implicit def hconsMapRecordOption3[K <: Symbol, V, W, TI <: HList, TO <: HList](
-    implicit f: V => W,
+  implicit def hconsMapRecordOption3[K <: Symbol, V, W, TI <: HList, TO <: HList](implicit
+    f: V => W,
     mrT: Lazy[MapRecord[TI, TO]]
   ): MV[K, Option[V], Option[W], TI, TO] = new MV[K, Option[V], Option[W], TI, TO] {
     override def apply(l: FieldType[K, Option[V]] :: TI): FieldType[K, Option[W]] :: TO =
@@ -63,10 +63,12 @@ trait LowPriorityMapRecordOption3 extends LowPriorityMapRecordOption4 {
 }
 
 trait LowPriorityMapRecordIterable1 extends LowPriorityMapRecordOption3 {
-  implicit def hconsMapRecordIterable1[K <: Symbol, V, W, TI <: HList, TO <: HList, S[_] <: Iterable[
+  implicit def hconsMapRecordIterable1[K <: Symbol, V, W, TI <: HList, TO <: HList, S[
     _
-  ]](
-    implicit f: V => W,
+  ] <: Iterable[
+    _
+  ]](implicit
+    f: V => W,
     mrT: Lazy[MapRecord[TI, TO]],
     fc: FactoryCompat[W, S[W]]
   ): MV[K, S[V], S[W], TI, TO] = new MV[K, S[V], S[W], TI, TO] {
@@ -87,8 +89,8 @@ trait LowPriorityMapRecord0 extends LowPriorityMapRecordIterable1 {
     HW <: HList,
     TI <: HList,
     TO <: HList
-  ](
-    implicit genV: LabelledGeneric.Aux[V, HV],
+  ](implicit
+    genV: LabelledGeneric.Aux[V, HV],
     genW: LabelledGeneric.Aux[W, HW],
     mrH: Lazy[MapRecord[HV, HW]],
     mrT: Lazy[MapRecord[TI, TO]]
@@ -107,8 +109,8 @@ trait LowPriorityMapRecordOption2 extends LowPriorityMapRecord0 {
     HW <: HList,
     TI <: HList,
     TO <: HList
-  ](
-    implicit genV: LabelledGeneric.Aux[V, HV],
+  ](implicit
+    genV: LabelledGeneric.Aux[V, HV],
     genW: LabelledGeneric.Aux[W, HW],
     mrH: Lazy[MapRecord[HV, HW]],
     mrT: Lazy[MapRecord[TI, TO]],
@@ -128,8 +130,8 @@ trait LowPriorityMapRecordOption1 extends LowPriorityMapRecordOption2 {
     HW <: HList,
     TI <: HList,
     TO <: HList
-  ](
-    implicit genV: LabelledGeneric.Aux[V, HV],
+  ](implicit
+    genV: LabelledGeneric.Aux[V, HV],
     genW: LabelledGeneric.Aux[W, HW],
     mrH: Lazy[MapRecord[HV, HW]],
     mrT: Lazy[MapRecord[TI, TO]]
@@ -148,8 +150,8 @@ trait LowPriorityMapRecordOption0 extends LowPriorityMapRecordOption1 {
     HW <: HList,
     TI <: HList,
     TO <: HList
-  ](
-    implicit genV: LabelledGeneric.Aux[V, HV],
+  ](implicit
+    genV: LabelledGeneric.Aux[V, HV],
     genW: LabelledGeneric.Aux[W, HW],
     mrH: Lazy[MapRecord[HV, HW]],
     mrT: Lazy[MapRecord[TI, TO]]
@@ -169,8 +171,8 @@ trait LowPriorityMapRecordIterable0 extends LowPriorityMapRecordOption0 {
     TI <: HList,
     TO <: HList,
     S[_] <: Iterable[_]
-  ](
-    implicit genV: LabelledGeneric.Aux[V, HV],
+  ](implicit
+    genV: LabelledGeneric.Aux[V, HV],
     genW: LabelledGeneric.Aux[W, HW],
     mrH: Lazy[MapRecord[HV, HW]],
     mrT: Lazy[MapRecord[TI, TO]],
@@ -191,14 +193,12 @@ object MapRecord extends LowPriorityMapRecordIterable0 {
 }
 
 class RecordMapper[A, B] extends Serializable {
-  def to[LA <: HList, LB <: HList](a: A)(
-    implicit
+  def to[LA <: HList, LB <: HList](a: A)(implicit
     genA: LabelledGeneric.Aux[A, LA],
     genB: LabelledGeneric.Aux[B, LB],
     mr: MapRecord[LA, LB]
   ): B = genB.from(mr(genA.to(a)))
-  def from[LB <: HList, LA <: HList](b: B)(
-    implicit
+  def from[LB <: HList, LA <: HList](b: B)(implicit
     genB: LabelledGeneric.Aux[B, LB],
     genA: LabelledGeneric.Aux[A, LA],
     mr: MapRecord[LB, LA]

@@ -37,7 +37,9 @@ object BigQuerySchema {
     val (mode, valType) = tpe match {
       case t if t.erasure =:= typeOf[Option[_]].erasure => ("NULLABLE", t.typeArgs.head)
       case t
-          if t.erasure <:< typeOf[Traversable[_]].erasure || (t.erasure <:< typeOf[Array[_]] && !(t.typeArgs.head =:= typeOf[
+          if t.erasure <:< typeOf[Traversable[_]].erasure || (t.erasure <:< typeOf[
+            Array[_]
+          ] && !(t.typeArgs.head =:= typeOf[
             Byte
           ])) =>
         ("REPEATED", t.typeArgs.head)

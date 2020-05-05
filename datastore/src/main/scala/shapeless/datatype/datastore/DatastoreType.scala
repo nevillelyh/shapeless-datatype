@@ -7,29 +7,25 @@ import org.joda.time.{DateTimeConstants, Instant}
 import shapeless._
 
 class DatastoreType[A] extends Serializable {
-  def fromEntityBuilder[L <: HList](m: Entity.Builder)(
-    implicit
+  def fromEntityBuilder[L <: HList](m: Entity.Builder)(implicit
     gen: LabelledGeneric.Aux[A, L],
     fromL: FromEntity[L]
   ): Option[A] =
     fromL(m).map(gen.from)
 
-  def fromEntity[L <: HList](m: Entity)(
-    implicit
+  def fromEntity[L <: HList](m: Entity)(implicit
     gen: LabelledGeneric.Aux[A, L],
     fromL: FromEntity[L]
   ): Option[A] =
     fromL(m.toBuilder).map(gen.from)
 
-  def toEntityBuilder[L <: HList](a: A)(
-    implicit
+  def toEntityBuilder[L <: HList](a: A)(implicit
     gen: LabelledGeneric.Aux[A, L],
     toL: ToEntity[L]
   ): Entity.Builder =
     toL(gen.to(a))
 
-  def toEntity[L <: HList](a: A)(
-    implicit
+  def toEntity[L <: HList](a: A)(implicit
     gen: LabelledGeneric.Aux[A, L],
     toL: ToEntity[L]
   ): Entity =

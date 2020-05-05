@@ -17,8 +17,7 @@ object DatastoreTypeSpec extends Properties("DatastoreType") {
   implicit def compareByteArrays(x: Array[Byte], y: Array[Byte]) = java.util.Arrays.equals(x, y)
   implicit def compareIntArrays(x: Array[Int], y: Array[Int]) = java.util.Arrays.equals(x, y)
 
-  def roundTrip[A, L <: HList](m: A)(
-    implicit
+  def roundTrip[A, L <: HList](m: A)(implicit
     gen: LabelledGeneric.Aux[A, L],
     fromL: FromEntity[L],
     toL: ToEntity[L],

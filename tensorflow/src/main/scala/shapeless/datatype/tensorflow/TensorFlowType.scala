@@ -7,29 +7,25 @@ import shapeless._
 import scala.collection.JavaConverters._
 
 class TensorFlowType[A] extends Serializable {
-  def fromExampleBuilder[L <: HList](m: Example.Builder)(
-    implicit
+  def fromExampleBuilder[L <: HList](m: Example.Builder)(implicit
     gen: LabelledGeneric.Aux[A, L],
     fromL: FromFeatures[L]
   ): Option[A] =
     fromL(m.getFeaturesBuilder).map(gen.from)
 
-  def fromExample[L <: HList](m: Example)(
-    implicit
+  def fromExample[L <: HList](m: Example)(implicit
     gen: LabelledGeneric.Aux[A, L],
     fromL: FromFeatures[L]
   ): Option[A] =
     fromL(m.getFeatures.toBuilder).map(gen.from)
 
-  def toExampleBuilder[L <: HList](a: A)(
-    implicit
+  def toExampleBuilder[L <: HList](a: A)(implicit
     gen: LabelledGeneric.Aux[A, L],
     toL: ToFeatures[L]
   ): Example.Builder =
     Example.newBuilder().setFeatures(toL(gen.to(a)))
 
-  def toExample[L <: HList](a: A)(
-    implicit
+  def toExample[L <: HList](a: A)(implicit
     gen: LabelledGeneric.Aux[A, L],
     toL: ToFeatures[L]
   ): Example =

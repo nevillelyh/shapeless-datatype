@@ -18,8 +18,7 @@ object TensorFlowTypeSpec extends Properties("TensorFlowType") {
   implicit def compareIntArrays(x: Array[Int], y: Array[Int]) = java.util.Arrays.equals(x, y)
   implicit def compareDouble(x: Double, y: Double) = x.toFloat == y.toFloat
 
-  def roundTrip[A, L <: HList](m: A)(
-    implicit
+  def roundTrip[A, L <: HList](m: A)(implicit
     gen: LabelledGeneric.Aux[A, L],
     fromL: FromFeatures[L],
     toL: ToFeatures[L],

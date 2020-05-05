@@ -10,8 +10,8 @@ trait MatchRecord[L <: HList] {
 }
 
 trait LowPriorityMatchRecordBase {
-  implicit def hconsMatchRecordBase[K <: Symbol, V, T <: HList](
-    implicit mrT: Lazy[MatchRecord[T]]
+  implicit def hconsMatchRecordBase[K <: Symbol, V, T <: HList](implicit
+    mrT: Lazy[MatchRecord[T]]
   ): MatchRecord[FieldType[K, V] :: T] = new MatchRecord[FieldType[K, V] :: T] {
     override def apply(l: FieldType[K, V] :: T, r: FieldType[K, V] :: T): Boolean =
       l.head == r.head && mrT.value(l.tail, r.tail)
@@ -19,8 +19,8 @@ trait LowPriorityMatchRecordBase {
 }
 
 trait LowPriorityMatchRecord1 extends LowPriorityMatchRecordBase {
-  implicit def hconsMatchRecord1[K <: Symbol, V, T <: HList](
-    implicit f: (V, V) => Boolean,
+  implicit def hconsMatchRecord1[K <: Symbol, V, T <: HList](implicit
+    f: (V, V) => Boolean,
     mrT: Lazy[MatchRecord[T]]
   ): MatchRecord[FieldType[K, V] :: T] = new MatchRecord[FieldType[K, V] :: T] {
     override def apply(l: FieldType[K, V] :: T, r: FieldType[K, V] :: T): Boolean =
@@ -29,8 +29,8 @@ trait LowPriorityMatchRecord1 extends LowPriorityMatchRecordBase {
 }
 
 trait LowPriorityMatchRecordOption1 extends LowPriorityMatchRecord1 {
-  implicit def hconsMatchRecordOption1[K <: Symbol, V, T <: HList](
-    implicit f: (V, V) => Boolean,
+  implicit def hconsMatchRecordOption1[K <: Symbol, V, T <: HList](implicit
+    f: (V, V) => Boolean,
     mrT: Lazy[MatchRecord[T]]
   ): MatchRecord[FieldType[K, Option[V]] :: T] = new MatchRecord[FieldType[K, Option[V]] :: T] {
     override def apply(
@@ -48,8 +48,8 @@ trait LowPriorityMatchRecordOption1 extends LowPriorityMatchRecord1 {
 }
 
 trait LowPriorityMatchRecordSeq1 extends LowPriorityMatchRecordOption1 {
-  implicit def hconsMatchRecordSeq1[K <: Symbol, V, T <: HList, S[_] <: Seq[_]](
-    implicit f: (V, V) => Boolean,
+  implicit def hconsMatchRecordSeq1[K <: Symbol, V, T <: HList, S[_] <: Seq[_]](implicit
+    f: (V, V) => Boolean,
     mrT: Lazy[MatchRecord[T]]
   ): MatchRecord[FieldType[K, S[V]] :: T] = new MatchRecord[FieldType[K, S[V]] :: T] {
     override def apply(l: FieldType[K, S[V]] :: T, r: FieldType[K, S[V]] :: T): Boolean = {
@@ -61,8 +61,8 @@ trait LowPriorityMatchRecordSeq1 extends LowPriorityMatchRecordOption1 {
 }
 
 trait LowPriorityMatchRecord0 extends LowPriorityMatchRecordSeq1 {
-  implicit def hconsMatchRecord0[K <: Symbol, V, H <: HList, T <: HList](
-    implicit gen: LabelledGeneric.Aux[V, H],
+  implicit def hconsMatchRecord0[K <: Symbol, V, H <: HList, T <: HList](implicit
+    gen: LabelledGeneric.Aux[V, H],
     mrH: Lazy[MatchRecord[H]],
     mrT: Lazy[MatchRecord[T]]
   ): MatchRecord[FieldType[K, V] :: T] = new MatchRecord[FieldType[K, V] :: T] {
@@ -72,8 +72,8 @@ trait LowPriorityMatchRecord0 extends LowPriorityMatchRecordSeq1 {
 }
 
 trait LowPriorityMatchRecordOption0 extends LowPriorityMatchRecord0 {
-  implicit def hconsMatchRecordOption0[K <: Symbol, V, H <: HList, T <: HList](
-    implicit gen: LabelledGeneric.Aux[V, H],
+  implicit def hconsMatchRecordOption0[K <: Symbol, V, H <: HList, T <: HList](implicit
+    gen: LabelledGeneric.Aux[V, H],
     mrH: Lazy[MatchRecord[H]],
     mrT: Lazy[MatchRecord[T]]
   ): MatchRecord[FieldType[K, Option[V]] :: T] = new MatchRecord[FieldType[K, Option[V]] :: T] {
@@ -92,8 +92,8 @@ trait LowPriorityMatchRecordOption0 extends LowPriorityMatchRecord0 {
 }
 
 trait LowPriorityMatchRecordSeq0 extends LowPriorityMatchRecordOption0 {
-  implicit def hconsMatchRecordSeq0[K <: Symbol, V, H <: HList, T <: HList, S[_] <: Seq[_]](
-    implicit gen: LabelledGeneric.Aux[V, H],
+  implicit def hconsMatchRecordSeq0[K <: Symbol, V, H <: HList, T <: HList, S[_] <: Seq[_]](implicit
+    gen: LabelledGeneric.Aux[V, H],
     mrH: Lazy[MatchRecord[H]],
     mrT: Lazy[MatchRecord[T]]
   ): MatchRecord[FieldType[K, S[V]] :: T] = new MatchRecord[FieldType[K, S[V]] :: T] {
@@ -114,8 +114,7 @@ object MatchRecord extends LowPriorityMatchRecordSeq0 {
 }
 
 class RecordMatcher[A] extends Serializable {
-  def apply[L <: HList](l: A, r: A)(
-    implicit
+  def apply[L <: HList](l: A, r: A)(implicit
     gen: LabelledGeneric.Aux[A, L],
     mr: MatchRecord[L]
   ): Boolean = mr(gen.to(l), gen.to(r))

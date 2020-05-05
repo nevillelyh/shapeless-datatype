@@ -21,8 +21,7 @@ object RecordMatcherSpec extends Properties("RecordMatcher") {
   object inc extends ->((x: Double) => x + 1.0)
   implicit def compareDoubles(x: Double, y: Double) = math.abs(x) == math.abs(y)
 
-  def test[A, L <: HList](original: A, withNegate: A, withInc: A)(
-    implicit
+  def test[A, L <: HList](original: A, withNegate: A, withInc: A)(implicit
     gen: LabelledGeneric.Aux[A, L],
     mr: MatchRecord[L]
   ): Prop = {
