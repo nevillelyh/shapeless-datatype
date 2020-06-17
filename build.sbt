@@ -56,100 +56,94 @@ lazy val root: Project = Project(
   "shapeless-datatype",
   file(".")
 ).settings(
-    commonSettings ++ noPublishSettings
-  )
-  .aggregate(
-    core,
-    avro,
-    bigquery,
-    datastore,
-    tensorflow,
-    test
-  )
+  commonSettings ++ noPublishSettings
+).aggregate(
+  core,
+  avro,
+  bigquery,
+  datastore,
+  tensorflow,
+  test
+)
 
 lazy val core: Project = Project(
   "core",
   file("core")
 ).settings(
-    moduleName := "shapeless-datatype-core",
-    commonSettings,
-    description := "Shapeless utilities for common data types",
-    libraryDependencies ++= Seq(
-      "com.chuusai" %% "shapeless" % shapelessVersion
-    )
+  moduleName := "shapeless-datatype-core",
+  commonSettings,
+  description := "Shapeless utilities for common data types",
+  libraryDependencies ++= Seq(
+    "com.chuusai" %% "shapeless" % shapelessVersion
   )
-  .dependsOn(
-    test % "test->test"
-  )
+).dependsOn(
+  test % "test->test"
+)
 
 lazy val avro: Project = Project(
   "avro",
   file("avro")
 ).settings(
-    moduleName := "shapeless-datatype-avro",
-    commonSettings,
-    description := "Shapeless utilities for Apache Avro",
-    libraryDependencies ++= Seq(
-      "org.apache.avro" % "avro" % avroVersion % Provided,
-      "org.scala-lang" % "scala-reflect" % scalaVersion.value
-    )
+  moduleName := "shapeless-datatype-avro",
+  commonSettings,
+  description := "Shapeless utilities for Apache Avro",
+  libraryDependencies ++= Seq(
+    "org.apache.avro" % "avro" % avroVersion % Provided,
+    "org.scala-lang" % "scala-reflect" % scalaVersion.value
   )
-  .dependsOn(
-    core,
-    test % "test->test"
-  )
+).dependsOn(
+  core,
+  test % "test->test"
+)
 
 lazy val bigquery: Project = Project(
   "bigquery",
   file("bigquery")
 ).settings(
-    moduleName := "shapeless-datatype-bigquery",
-    commonSettings,
-    description := "Shapeless utilities for Google Cloud BigQuery",
-    libraryDependencies ++= Seq(
-      "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-      "com.google.apis" % "google-api-services-bigquery" % bigqueryVersion % Provided,
-      "joda-time" % "joda-time" % jodaTimeVersion % Provided,
-      "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion % Test
-    )
+  moduleName := "shapeless-datatype-bigquery",
+  commonSettings,
+  description := "Shapeless utilities for Google Cloud BigQuery",
+  libraryDependencies ++= Seq(
+    "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+    "com.google.apis" % "google-api-services-bigquery" % bigqueryVersion % Provided,
+    "joda-time" % "joda-time" % jodaTimeVersion % Provided,
+    "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion % Test
   )
-  .dependsOn(
-    core,
-    test % "test->test"
-  )
+).dependsOn(
+  core,
+  test % "test->test"
+)
 
 lazy val datastore: Project = Project(
   "datastore",
   file("datastore")
 ).settings(
-    commonSettings,
-    moduleName := "shapeless-datatype-datastore",
-    description := "Shapeless utilities for Google Cloud Datastore",
-    libraryDependencies ++= Seq(
-      "com.google.cloud.datastore" % "datastore-v1-proto-client" % datastoreVersion % Provided,
-      "joda-time" % "joda-time" % jodaTimeVersion % Provided
-    )
+  commonSettings,
+  moduleName := "shapeless-datatype-datastore",
+  description := "Shapeless utilities for Google Cloud Datastore",
+  libraryDependencies ++= Seq(
+    "com.google.cloud.datastore" % "datastore-v1-proto-client" % datastoreVersion % Provided,
+    "joda-time" % "joda-time" % jodaTimeVersion % Provided
   )
-  .dependsOn(
-    core,
-    test % "test->test"
-  )
+).dependsOn(
+  core,
+  test % "test->test"
+)
 
 lazy val tensorflow: Project = Project(
   "tensorflow",
   file("tensorflow")
 ).settings(
-    moduleName := "shapeless-datatype-tensorflow",
-    commonSettings,
-    description := "Shapeless utilities for TensorFlow",
-    libraryDependencies ++= Seq(
-      "org.tensorflow" % "proto" % tensorflowVersion % Provided
-    )
+  moduleName := "shapeless-datatype-tensorflow",
+  commonSettings,
+  description := "Shapeless utilities for TensorFlow",
+  libraryDependencies ++= Seq(
+    "org.tensorflow" % "proto" % tensorflowVersion % Provided
   )
-  .dependsOn(
-    core,
-    test % "test->test"
-  )
+).dependsOn(
+  core,
+  test % "test->test"
+)
 
 lazy val test: Project = Project(
   "test",
