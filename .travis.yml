@@ -1,16 +1,10 @@
 language: scala
-matrix:
-  include:
-    - scala: 2.11.12
-      jdk: openjdk8
-    - scala: 2.12.11
-      jdk: openjdk8
-    - scala: 2.12.11
-      jdk: openjdk11
-    - scala: 2.13.2
-      jdk: openjdk8
-    - scala: 2.13.2
-      jdk: openjdk11
+scala:
+  - 2.12.11
+  - 2.13.2
+jdk:
+  - openjdk8
+  - openjdk11
 
 before_cache:
   # Tricks to avoid unnecessary cache updates
