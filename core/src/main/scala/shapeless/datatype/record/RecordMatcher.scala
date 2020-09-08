@@ -99,8 +99,8 @@ trait LowPriorityMatchRecordSeq0 extends LowPriorityMatchRecordOption0 {
   ): MatchRecord[FieldType[K, S[V]] :: T] = new MatchRecord[FieldType[K, S[V]] :: T] {
     override def apply(l: FieldType[K, S[V]] :: T, r: FieldType[K, S[V]] :: T): Boolean = {
       val (ls, rs) = (l.head.asInstanceOf[Seq[V]], r.head.asInstanceOf[Seq[V]])
-      val h = ls.size == rs.size && (ls zip rs).forall {
-        case (x, y) => mrH.value(gen.to(x), gen.to(y))
+      val h = ls.size == rs.size && (ls zip rs).forall { case (x, y) =>
+        mrH.value(gen.to(x), gen.to(y))
       }
       h && mrT.value(l.tail, r.tail)
     }
