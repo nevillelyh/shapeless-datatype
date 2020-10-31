@@ -8,7 +8,7 @@ val jacksonVersion = "2.11.3"
 val jodaTimeVersion = "2.10.8"
 val protobufVersion = "3.13.0"
 val scalacheckShapelessVersion = "1.2.5"
-val scalacheckVersion = "1.14.3"
+val scalacheckVersion = "1.15.0"
 val shapelessVersion = "2.3.3"
 val tensorflowVersion = "1.15.0"
 
