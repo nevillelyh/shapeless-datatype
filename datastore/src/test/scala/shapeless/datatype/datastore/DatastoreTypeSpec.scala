@@ -5,8 +5,8 @@ import java.net.URI
 import com.google.datastore.v1.Entity
 import com.google.datastore.v1.client.DatastoreHelper._
 import org.scalacheck.Prop.{all, forAll}
-import org.scalacheck.ScalacheckShapeless._
 import org.scalacheck._
+import magnolify.scalacheck.auto._
 import shapeless._
 import shapeless.datatype.record._
 

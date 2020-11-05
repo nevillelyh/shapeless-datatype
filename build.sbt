@@ -6,8 +6,8 @@ val bigqueryVersion = "v2-rev20201022-1.30.10"
 val datastoreVersion = "1.6.3"
 val jacksonVersion = "2.11.3"
 val jodaTimeVersion = "2.10.8"
+val magnolifyVersion = "0.3.0"
 val protobufVersion = "3.13.0"
-val scalacheckShapelessVersion = "1.2.5"
 val scalacheckVersion = "1.15.0"
 val shapelessVersion = "2.3.3"
 val tensorflowVersion = "1.15.0"
@@ -152,8 +152,8 @@ lazy val test: Project = Project(
   commonSettings ++ noPublishSettings,
   description := "Shapeless utilities for common data types - shared code for unit test",
   libraryDependencies ++= Seq(
+    "com.spotify" %% "magnolify-scalacheck" % magnolifyVersion % Test,
     "org.scalacheck" %% "scalacheck" % scalacheckVersion % Test,
-    "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % scalacheckShapelessVersion % Test,
     "com.google.protobuf" % "protobuf-java" % protobufVersion % Test,
     "joda-time" % "joda-time" % jodaTimeVersion % Test
   )

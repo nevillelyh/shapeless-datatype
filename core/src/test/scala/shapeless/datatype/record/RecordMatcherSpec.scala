@@ -1,8 +1,8 @@
 package shapeless.datatype.record
 
 import org.scalacheck.Prop.{all, forAll, propBoolean}
-import org.scalacheck.ScalacheckShapeless._
 import org.scalacheck._
+import magnolify.scalacheck.auto._
 import shapeless._
 import shapeless.poly._
 

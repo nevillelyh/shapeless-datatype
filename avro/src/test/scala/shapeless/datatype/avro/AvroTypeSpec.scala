@@ -10,8 +10,8 @@ import org.apache.avro.generic.{GenericDatumReader, GenericDatumWriter, GenericR
 import org.apache.avro.io.{DecoderFactory, EncoderFactory}
 import org.joda.time.Instant
 import org.scalacheck.Prop.forAll
-import org.scalacheck.ScalacheckShapeless._
 import org.scalacheck._
+import magnolify.scalacheck.auto._
 import shapeless._
 import shapeless.datatype.record._
 
