@@ -1,8 +1,8 @@
 package shapeless.datatype.record
 
 import org.scalacheck.Prop.forAll
-import org.scalacheck.ScalacheckShapeless._
 import org.scalacheck._
+import magnolify.scalacheck.auto._
 import shapeless._
 
 import scala.language.implicitConversions
