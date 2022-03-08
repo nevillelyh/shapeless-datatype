@@ -3,7 +3,7 @@ description := "Shapeless utilities for common data types"
 
 val avroVersion = "1.11.0"
 val bigqueryVersion = "v2-rev20220226-1.32.1"
-val datastoreVersion = "2.2.5"
+val datastoreVersion = "2.2.6"
 val jacksonVersion = "2.13.2"
 val jodaTimeVersion = "2.10.13"
 val magnolifyVersion = "0.4.7"
