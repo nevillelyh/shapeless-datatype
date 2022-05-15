@@ -37,11 +37,11 @@ object BigQuerySchema {
     val (mode, valType) = tpe match {
       case t if t.erasure =:= typeOf[Option[_]].erasure => ("NULLABLE", t.typeArgs.head)
       case t
-          if t.erasure <:< typeOf[Traversable[_]].erasure || (t.erasure <:< typeOf[
+          if t.erasure <:< typeOf[Traversable[_]].erasure || t.erasure <:< typeOf[
             Array[_]
           ] && !(t.typeArgs.head =:= typeOf[
             Byte
-          ])) =>
+          ]) =>
         ("REPEATED", t.typeArgs.head)
       case t => ("REQUIRED", t)
     }
@@ -49,7 +49,7 @@ object BigQuerySchema {
       case Some(t) => (t, Nil)
       case None    => rawType(valType)
     }
-    val tfs = new TableFieldSchema().setMode(mode).setName(name).setType(tpeParam)
+    val tfs = new TableFieldSchema.setMode(mode).setName(name).setType(tpeParam)
     if (nestedParam.nonEmpty) {
       tfs.setFields(nestedParam.toList.asJava)
     }
@@ -66,6 +66,6 @@ object BigQuerySchema {
 
   def apply[T: TypeTag]: TableSchema = {
     val tt = implicitly[TypeTag[T]]
-    cachedSchemas.getOrElseUpdate(tt, new TableSchema().setFields(toFields(tt.tpe).toList.asJava))
+    cachedSchemas.getOrElseUpdate(tt, new TableSchema.setFields(toFields(tt.tpe).toList.asJava))
   }
 }

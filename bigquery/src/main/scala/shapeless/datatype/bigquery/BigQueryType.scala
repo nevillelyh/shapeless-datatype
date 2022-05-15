@@ -13,7 +13,7 @@ class BigQueryType[A] extends Serializable {
   def toTableRow[L <: HList](
     a: A
   )(implicit gen: LabelledGeneric.Aux[A, L], toL: ToTableRow[L]): TableRow = {
-    val tr = new TableRow()
+    val tr = new TableRow
     tr.putAll(toL(gen.to(a)))
     tr
   }

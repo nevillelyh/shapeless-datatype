@@ -19,7 +19,7 @@ object BigQueryTypeSpec extends Properties("BigQueryType") {
   import shapeless.datatype.test.Records._
   import shapeless.datatype.test.SerializableUtils._
 
-  val mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+  val mapper = new ObjectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
 
   implicit def compareByteArrays(x: Array[Byte], y: Array[Byte]) = java.util.Arrays.equals(x, y)
   implicit def compareIntArrays(x: Array[Int], y: Array[Int]) = java.util.Arrays.equals(x, y)

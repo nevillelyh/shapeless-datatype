@@ -4,7 +4,7 @@ import java.{io => jio}
 
 object SerializableUtils {
   private def serializeToByteArray(value: Serializable): Array[Byte] = {
-    val buffer = new jio.ByteArrayOutputStream()
+    val buffer = new jio.ByteArrayOutputStream
     val oos = new jio.ObjectOutputStream(buffer)
     oos.writeObject(value)
     buffer.toByteArray
@@ -18,5 +18,5 @@ object SerializableUtils {
   def ensureSerializable[T <: Serializable](value: T): T =
     deserializeFromByteArray(serializeToByteArray(value)).asInstanceOf[T]
 
-  trait SerializableFunction[A, B] extends (A => B) with Serializable
+  trait SerializableFunction[A, B] extends A => B with Serializable
 }

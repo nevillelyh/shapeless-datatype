@@ -48,7 +48,7 @@ object AvroTypeSpec extends Properties("AvroType") {
 
   def roundTripRecord(r: GenericRecord): GenericRecord = {
     val writer = new GenericDatumWriter[GenericRecord](r.getSchema)
-    val baos = new ByteArrayOutputStream()
+    val baos = new ByteArrayOutputStream
     val encoder = EncoderFactory.get().binaryEncoder(baos, null)
     writer.write(r, encoder)
     encoder.flush()

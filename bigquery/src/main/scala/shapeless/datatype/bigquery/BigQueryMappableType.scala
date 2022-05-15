@@ -35,7 +35,7 @@ trait BaseBigQueryMappableType[V] extends MappableType[BigQueryMap, V] {
 
 trait BigQueryMappableType extends Serializable {
   implicit val bigQueryBaseMappableType = new BaseMappableType[BigQueryMap] {
-    override def base: BigQueryMap = new java.util.LinkedHashMap[String, Any]()
+    override def base: BigQueryMap = new java.util.LinkedHashMap[String, Any]
 
     override def get(m: BigQueryMap, key: String): Option[BigQueryMap] =
       Option(m.get(key)).map(_.asInstanceOf[BigQueryMap])
@@ -87,16 +87,16 @@ private object TimestampConverter {
   // TIMESTAMP
   // YYYY-[M]M-[D]D[ [H]H:[M]M:[S]S[.DDDDDD]][time zone]
   private val timestampPrinter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSSSSS ZZZ")
-  private val timestampParser = new DateTimeFormatterBuilder()
+  private val timestampParser = new DateTimeFormatterBuilder
     .append(DateTimeFormat.forPattern("yyyy-MM-dd"))
     .appendOptional(
-      new DateTimeFormatterBuilder()
+      new DateTimeFormatterBuilder
         .append(DateTimeFormat.forPattern(" HH:mm:ss").getParser)
         .appendOptional(DateTimeFormat.forPattern(".SSSSSS").getParser)
         .toParser
     )
     .appendOptional(
-      new DateTimeFormatterBuilder()
+      new DateTimeFormatterBuilder
         .append(null, Array(" ZZZ", "ZZ").map(p => DateTimeFormat.forPattern(p).getParser))
         .toParser
     )
@@ -111,7 +111,7 @@ private object TimestampConverter {
   // TIME
   // [H]H:[M]M:[S]S[.DDDDDD]
   private val timePrinter = DateTimeFormat.forPattern("HH:mm:ss.SSSSSS").withZoneUTC()
-  private val timeParser = new DateTimeFormatterBuilder()
+  private val timeParser = new DateTimeFormatterBuilder
     .append(DateTimeFormat.forPattern("HH:mm:ss").getParser)
     .appendOptional(DateTimeFormat.forPattern(".SSSSSS").getParser)
     .toFormatter
@@ -120,10 +120,10 @@ private object TimestampConverter {
   // DATETIME
   // YYYY-[M]M-[D]D[ [H]H:[M]M:[S]S[.DDDDDD]]
   private val datetimePrinter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")
-  private val datetimeParser = new DateTimeFormatterBuilder()
+  private val datetimeParser = new DateTimeFormatterBuilder
     .append(DateTimeFormat.forPattern("yyyy-MM-dd"))
     .appendOptional(
-      new DateTimeFormatterBuilder()
+      new DateTimeFormatterBuilder
         .append(DateTimeFormat.forPattern(" HH:mm:ss").getParser)
         .appendOptional(DateTimeFormat.forPattern(".SSSSSS").getParser)
         .toParser

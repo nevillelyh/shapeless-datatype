@@ -206,7 +206,7 @@ class RecordMapper[A, B] extends Serializable {
 }
 
 object RecordMapper {
-  def apply[A, B]: RecordMapper[A, B] = new RecordMapper[A, B]()
+  def apply[A, B]: RecordMapper[A, B] = new RecordMapper[A, B]
 }
 
 class UnsafeOptionExtractor[T] {
