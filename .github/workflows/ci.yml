@@ -5,7 +5,7 @@ jobs:
   checks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Cache sbt
         uses: coursier/cache-action@v6
       - name: Java 11 setup
@@ -17,7 +17,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Cache sbt
         uses: coursier/cache-action@v6
       - name: Java ${{matrix.java}} setup
@@ -37,7 +37,7 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Cache sbt
         uses: coursier/cache-action@v6
       - name: Java 11 setup
