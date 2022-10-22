@@ -6,7 +6,7 @@ val bigqueryVersion = "v2-rev20220827-2.0.0"
 val datastoreVersion = "2.11.2"
 val jacksonVersion = "2.13.4"
 val jodaTimeVersion = "2.11.1"
-val magnolifyVersion = "0.5.0"
+val magnolifyVersion = "0.6.1"
 val protobufVersion = "3.21.6"
 val scalacheckVersion = "1.17.0"
 val shapelessVersion = "2.3.10"
@@ -88,8 +88,8 @@ lazy val avro: Project = Project(
   commonSettings,
   description := "Shapeless utilities for Apache Avro",
   libraryDependencies ++= Seq(
-    "org.apache.avro" % "avro" % avroVersion % Provided,
-    "org.scala-lang" % "scala-reflect" % scalaVersion.value
+    "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+    "org.apache.avro" % "avro" % avroVersion % Provided
   )
 ).dependsOn(
   core,
@@ -152,6 +152,7 @@ lazy val test: Project = Project(
   commonSettings ++ noPublishSettings,
   description := "Shapeless utilities for common data types - shared code for unit test",
   libraryDependencies ++= Seq(
+    "org.scala-lang" % "scala-reflect" % scalaVersion.value,
     "com.spotify" %% "magnolify-scalacheck" % magnolifyVersion % Test,
     "org.scalacheck" %% "scalacheck" % scalacheckVersion % Test,
     "com.google.protobuf" % "protobuf-java" % protobufVersion % Test,
