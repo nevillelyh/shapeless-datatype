@@ -1,7 +1,7 @@
 shapeless-datatype
 ==================
 
-[![Build Status](https://img.shields.io/github/workflow/status/nevillelyh/shapeless-datatype/CI)](https://github.com/nevillelyh/shapeless-datatype/actions?query=workflow%3ACI)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/nevillelyh/shapeless-datatype/ci.yml?branch=main)](https://github.com/nevillelyh/shapeless-datatype/actions?query=workflow%3ACI)
 [![codecov.io](https://codecov.io/github/nevillelyh/shapeless-datatype/coverage.svg?branch=master)](https://codecov.io/github/nevillelyh/shapeless-datatype?branch=master)
 [![GitHub license](https://img.shields.io/github/license/nevillelyh/shapeless-datatype.svg)](./LICENSE)
 [![Maven Central](https://img.shields.io/maven-central/v/me.lyh/shapeless-datatype-core_2.13.svg)](https://maven-badges.herokuapp.com/maven-central/me.lyh/shapeless-datatype-core_2.13)
