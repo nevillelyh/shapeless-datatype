@@ -15,7 +15,7 @@ val tensorflowVersion = "1.15.0"
 val commonSettings = Seq(
   organization := "me.lyh",
   scalaVersion := "2.13.10",
-  crossScalaVersions := Seq("2.12.17", "2.13.10"),
+  crossScalaVersions := Seq("2.12.18", "2.13.10"),
   scalacOptions ++= Seq("-target:jvm-1.8", "-deprecation", "-feature", "-unchecked"),
   // protobuf-lite is an older subset of protobuf-java and causes issues
   excludeDependencies += "com.google.protobuf" % "protobuf-lite",
