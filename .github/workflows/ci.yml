@@ -20,14 +20,11 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: ${{matrix.java}}
+          java-version: '17'
           cache: 'sbt'
       - run: sbt "++${{matrix.scala}} test"
     strategy:
       matrix:
-        java:
-          - '11'
-          - '17'
         scala:
           - '2.12.18'
           - '2.13.11'
