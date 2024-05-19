@@ -9,7 +9,7 @@ val jodaTimeVersion = "2.12.7"
 val magnolifyVersion = "0.7.2"
 val protobufVersion = "3.25.3"
 val scalacheckVersion = "1.18.0"
-val shapelessVersion = "2.3.11"
+val shapelessVersion = "2.3.12"
 val tensorflowVersion = "1.15.0"
 
 val commonSettings = Seq(
