@@ -23,6 +23,7 @@ object AvroTypeSpec extends Properties("AvroType") {
 
   implicit def compareByteArrays(x: Array[Byte], y: Array[Byte]) = java.util.Arrays.equals(x, y)
   implicit def compareIntArrays(x: Array[Int], y: Array[Int]) = java.util.Arrays.equals(x, y)
+  implicit def compareDouble(x: Double, y: Double) = x.toFloat == y.toFloat
 
   def roundTrip[A: TypeTag, L <: HList](m: A)(implicit
     gen: LabelledGeneric.Aux[A, L],
