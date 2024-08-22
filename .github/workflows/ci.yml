@@ -9,7 +9,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21'
           cache: 'sbt'
       - run: sbt scalafmtCheckAll scalafmtSbtCheck
 
@@ -20,14 +20,14 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21'
           cache: 'sbt'
       - run: sbt "++${{matrix.scala}} test"
     strategy:
       matrix:
         scala:
-          - '2.12.18'
-          - '2.13.11'
+          - '2.12.19'
+          - '2.13.14'
 
   coverage:
     runs-on: ubuntu-latest
@@ -36,7 +36,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21'
           cache: 'sbt'
       - run: |
           sbt coverage test coverageAggregate
