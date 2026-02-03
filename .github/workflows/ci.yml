@@ -28,8 +28,8 @@ jobs:
     strategy:
       matrix:
         scala:
-          - '2.12.20'
-          - '2.13.16'
+          - '2.12.21'
+          - '2.13.18'
 
   coverage:
     runs-on: ubuntu-latest
