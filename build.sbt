@@ -20,9 +20,8 @@ val commonSettings = Seq(
   // protobuf-lite is an older subset of protobuf-java and causes issues
   excludeDependencies += "com.google.protobuf" % "protobuf-lite",
   // Release settings
-  publishTo := Some(
-    if (isSnapshot.value) Opts.resolver.sonatypeOssSnapshots.head else Opts.resolver.sonatypeStaging
-  ),
+  publishTo := (if (isSnapshot.value) Some(Resolver.sonatypeCentralSnapshots)
+                else localStaging.value),
   releaseCrossBuild := true,
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   publishMavenStyle := true,
