@@ -26,12 +26,11 @@ val commonSettings = Seq(
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   publishMavenStyle := true,
   Test / publishArtifact := false,
-  sonatypeProfileName := "me.lyh",
-  licenses := Seq("Apache 2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
-  homepage := Some(url("https://github.com/nevillelyh/shapeless-datatype")),
+  licenses := Seq(License.Apache2),
+  homepage := Some(uri("https://github.com/nevillelyh/shapeless-datatype")),
   scmInfo := Some(
     ScmInfo(
-      url("https://github.com/nevillelyh/shapeless-datatype.git"),
+      uri("https://github.com/nevillelyh/shapeless-datatype.git"),
       "scm:git:git@github.com:nevillelyh/shapeless-datatype.git"
     )
   ),
@@ -40,7 +39,7 @@ val commonSettings = Seq(
       id = "sinisa_lyh",
       name = "Neville Li",
       email = "neville.lyh@gmail.com",
-      url = url("https://twitter.com/sinisa_lyh")
+      url = uri("https://twitter.com/sinisa_lyh")
     )
   )
 )
@@ -148,6 +147,7 @@ lazy val test: Project = Project(
   "test",
   file("test")
 ).settings(
+  moduleName := "shapeless-datatype-test",
   commonSettings ++ noPublishSettings,
   description := "Shapeless utilities for common data types - shared code for unit test",
   libraryDependencies ++= Seq(
