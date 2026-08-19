@@ -12,7 +12,7 @@ jobs:
           java-version: '21'
           cache: 'sbt'
       - uses: sbt/setup-sbt@v1
-      - run: sbt scalafmtCheckAll scalafmtSbtCheck
+      - run: sbt "scalafmtCheckAll; scalafmtSbtCheck"
 
   test:
     runs-on: ubuntu-latest
@@ -42,5 +42,5 @@ jobs:
           cache: 'sbt'
       - uses: sbt/setup-sbt@v1
       - run: |
-          sbt coverage test coverageAggregate
+          sbt "coverage; test; coverageAggregate"
           bash <(curl -s https://codecov.io/bash)
